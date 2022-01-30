@@ -1,4 +1,5 @@
 export const state: any = {
-  films: null,
+  filmsData: null,
   userData: null,
+  isAuth: false,
 };
