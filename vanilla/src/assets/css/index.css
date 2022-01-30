@@ -1,0 +1,14 @@
+main {
+  background-color: rgb(232,232,232);
+}
+
+table {
+  margin: 0 auto;
+  margin-top: 150px
+}
+
+table td {
+  cursor: pointer
+}
+
+
