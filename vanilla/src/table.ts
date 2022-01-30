@@ -1,6 +1,10 @@
 import { state } from './state';
 
-// maping html elements for table
+/**
+ * Function for maping html elements for table.
+ * @param tableBody - Body of table html selector.
+ */
+
 export const createTable = (tableBody): void => {
   const tableRowsWithFilmDataHtmlArr = state.filmsData.map(
     film =>

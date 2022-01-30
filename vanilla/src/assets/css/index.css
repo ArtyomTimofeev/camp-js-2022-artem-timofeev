@@ -1,5 +1,7 @@
+
 main {
-  background-color: rgb(232,232,232);
+  --main-bg-color: rgb(232,232,232);
+  background-color: var(--main-bg-color);
 }
 
 table {
@@ -8,7 +10,7 @@ table {
 }
 
 table td {
-  cursor: pointer
+  cursor: pointer;
 }
 
 
