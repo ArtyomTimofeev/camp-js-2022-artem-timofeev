@@ -5,8 +5,7 @@ main {
 }
 
 table {
-  margin: 0 auto;
-  margin-top: 150px
+  margin:150px auto 0;
 }
 
 table td {

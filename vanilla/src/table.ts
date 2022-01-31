@@ -1,12 +1,13 @@
-import { state } from './state';
-
 /**
  * Function for maping html elements for table.
  * @param tableBody - Body of table html selector.
+ * @param filmsData - Data about films.
  */
 
-export const createTable = (tableBody): void => {
-  const tableRowsWithFilmDataHtmlArr = state.filmsData.map(
+import { DocumentData } from 'firebase/firestore';
+
+export const createTable = (tableBody, filmsData: DocumentData): void => {
+  const tableRowsWithFilmDataHtmlArr = filmsData.map(
     film =>
       ` <tr class="table-rows-with-films">
           <td class="mdl-data-table__cell--non-numeric">${film.fields.title}</td>
