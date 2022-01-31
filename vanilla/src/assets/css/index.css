@@ -1,0 +1,15 @@
+
+main {
+  --main-bg-color: rgb(232,232,232);
+  background-color: var(--main-bg-color);
+}
+
+table {
+  margin:150px auto 0;
+}
+
+table td {
+  cursor: pointer;
+}
+
+

@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "ignorePatterns": ["dist/**", "vite.config.js"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["./tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": ["@chernodub/eslint-config"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": 0,
+        "linebreak-style": 0
+      }
+    }
+  ]
+}
