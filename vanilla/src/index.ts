@@ -1,5 +1,3 @@
-import { DocumentData } from 'firebase/firestore';
-
 import { LOGOUT_TEXT, LOGIN_TEXT } from './utils/constants';
 import { login } from './auth/login';
 import { createTable } from './table';
@@ -8,19 +6,26 @@ import { logout } from './auth/logout';
 
 const tableBody = document.querySelector('tbody');
 const loginButton = document.querySelector('.login-button');
+const sortingSelect = document.getElementById('sorting-select');
 
-const filmsData: DocumentData = await getFilms();
+const filmsData = await getFilms();
 createTable(tableBody, filmsData);
 
+sortingSelect?.addEventListener('change', async event => {
+  const selectElem = event.target as HTMLSelectElement;
+  const filmsData1 = await getFilms(selectElem.value);
+  createTable(tableBody, filmsData1);
+});
+
 let isAuth = false;
-loginButton?.addEventListener('click', () => {
+loginButton?.addEventListener('click', async() => {
   if (!isAuth) {
-    login(auth);
-    loginButton.textContent = LOGOUT_TEXT;
     isAuth = true;
+    await login(auth);
+    loginButton.textContent = LOGOUT_TEXT;
   } else {
-    logout(auth);
-    loginButton.textContent = LOGIN_TEXT;
     isAuth = false;
+    await logout(auth);
+    loginButton.textContent = LOGIN_TEXT;
   }
-  });
+});
