@@ -2,11 +2,8 @@ import { getAuth } from 'firebase/auth';
 import { query, collection, getDocs, orderBy } from 'firebase/firestore';
 
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
-
 import { filmMapper } from '../entities/mappers /filmMapper';
-
 import { Film, FilmDocument } from '../entities/types/filmTypes';
-
 import { FILMS_COLLECTION } from '../utils/constants';
 
 import { db } from './firebase-config';
