@@ -1,43 +1,23 @@
+:root{
+  --main-bg-color: rgb(232,232,232);
+  --sort-select-font-color: rgb(46, 46, 46);
+  --select-border-color: rgb(68, 68, 68);
+}
 
 main {
-  --main-bg-color: rgb(232,232,232);
   background-color: var(--main-bg-color);
 }
 
 .container{
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 50px;
 }
 
-table {
-  margin:30px auto 0;
-}
-
-table td {
-  cursor: pointer;
-}
-
-
 .dropdown {
   position: relative;
 }
-#sorting-select{
-  outline: none;
-  display: block;
-  width: 100%; 
-  padding: .75rem 2.5rem .75rem 1rem;
-  background: none; 
-  border: 1px solid gray; 
-  border-radius: 3px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  font-family: inherit;
-  font-size: 1rem;
-  --sort-select-font-color: rgb(46, 46, 46);
-  color:  var(--sort-select-font-color)
-}
+
 .dropdown:after {
   content: "";
   display: block;
@@ -49,5 +29,30 @@ table td {
   top: 50%;
   right: 1rem;
   z-index: 1;
-  margin-top: -3px;
+  margin-top: 6px;
+}
+
+.sorting-select {
+  display: block;
+  width: 100%; 
+  padding: .75rem 2.5rem .75rem 1rem;
+  background: none; 
+  border: 1px solid var(--select-border-color); 
+  border-radius: 3px;
+  appearance: none;
+  font-family: inherit;
+  font-size: 1rem;
+  color:  var(--sort-select-font-color)
+}
+
+.sorting-select:focus {
+  outline: none;
+}
+
+.films-table {
+  margin: 30px auto 0;
+}
+
+.films-table td {
+  cursor: pointer;
 }

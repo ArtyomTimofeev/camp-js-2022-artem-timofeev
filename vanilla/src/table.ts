@@ -1,4 +1,4 @@
-import { DocumentData } from 'firebase/firestore';
+import { Film } from './entities/types/filmTypes';
 
 /**
  * Function for maping html elements for table.
@@ -6,14 +6,18 @@ import { DocumentData } from 'firebase/firestore';
  * @param filmsData - Data about films.
  */
 
-export const createTable = (tableBody, filmsData: DocumentData): void => {
+export const createTable = (tableBody: HTMLElement | null, filmsData: Film[]): void => {
+  if (!tableBody) {
+    return;
+  }
+
   const tableRowsWithFilmDataHtmlArr = filmsData.map(
-    (film: DocumentData) =>
+    film =>
       ` <tr class="table-rows-with-films">
-          <td class="mdl-data-table__cell--non-numeric">${film.fields.title}</td>
-          <td>${film.fields.episode_id}</td>
-          <td>${film.fields.producer}</td>
-          <td>${film.fields.release_date}</td>
+          <td class="mdl-data-table__cell--non-numeric">${film.title}</td>
+          <td>${film.episodeId}</td>
+          <td>${film.producer}</td>
+          <td>${film.releaseDate}</td>
         </tr>`,
   );
   tableBody.innerHTML = tableRowsWithFilmDataHtmlArr.join('');

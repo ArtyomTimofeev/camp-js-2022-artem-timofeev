@@ -21,9 +21,7 @@
         <div class="mdl-layout__header-row">
           <!-- Title -->
           <h3 class="mdl-layout-title">Films Catalogue</h3>
-          <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
-          <!-- Navigation. We hide it in small screens. -->
           <nav class="auth-buttons">
             <button
               type="button"
@@ -36,16 +34,20 @@
       </header>
       <main class="mdl-layout__content">
         <div class="container">
-          <label for="dropdown">Sort Ascending</label>
           <div class="dropdown">
-            <select id="sorting-select">
-              <option value="fields.title">Title</option>
-              <option value="fields.episode_id">Episode №</option>
-              <option value="fields.release_date">Release date</option>
-            </select>
+            <label
+              >Sort Ascending
+              <select class="sorting-select">
+                <option value="fields.title">Title</option>
+                <option value="fields.episode_id">Episode №</option>
+                <option value="fields.release_date">Release date</option>
+              </select>
+            </label>
           </div>
 
-          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+          <table
+            class="films-table mdl-data-table mdl-js-data-table mdl-shadow--2dp"
+          >
             <thead>
               <tr>
                 <th class="mdl-data-table__cell--non-numeric">Title</th>
