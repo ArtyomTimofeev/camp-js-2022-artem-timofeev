@@ -1,4 +1,4 @@
-import { Film } from './entities/types/filmTypes';
+import { Film } from './entities/models/film';
 
 /**
  * Function for maping html elements for table.
