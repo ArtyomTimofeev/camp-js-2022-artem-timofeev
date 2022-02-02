@@ -7,16 +7,16 @@ export interface FilmDocument {
   readonly fields: {
 
     /** Character ids. */
-    readonly characters: number[];
+    readonly characters: readonly number[];
 
     /** Specie ids. */
-    readonly species: number[];
+    readonly species: readonly number[];
 
     /** Starship ids. */
-    readonly starships: number[];
+    readonly starships: readonly number[];
 
     /** Vehicle ids. */
-    readonly vehicles: number[];
+    readonly vehicles: readonly number[];
 
     /** Create time (ISO format). */
     readonly created: string;
@@ -24,7 +24,7 @@ export interface FilmDocument {
     /** Director name. */
     readonly director: string;
 
-    /** Edit time. */
+    /** Edit time (ISO format). */
     readonly edited: string;
 
     /** Episode id. */
@@ -57,25 +57,25 @@ export interface Film {
   readonly id: number;
 
   /** Character ids. */
-  readonly characterIds: number[];
+  readonly characterIds: readonly number[];
 
   /** Specie ids. */
-  readonly specieIds: number[];
+  readonly specieIds: readonly number[];
 
   /** Starship ids. */
-  readonly starshipIds: number[];
+  readonly starshipIds: readonly number[];
 
   /** Vehicle ids. */
-  readonly vehicleIds: number[];
+  readonly vehicleIds: readonly number[];
 
-  /** Create time (xx.yy.zzzz). */
-  readonly created: string;
+  /** Create time. */
+  readonly created: Date;
 
   /** Director name. */
   readonly director: string;
 
-  /** Edit time (xx.yy.zzzz). */
-  readonly edited: string;
+  /** Edit time. */
+  readonly edited: Date;
 
   /** Episode id. */
   readonly episodeId: number;
@@ -86,8 +86,8 @@ export interface Film {
   /** Producer name. */
   readonly producer: string;
 
-  /** Release date (xx.yy.zzzz). */
-  readonly releaseDate: string;
+  /** Release date. */
+  readonly releaseDate: Date;
 
   /** Title. */
   readonly title: string;

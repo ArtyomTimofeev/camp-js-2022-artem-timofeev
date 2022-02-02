@@ -5,9 +5,9 @@ import { createTable } from './table';
 import { auth, getFilms } from './api/api';
 import { logout } from './auth/logout';
 
-const tableBody = document.querySelector('tbody');
-const loginButton = document.querySelector('.login-button');
-const sortingSelect = document.querySelector('.sorting-select');
+const tableBody = document.querySelector<HTMLTableElement>('tbody');
+const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
+const sortingSelect = document.querySelector<HTMLSelectElement>('.sorting-select');
 
 let filmsData = await getFilms();
 createTable(tableBody, filmsData);

@@ -17,7 +17,7 @@ export const createTable = (tableBody: HTMLElement | null, filmsData: Film[]): v
           <td class="mdl-data-table__cell--non-numeric">${film.title}</td>
           <td>${film.episodeId}</td>
           <td>${film.producer}</td>
-          <td>${film.releaseDate}</td>
+          <td>${film.releaseDate.toLocaleDateString()}</td>
         </tr>`,
   );
   tableBody.innerHTML = tableRowsWithFilmDataHtmlArr.join('');
