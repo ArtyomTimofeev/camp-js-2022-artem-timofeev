@@ -1,8 +1,8 @@
-import { FilmDocument } from '../DTOs/filmDTO';
+import { FilmDocumentDTO } from '../DTOs/filmDTO';
 import { Film } from '../models/film';
 
 export const filmMapper = {
-  fromDto(dto: FilmDocument): Film {
+  fromDto(dto: FilmDocumentDTO): Film {
     return {
       id: dto.pk,
       characterIds: dto.fields.characters,

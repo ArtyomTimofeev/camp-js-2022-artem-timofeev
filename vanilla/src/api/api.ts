@@ -1,11 +1,12 @@
 import { getAuth } from 'firebase/auth';
 import { query, collection, getDocs, orderBy } from 'firebase/firestore';
 
+import { FILMS_COLLECTION } from '../utils/constants';
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
 import { filmMapper } from '../entities/mappers/filmMapper';
-import { Film, FilmDocument } from '../entities/types/filmTypes';
-import { FILMS_COLLECTION } from '../utils/constants';
+import { FilmDocumentDTO } from '../entities/DTOs/filmDTO';
 
+import { Film } from './../entities/models/film';
 import { db } from './firebase-config';
 
 export const auth = getAuth();
@@ -17,6 +18,6 @@ export const auth = getAuth();
 export const getFilms = async(sortingType = FilmsSortingType.Default): Promise<Film[]> => {
   const queryForFilms = query(collection(db, FILMS_COLLECTION), orderBy(sortingType, 'asc'));
   const filmsSnapshot = await getDocs(queryForFilms);
-  const filmsDocument = filmsSnapshot.docs.map(doc => doc.data() as FilmDocument);
-  return filmsDocument.map(filmDocument => filmMapper.fromDto(filmDocument));
+  const filmDocuments = filmsSnapshot.docs.map(doc => doc.data() as FilmDocumentDTO);
+  return filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
 };

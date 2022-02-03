@@ -5,9 +5,9 @@ import { createTable } from './table';
 import { auth, getFilms } from './api/api';
 import { logout } from './auth/logout';
 
-const tableBody = document.querySelector<HTMLTableElement>('tbody');
+const tableBody = document.querySelector<HTMLTableElement>('.films-table__body');
 const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
-const sortingSelect = document.querySelector<HTMLSelectElement>('.sorting-select');
+const sortingSelect = document.querySelector<HTMLSelectElement>('.sort-form__control');
 
 let filmsData = await getFilms();
 createTable(tableBody, filmsData);
@@ -19,14 +19,14 @@ sortingSelect?.addEventListener('change', async event => {
   createTable(tableBody, filmsData);
 });
 
-let isAuth = false;
+let isAuthorized = false;
 loginButton?.addEventListener('click', async() => {
-  if (!isAuth) {
-    isAuth = true;
+  if (!isAuthorized) {
+    isAuthorized = true;
     await login(auth);
     loginButton.textContent = LOGOUT_TEXT;
   } else {
-    isAuth = false;
+    isAuthorized = false;
     await logout(auth);
     loginButton.textContent = LOGIN_TEXT;
   }

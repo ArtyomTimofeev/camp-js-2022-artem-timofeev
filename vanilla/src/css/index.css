@@ -1,5 +1,5 @@
-:root{
-  --main-bg-color: rgb(232,232,232);
+:root {
+  --main-bg-color: rgb(232, 232, 232);
   --sort-select-font-color: rgb(46, 46, 46);
   --select-border-color: rgb(68, 68, 68);
 }
@@ -8,17 +8,22 @@ main {
   background-color: var(--main-bg-color);
 }
 
-.container{
+mdl-layout__header-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.sort-form {
   max-width: 1200px;
   margin: 0 auto;
   padding: 50px;
 }
 
-.dropdown {
+.sort-form__dropdown {
   position: relative;
 }
 
-.dropdown:after {
+.sort-form__dropdown:after {
   content: "";
   display: block;
   border-style: solid;
@@ -28,25 +33,24 @@ main {
   position: absolute;
   top: 50%;
   right: 1rem;
-  z-index: 1;
   margin-top: 6px;
 }
 
-.sorting-select {
+.sort-form__control {
   display: block;
-  width: 100%; 
-  padding: .75rem 2.5rem .75rem 1rem;
-  background: none; 
-  border: 1px solid var(--select-border-color); 
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  background: none;
+  border: 1px solid var(--select-border-color);
   border-radius: 3px;
   appearance: none;
   font-family: inherit;
   font-size: 1rem;
-  color:  var(--sort-select-font-color)
+  color: var(--sort-select-font-color);
 }
 
-.sorting-select:focus {
-  outline: none;
+.sort-form__control:focus {
+  outline: unset;
 }
 
 .films-table {

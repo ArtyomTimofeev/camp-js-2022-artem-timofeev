@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /** Film data that stored in firestore. */
-export interface FilmDocument {
+export interface FilmDocumentDTO {
 
   /** Film fields. */
   readonly fields: {
