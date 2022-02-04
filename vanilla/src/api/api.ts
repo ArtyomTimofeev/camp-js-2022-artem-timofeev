@@ -1,5 +1,7 @@
+// @ts-nocheck
+
 import { getAuth } from 'firebase/auth';
-import { query, collection, getDocs, orderBy, QuerySnapshot, DocumentData } from 'firebase/firestore';
+import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, endAt, startAt, limitToLast } from 'firebase/firestore';
 
 import { FILMS_COLLECTION } from '../utils/constants';
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
@@ -16,65 +18,99 @@ export const auth = getAuth();
  * @param sortingType - Type of selected sort.
  */
 
-export const getFilms = async(sortingType = FilmsSortingType.Default): Promise<Film[]> => {
-  const queryForFilms = query(collection(db, FILMS_COLLECTION), orderBy(sortingType, 'asc'));
-  const filmsSnapshot = await getDocs(queryForFilms);
-  const filmDocuments = filmsSnapshot.docs.map(doc => doc.data() as FilmDocumentDTO);
-  return filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
+export const fetchFilms = {
+
+  lastVisible: null,
+
+  sortingType: null,
+
+  snapshotLength: null,
+
+  btnDisable: false,
+
+  async getFilms(sortingType = FilmsSortingType.Default): Promise<Film[]> {
+    const queryForFilms = query(collection(db, FILMS_COLLECTION), orderBy(sortingType, 'asc'), limit(3));
+    const filmsSnapshot = await getDocs(queryForFilms);
+    this.lastVisible = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
+    this.sortingType = sortingType;
+    this.snapshotLength = filmsSnapshot.docs.length;
+    const filmDocuments = filmsSnapshot.docs.map(doc => doc.data() as FilmDocumentDTO);
+    return filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
+  },
+
+  async nextPage(): Promise<Film[]> {
+    const queryForFilms = query(collection(db, FILMS_COLLECTION), orderBy(this.sortingType, 'asc'), limit(3), startAfter(this.lastVisible));
+    const filmsSnapshot = await getDocs(queryForFilms);
+    if (filmsSnapshot.docs.length > 0) {
+      this.lastVisible = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
+      const filmDocuments = filmsSnapshot.docs.map(doc => doc.data() as FilmDocumentDTO);
+      return filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
+    }
+
+  },
+  async prevPage(): Promise<Film[]> {
+    const queryForFilms = query(collection(db, FILMS_COLLECTION), orderBy(this.sortingType, 'asc'), limit(3), endBefore(this.lastVisible));
+    const filmsSnapshot = await getDocs(queryForFilms);
+    this.lastVisible = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
+    const filmDocuments = filmsSnapshot.docs.map(doc => doc.data() as FilmDocumentDTO);
+    console.log(this.lastVisible);
+    return filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
+  },
+
 };
 
-interface FetchOptions<T> {
-  readonly startFrom: T | null;
-  readonly sort?: string;
-}
+// interface FetchOptions<T> {
+//   readonly startFrom: T | null;
+//   readonly sort?: string;
+// }
 
-type FetchFunctionType<T> = (options: FetchOptions<T>) => Promise<T[]>;
-export class ListManager<T> {
-  private readonly fetchDataFunc: FetchFunctionType<T>;
+// type FetchFunctionType<T> = (options: FetchOptions<T>) => Promise<T[]>;
+// export class ListManager<T> {
+//   private readonly fetchDataFunc: FetchFunctionType<T>;
 
-  private lastVisibleElement: T | null = null;
+//   private lastVisibleElement: T | null = null;
 
-  private sort?: string;
+//   private sort?: string;
 
-  private readonly allItems: T[] = [];
+//   private readonly allItems: T[] = [];
 
-  private readonly pageSize = 10;
+//   private readonly pageSize = 10;
 
-  private currentPage = 1;
+//   private currentPage = 1;
 
-  public constructor(fetchFunction: FetchFunctionType<T>) {
-    this.fetchDataFunc = fetchFunction;
-  }
+//   public constructor(fetchFunction: FetchFunctionType<T>) {
+//     this.fetchDataFunc = fetchFunction;
+//   }
 
-  public async nextPage(): Promise<T[]> {
-    const list = await this.fetchDataFunc({
-      startFrom: this.lastVisibleElement,
-      sort: this.sort,
-    });
-    this.currentPage++;
-    this.allItems.push(...list);
+//   public async nextPage(): Promise<T[]> {
+//     const list = await this.fetchDataFunc({
+//       startFrom: this.lastVisibleElement,
+//       sort: this.sort,
+//     });
+//     this.currentPage++;
+//     this.allItems.push(...list);
 
-    this.lastVisibleElement = list[list.length - 1];
+//     this.lastVisibleElement = list[list.length - 1];
 
-    return list;
-  }
+//     return list;
+//   }
 
-  public prevPage(): T[] {
-    if (this.currentPage === 1) {
-      return this.allItems;
-    }
-    this.currentPage--;
-    const start = this.currentPage * this.pageSize;
-    return this.allItems.splice(start, this.pageSize);
-  }
+//   public prevPage(): T[] {
+//     if (this.currentPage === 1) {
+//       return this.allItems;
+//     }
+//     this.currentPage--;
+//     const start = this.currentPage * this.pageSize;
+//     return this.allItems.splice(start, this.pageSize);
+//   }
 
-  public setSort(): void {
-    this.allItems.splice(0, this.allItems.length);
-    this.currentPage = 1;
-  }
-}
+//   public setSort(): void {
+//     this.allItems.splice(0, this.allItems.length);
+//     this.currentPage = 1;
+//   }
+// }
 
-const filmsListManager = new ListManager(options => getFilms(options.sort as any));
-filmsListManager.nextPage();
+// const filmsListManager = new ListManager(options => getFilms(options.sort as any));
+// filmsListManager.nextPage();
 
-filmsListManager.setSort();
+// filmsListManager.setSort();

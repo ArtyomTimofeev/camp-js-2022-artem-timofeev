@@ -32,6 +32,7 @@
           </nav>
         </div>
       </header>
+
       <main class="mdl-layout__content">
         <div class="sort-form">
           <div class="sort-form__dropdown">
@@ -44,10 +45,12 @@
               </select>
             </label>
           </div>
+        </div>
 
+        <div class="films-form">
           <table
             aria-label="SW Films data table"
-            class="films-table mdl-data-table mdl-js-data-table mdl-shadow--2dp"
+            class="films-form__table mdl-data-table mdl-js-data-table mdl-shadow--2dp"
           >
             <thead>
               <tr>
@@ -59,6 +62,20 @@
             </thead>
             <tbody class="films-table__body"></tbody>
           </table>
+          <div class="films-form__buttons">
+            <button
+              class="films-form__prev-page-btn mdl-button mdl-js-button mdl-button--accent"
+              type="button"
+            >
+              Prev
+            </button>
+            <button
+              class="films-form__next-page-btn mdl-button mdl-js-button mdl-button--accent"
+              type="button"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </main>
     </div>
