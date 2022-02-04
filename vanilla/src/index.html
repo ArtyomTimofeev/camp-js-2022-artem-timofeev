@@ -11,7 +11,7 @@
       rel="stylesheet"
       href="https://code.getmdl.io/1.3.0/material.blue_grey-purple.min.css"
     />
-    <link rel="stylesheet" href="./assets/css/index.css" />
+    <link rel="stylesheet" href="./css/index.css" />
     <title>Films Catalogue</title>
   </head>
 
@@ -21,9 +21,7 @@
         <div class="mdl-layout__header-row">
           <!-- Title -->
           <h3 class="mdl-layout-title">Films Catalogue</h3>
-          <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
-          <!-- Navigation. We hide it in small screens. -->
           <nav class="auth-buttons">
             <button
               type="button"
@@ -34,19 +32,34 @@
           </nav>
         </div>
       </header>
-
       <main class="mdl-layout__content">
-        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-          <thead>
-            <tr>
-              <th class="mdl-data-table__cell--non-numeric">Title</th>
-              <th>Director</th>
-              <th>Producer</th>
-              <th>Release date</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="sort-form">
+          <div class="sort-form__dropdown">
+            <label
+              >Sort Ascending
+              <select class="sort-form__control">
+                <option value="fields.title">Title</option>
+                <option value="fields.episode_id">Episode №</option>
+                <option value="fields.release_date">Release date</option>
+              </select>
+            </label>
+          </div>
+
+          <table
+            aria-label="SW Films data table"
+            class="films-table mdl-data-table mdl-js-data-table mdl-shadow--2dp"
+          >
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Title</th>
+                <th>Episode №</th>
+                <th>Producer</th>
+                <th>Release date</th>
+              </tr>
+            </thead>
+            <tbody class="films-table__body"></tbody>
+          </table>
+        </div>
       </main>
     </div>
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
