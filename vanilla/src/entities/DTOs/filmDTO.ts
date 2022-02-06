@@ -18,6 +18,9 @@ export interface FilmDocumentDTO {
     /** Vehicle ids. */
     readonly vehicles: readonly number[];
 
+    /** Planets ids. */
+    readonly planets: readonly number[];
+
     /** Create time (ISO format). */
     readonly created: string;
 

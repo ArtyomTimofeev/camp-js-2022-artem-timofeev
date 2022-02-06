@@ -9,6 +9,7 @@ export const filmMapper = {
       specieIds: dto.fields.species,
       starshipIds: dto.fields.starships,
       vehicleIds: dto.fields.vehicles,
+      planetsIds: dto.fields.planets,
       created: new Date(dto.fields.created),
       director: dto.fields.director,
       edited: new Date(dto.fields.edited),

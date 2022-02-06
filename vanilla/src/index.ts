@@ -1,9 +1,10 @@
+import { Film } from './entities/models/film';
+import { authorization } from './api/authorization';
+import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
 import { LOGOUT_TEXT, LOGIN_TEXT } from './utils/constants';
-import { login } from './auth/login';
-import { createTable } from './table';
-import { auth, fetchFilms } from './api/api';
-import { logout } from './auth/logout';
+import { createTable } from './scripts/table';
+import { auth, fetchFilms } from './api/fetchingFilms';
 
 const tableBody = document.querySelector<HTMLTableElement>('.films-table__body');
 const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
@@ -11,40 +12,41 @@ const sortingSelect = document.querySelector<HTMLSelectElement>('.sort-form__con
 const prevPageBtn = document.querySelector<HTMLButtonElement>('.films-form__prev-page-btn');
 const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next-page-btn');
 
-let filmsData = await fetchFilms.getFilms();
-createTable(tableBody, filmsData);
-console.log(fetchFilms.snapshotLength);
+await fetchFilms.getFilmsData();
+
+const createFilmsPage = (filmsData: Film[]): void => {
+  disableTableButtons(prevPageBtn, nextPageBtn);
+  createTable(tableBody, filmsData);
+};
+createFilmsPage(fetchFilms.filmsData);
+
 sortingSelect?.addEventListener('change', async event => {
   const selectedOptionElement = event.target as HTMLSelectElement;
-  const optionElementValue = selectedOptionElement.value as FilmsSortingType;
-  filmsData = await fetchFilms.getFilms(optionElementValue);
-  createTable(tableBody, filmsData);
+  const sortingType = selectedOptionElement.value as FilmsSortingType;
+  await fetchFilms.getFilmsData(sortingType);
+  createFilmsPage(fetchFilms.filmsData);
 });
 
 nextPageBtn?.addEventListener('click', async() => {
-    if (fetchFilms.snapshotLength > 0) {
-filmsData = await fetchFilms.nextPage();
-}
-    createTable(tableBody, filmsData);
+  if (fetchFilms.currentPageNumber < fetchFilms.numberOfPages) {
+    await fetchFilms.nextPage();
+    createFilmsPage(fetchFilms.filmsData);
+  }
 });
 
 prevPageBtn?.addEventListener('click', async() => {
-  if (fetchFilms.lastVisible !== undefined) {
- filmsData = await fetchFilms.prevPage();
-    createTable(tableBody, filmsData);
-}
-
+  if (fetchFilms.currentPageNumber !== 1) {
+    await fetchFilms.prevPage();
+    createFilmsPage(fetchFilms.filmsData);
+  }
 });
 
-let isAuthorized = false;
 loginButton?.addEventListener('click', async() => {
-  if (!isAuthorized) {
-    isAuthorized = true;
-    await login(auth);
+  if (!authorization.isUserAuthorized) {
+    await authorization.login(auth);
     loginButton.textContent = LOGOUT_TEXT;
   } else {
-    isAuthorized = false;
-    await logout(auth);
+    await authorization.logout(auth);
     loginButton.textContent = LOGIN_TEXT;
   }
 });
