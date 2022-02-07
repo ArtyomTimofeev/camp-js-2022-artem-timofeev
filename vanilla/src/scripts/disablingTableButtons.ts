@@ -1,18 +1,19 @@
-import { fetchFilms } from '../api/fetchingFilms';
+import { filmsList } from './../index';
 
 export const disableTableButtons = (prevPageBtn: HTMLButtonElement | null, nextPageBtn: HTMLButtonElement | null): void => {
 
+  /** Condition for typescript without logic for application to work. */
   if (!prevPageBtn || !nextPageBtn) {
     return;
   }
 
-  if (fetchFilms.currentPageNumber === 1) {
+  if (filmsList.currentPageNumberGetter === 1) {
     prevPageBtn.disabled = true;
   } else {
     prevPageBtn.disabled = false;
   }
 
-  if (fetchFilms.currentPageNumber === fetchFilms.numberOfPages) {
+  if (filmsList.currentPageNumberGetter === filmsList.numberOfPagesGetter) {
     nextPageBtn.disabled = true;
   } else {
     nextPageBtn.disabled = false;

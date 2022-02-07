@@ -1,10 +1,11 @@
-import { Film } from './entities/models/film';
-import { AuthInstance } from './api/authorization';
+import { DocumentData } from 'firebase/firestore';
+
+import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
-import { LOGOUT_TEXT, LOGIN_TEXT } from './utils/constants';
+import { LOGOUT_TEXT, LOGIN_TEXT, FILMS_COLLECTION } from './utils/constants';
 import { createTable } from './scripts/table';
-import { auth, fetchFilms } from './api/fetchingFilms';
+import { auth, ListManager } from './api/ListManager';
 
 const tableBody = document.querySelector<HTMLTableElement>('.films-table__body');
 const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
@@ -12,43 +13,44 @@ const sortingSelect = document.querySelector<HTMLSelectElement>('.sort-form__con
 const prevPageBtn = document.querySelector<HTMLButtonElement>('.films-form__prev-page-btn');
 const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next-page-btn');
 
-await fetchFilms.firstPage();
+export const filmsList = new ListManager(FILMS_COLLECTION);
+await filmsList.firstPage();
 
-const createFilmsPage = (filmsData: Film[]): void => {
+const createFilmsPage = (filmsData: DocumentData): void => {
   disableTableButtons(prevPageBtn, nextPageBtn);
   createTable(tableBody, filmsData);
 };
-createFilmsPage(fetchFilms.getData);
+createFilmsPage(filmsList.dataOfListItemsGetter);
 
 sortingSelect?.addEventListener('change', async event => {
   const selectedOptionElement = event.target as HTMLSelectElement;
   const sortingType = selectedOptionElement.value as FilmsSortingType;
-  await fetchFilms.getFilmsData(sortingType);
-  createFilmsPage(fetchFilms.filmsData);
+  await filmsList.firstPage(sortingType);
+  createFilmsPage(filmsList.dataOfListItemsGetter);
 });
 
 nextPageBtn?.addEventListener('click', async() => {
-  if (fetchFilms.currentPageNumber < fetchFilms.numberOfPages) {
+  if (filmsList.currentPageNumberGetter < filmsList.numberOfPagesGetter) {
     nextPageBtn.disabled = true;
-    await fetchFilms.nextPage();
-    createFilmsPage(fetchFilms.filmsData);
+    await filmsList.nextPage();
+    createFilmsPage(filmsList.dataOfListItemsGetter);
   }
 });
 
 prevPageBtn?.addEventListener('click', async() => {
-  if (fetchFilms.currentPageNumber !== 1) {
+  if (filmsList.currentPageNumberGetter !== 1) {
     prevPageBtn.disabled = true;
-    await fetchFilms.prevPage();
-    createFilmsPage(fetchFilms.filmsData);
+    await filmsList.prevPage();
+    createFilmsPage(filmsList.dataOfListItemsGetter);
   }
 });
 
 loginButton?.addEventListener('click', async() => {
-  if (!AuthInstance.isAuthorized) {
-    await AuthInstance.login(auth);
+  if (!authService.isUserAuthorizedGetter) {
+    await authService.login(auth);
     loginButton.textContent = LOGOUT_TEXT;
   } else {
-    await AuthInstance.logout(auth);
+    await authService.logout(auth);
     loginButton.textContent = LOGIN_TEXT;
   }
 });

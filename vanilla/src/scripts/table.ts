@@ -1,4 +1,4 @@
-import { Film } from '../entities/models/film';
+import { DocumentData } from 'firebase/firestore';
 
 /**
  * Function for maping html elements for table.
@@ -6,7 +6,7 @@ import { Film } from '../entities/models/film';
  * @param filmsData - Data about films.
  */
 
-export const createTable = (tableBody: HTMLElement | null, filmsData: Film[]): void => {
+export const createTable = (tableBody: HTMLElement | null, filmsData: DocumentData): void => {
   if (!tableBody) {
     return;
   }

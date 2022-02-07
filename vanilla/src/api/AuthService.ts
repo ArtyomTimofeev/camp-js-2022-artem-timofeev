@@ -1,8 +1,11 @@
 import { Auth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
+/**
+ * Class for working with authorization.
+ */
 class AuthService {
-
-  public get isAuthorized(): boolean {
+  /** Method to get isUserAuthorized flag. */
+  public get isUserAuthorizedGetter(): boolean {
     return this.isUserAuthorized;
   }
 
@@ -29,4 +32,4 @@ class AuthService {
   }
 }
 
-export const AuthInstance = new AuthService();
+export const authService = new AuthService();
