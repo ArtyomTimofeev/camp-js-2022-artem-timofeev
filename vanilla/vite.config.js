@@ -14,6 +14,7 @@ export default defineConfig({
     rollupOptions: {
       input: [
         resolve(root, 'index.html'),
+        resolve(root, 'film-details-page', 'index.html'),
         resolve(root, 'example', 'index.html'),
         resolve(root, 'example', 'nested', 'index.html')
       ]

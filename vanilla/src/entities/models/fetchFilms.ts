@@ -5,7 +5,7 @@ import { Film } from './film';
 /**
  * FetchFilms model.
  */
-export interface FetchFilms{
+export interface FetchFilms {
 
   /** Data of films. */
   filmsData: Film[] | [];

@@ -3,7 +3,7 @@ import { Auth } from 'firebase/auth';
 /**
  * Authorization model.
  */
-export interface Authorization{
+export interface Authorization {
 
   /** Flag indicating whether the user is logged in. */
   isUserAuthorized: boolean;

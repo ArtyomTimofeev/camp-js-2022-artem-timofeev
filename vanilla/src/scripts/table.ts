@@ -14,7 +14,11 @@ export const createTable = (tableBody: HTMLElement | null, filmsData: Film[]): v
   const tableRowsWithFilmDataHtmlArr = filmsData.map(
     film =>
       ` <tr class="table-rows-with-films">
-          <td class="mdl-data-table__cell--non-numeric">${film.title}</td>
+          <td class="mdl-data-table__cell--non-numeric">
+            <a href="/film-details-page/">
+            ${film.title}
+            </a>
+          </td>
           <td>${film.episodeId}</td>
           <td>${film.producer}</td>
           <td>${film.releaseDate.toLocaleDateString()}</td>

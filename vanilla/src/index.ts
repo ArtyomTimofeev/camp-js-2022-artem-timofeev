@@ -1,5 +1,5 @@
 import { Film } from './entities/models/film';
-import { authorization } from './api/authorization';
+import { AuthInstance } from './api/authorization';
 import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
 import { LOGOUT_TEXT, LOGIN_TEXT } from './utils/constants';
@@ -12,13 +12,13 @@ const sortingSelect = document.querySelector<HTMLSelectElement>('.sort-form__con
 const prevPageBtn = document.querySelector<HTMLButtonElement>('.films-form__prev-page-btn');
 const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next-page-btn');
 
-await fetchFilms.getFilmsData();
+await fetchFilms.firstPage();
 
 const createFilmsPage = (filmsData: Film[]): void => {
   disableTableButtons(prevPageBtn, nextPageBtn);
   createTable(tableBody, filmsData);
 };
-createFilmsPage(fetchFilms.filmsData);
+createFilmsPage(fetchFilms.getData);
 
 sortingSelect?.addEventListener('change', async event => {
   const selectedOptionElement = event.target as HTMLSelectElement;
@@ -29,6 +29,7 @@ sortingSelect?.addEventListener('change', async event => {
 
 nextPageBtn?.addEventListener('click', async() => {
   if (fetchFilms.currentPageNumber < fetchFilms.numberOfPages) {
+    nextPageBtn.disabled = true;
     await fetchFilms.nextPage();
     createFilmsPage(fetchFilms.filmsData);
   }
@@ -36,17 +37,18 @@ nextPageBtn?.addEventListener('click', async() => {
 
 prevPageBtn?.addEventListener('click', async() => {
   if (fetchFilms.currentPageNumber !== 1) {
+    prevPageBtn.disabled = true;
     await fetchFilms.prevPage();
     createFilmsPage(fetchFilms.filmsData);
   }
 });
 
 loginButton?.addEventListener('click', async() => {
-  if (!authorization.isUserAuthorized) {
-    await authorization.login(auth);
+  if (!AuthInstance.isAuthorized) {
+    await AuthInstance.login(auth);
     loginButton.textContent = LOGOUT_TEXT;
   } else {
-    await authorization.logout(auth);
+    await AuthInstance.logout(auth);
     loginButton.textContent = LOGIN_TEXT;
   }
 });
