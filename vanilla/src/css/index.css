@@ -14,7 +14,7 @@ mdl-layout__header-row {
 }
 
 .sort-form {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 50px;
 }
@@ -47,16 +47,27 @@ mdl-layout__header-row {
   font-family: inherit;
   font-size: 1rem;
   color: var(--sort-select-font-color);
+  cursor: pointer;
 }
 
 .sort-form__control:focus {
   outline: unset;
 }
 
-.films-table {
-  margin: 30px auto 0;
+.films-form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.films-table td {
+.films-form__table td {
   cursor: pointer;
+}
+
+.films-form__buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
 }

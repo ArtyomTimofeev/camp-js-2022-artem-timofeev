@@ -16,6 +16,9 @@ export interface Film {
   /** Vehicle ids. */
   readonly vehicleIds: readonly number[];
 
+  /** Planets ids. */
+  readonly planetsIds: readonly number[];
+
   /** Create time. */
   readonly created: Date;
 
