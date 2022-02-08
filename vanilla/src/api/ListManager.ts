@@ -59,8 +59,8 @@ export class ListManager {
     this._currentPageNumber = 1;
     this._sortingType = sortingType;
     this.getNumberOfPages();
-    const queryForFilms = query(collection(db, this._collectionName), orderBy(String(sortingType), 'asc'), limit(this._limitDocs));
-    await this.getItemsList(queryForFilms);
+    const queryForDocs = query(collection(db, this._collectionName), orderBy(String(sortingType), 'asc'), limit(this._limitDocs));
+    await this.getDocsList(queryForDocs);
   }
 
   /**
@@ -68,11 +68,11 @@ export class ListManager {
    */
   public async nextPage(): Promise<void> {
     this._currentPageNumber++;
-    const queryForFilms = query(collection(db, this._collectionName),
+    const queryForDocs = query(collection(db, this._collectionName),
       orderBy(this._sortingType, 'asc'),
       limit(this._limitDocs),
       startAfter(this._lastVisibleDoc));
-    await this.getItemsList(queryForFilms);
+    await this.getDocsList(queryForDocs);
   }
 
   /**
@@ -80,26 +80,26 @@ export class ListManager {
    */
   public async prevPage(): Promise<void> {
     this._currentPageNumber--;
-    const queryForFilms = query(collection(db, this._collectionName),
+    const queryForDocs = query(collection(db, this._collectionName),
       orderBy(this._sortingType, 'asc'),
       limitToLast(this._limitDocs),
       endBefore(this._firstVisibleDoc));
-    await this.getItemsList(queryForFilms);
+    await this.getDocsList(queryForDocs);
   }
 
   private async getNumberOfPages(): Promise<void> {
-    const queryForFilms = query(collection(db, this._collectionName));
-    const filmsSnapshot = await getDocs(queryForFilms);
-    const numberOfAllDocs = filmsSnapshot.docs.length;
+    const queryForItems = query(collection(db, this._collectionName));
+    const docsSnapshot = await getDocs(queryForItems);
+    const numberOfAllDocs = docsSnapshot.docs.length;
     this._numberOfPages = Math.ceil(numberOfAllDocs / this._limitDocs);
   }
 
-  private async getItemsList(queryForFilms): Promise<void> {
-    const filmsSnapshot = await getDocs(queryForFilms);
-    const filmDocuments = filmsSnapshot.docs.map(doc => doc.data() as FilmDocumentDTO);
-    this._firstVisibleDoc = filmsSnapshot.docs[0];
-    this._lastVisibleDoc = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
-    this._dataOfListItems = filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
+  private async getDocsList(queryForDocs): Promise<void> {
+    const docsSnapshot = await getDocs(queryForDocs);
+    const docs = docsSnapshot.docs.map(doc => ({ ...doc.data() as FilmDocumentDTO, id: doc.id }));
+    this._firstVisibleDoc = docsSnapshot.docs[0];
+    this._lastVisibleDoc = docsSnapshot.docs[docsSnapshot.docs.length - 1];
+    this._dataOfListItems = docs.map(filmDocument => filmMapper.fromDto(filmDocument));
   }
 }
 export const filmsList = new ListManager(FILMS_COLLECTION);
