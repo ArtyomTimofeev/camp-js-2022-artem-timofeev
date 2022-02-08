@@ -5,6 +5,8 @@ import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
 import { filmMapper } from '../entities/mappers/filmMapper';
 import { FilmDocumentDTO } from '../entities/DTOs/filmDTO';
 
+import { FILMS_COLLECTION } from '../utils/constants';
+
 import { db } from './firebase-config';
 
 export const auth = getAuth();
@@ -15,49 +17,49 @@ export const auth = getAuth();
 export class ListManager {
 
   /** Method to get dataOfListItems. */
-  public get dataOfListItemsGetter(): DocumentData {
-    return this.dataOfListItems;
+  public get dataOfListItems(): DocumentData {
+    return this._dataOfListItems;
   }
 
   /** Method to get numberOfPages. */
-  public get numberOfPagesGetter(): number {
-    return this.numberOfPages;
+  public get numberOfPages(): number {
+    return this._numberOfPages;
   }
 
   /** Method to get currentPageNumber. */
-  public get currentPageNumberGetter(): number {
-    return this.currentPageNumber;
+  public get currentPageNumber(): number {
+    return this._currentPageNumber;
   }
 
-  private dataOfListItems: [] | DocumentData = [];
+  private _dataOfListItems: [] | DocumentData = [];
 
-  private numberOfPages = 1;
+  private _numberOfPages = 1;
 
-  private collectionName: string;
+  private _collectionName: string;
 
-  private currentPageNumber = 1;
+  private _currentPageNumber = 1;
 
-  private sortingType: string = FilmsSortingType.Default;
+  private _sortingType: string = FilmsSortingType.Default;
 
-  private firstVisibleDoc: QueryDocumentSnapshot<unknown> | null = null;
+  private _firstVisibleDoc: QueryDocumentSnapshot<unknown> | null = null;
 
-  private lastVisibleDoc: QueryDocumentSnapshot<unknown> | null = null;
+  private _lastVisibleDoc: QueryDocumentSnapshot<unknown> | null = null;
 
-  private limitDocs = 3;
+  private _limitDocs = 3;
 
   public constructor(collectionName: string) {
-    this.collectionName = collectionName;
+    this._collectionName = collectionName;
   }
 
   /**
    * Function to get first page of table with data of list items.
    * @param sortingType - Type of sorting.
    */
-  public async firstPage(sortingType = this.sortingType): Promise<void> {
-    this.currentPageNumber = 1;
-    this.sortingType = sortingType;
+  public async firstPage(sortingType = this._sortingType): Promise<void> {
+    this._currentPageNumber = 1;
+    this._sortingType = sortingType;
     this.getNumberOfPages();
-    const queryForFilms = query(collection(db, this.collectionName), orderBy(String(sortingType), 'asc'), limit(this.limitDocs));
+    const queryForFilms = query(collection(db, this._collectionName), orderBy(String(sortingType), 'asc'), limit(this._limitDocs));
     await this.getItemsList(queryForFilms);
   }
 
@@ -65,11 +67,11 @@ export class ListManager {
    * Function to get next page of table with data of list items.
    */
   public async nextPage(): Promise<void> {
-    this.currentPageNumber++;
-    const queryForFilms = query(collection(db, this.collectionName),
-      orderBy(this.sortingType, 'asc'),
-      limit(this.limitDocs),
-      startAfter(this.lastVisibleDoc));
+    this._currentPageNumber++;
+    const queryForFilms = query(collection(db, this._collectionName),
+      orderBy(this._sortingType, 'asc'),
+      limit(this._limitDocs),
+      startAfter(this._lastVisibleDoc));
     await this.getItemsList(queryForFilms);
   }
 
@@ -77,26 +79,27 @@ export class ListManager {
    * Function to get previous page of table with data of list items.
    */
   public async prevPage(): Promise<void> {
-    this.currentPageNumber--;
-    const queryForFilms = query(collection(db, this.collectionName),
-      orderBy(this.sortingType, 'asc'),
-      limitToLast(this.limitDocs),
-      endBefore(this.firstVisibleDoc));
+    this._currentPageNumber--;
+    const queryForFilms = query(collection(db, this._collectionName),
+      orderBy(this._sortingType, 'asc'),
+      limitToLast(this._limitDocs),
+      endBefore(this._firstVisibleDoc));
     await this.getItemsList(queryForFilms);
   }
 
   private async getNumberOfPages(): Promise<void> {
-    const queryForFilms = query(collection(db, this.collectionName));
+    const queryForFilms = query(collection(db, this._collectionName));
     const filmsSnapshot = await getDocs(queryForFilms);
     const numberOfAllDocs = filmsSnapshot.docs.length;
-    this.numberOfPages = Math.ceil(numberOfAllDocs / this.limitDocs);
+    this._numberOfPages = Math.ceil(numberOfAllDocs / this._limitDocs);
   }
 
   private async getItemsList(queryForFilms): Promise<void> {
     const filmsSnapshot = await getDocs(queryForFilms);
     const filmDocuments = filmsSnapshot.docs.map(doc => doc.data() as FilmDocumentDTO);
-    this.firstVisibleDoc = filmsSnapshot.docs[0];
-    this.lastVisibleDoc = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
-    this.dataOfListItems = filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
+    this._firstVisibleDoc = filmsSnapshot.docs[0];
+    this._lastVisibleDoc = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
+    this._dataOfListItems = filmDocuments.map(filmDocument => filmMapper.fromDto(filmDocument));
   }
 }
+export const filmsList = new ListManager(FILMS_COLLECTION);

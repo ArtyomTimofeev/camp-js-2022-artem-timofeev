@@ -1,4 +1,4 @@
-import { filmsList } from './../index';
+import { filmsList } from './../api/ListManager';
 
 export const disableTableButtons = (prevPageBtn: HTMLButtonElement | null, nextPageBtn: HTMLButtonElement | null): void => {
 
@@ -7,13 +7,13 @@ export const disableTableButtons = (prevPageBtn: HTMLButtonElement | null, nextP
     return;
   }
 
-  if (filmsList.currentPageNumberGetter === 1) {
+  if (filmsList.currentPageNumber === 1) {
     prevPageBtn.disabled = true;
   } else {
     prevPageBtn.disabled = false;
   }
 
-  if (filmsList.currentPageNumberGetter === filmsList.numberOfPagesGetter) {
+  if (filmsList.currentPageNumber === filmsList.numberOfPages) {
     nextPageBtn.disabled = true;
   } else {
     nextPageBtn.disabled = false;

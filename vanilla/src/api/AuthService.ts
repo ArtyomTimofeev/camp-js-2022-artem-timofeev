@@ -5,12 +5,12 @@ import { Auth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/aut
  */
 class AuthService {
   /** Method to get isUserAuthorized flag. */
-  public get isUserAuthorizedGetter(): boolean {
-    return this.isUserAuthorized;
+  public get isUserAuthorize(): boolean {
+    return this._isUserAuthorized;
   }
 
   /** Flag indicating whether the user is logged in. */
-  private isUserAuthorized = false;
+  private _isUserAuthorized = false;
 
   /**
    * Login through google account.
@@ -18,7 +18,7 @@ class AuthService {
    */
   public async logout(auth: Auth): Promise<void> {
     await signOut(auth);
-    this.isUserAuthorized = false;
+    this._isUserAuthorized = false;
   }
 
   /**
@@ -28,7 +28,7 @@ class AuthService {
   public async login(auth: Auth): Promise <void> {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
-    this.isUserAuthorized = true;
+    this._isUserAuthorized = true;
   }
 }
 
