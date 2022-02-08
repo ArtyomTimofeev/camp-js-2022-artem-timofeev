@@ -1,9 +1,8 @@
 import { getAuth } from 'firebase/auth';
-import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
+import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
-import { filmMapper } from '../entities/mappers/filmMapper';
-import { FilmDocumentDTO } from '../entities/DTOs/filmDTO';
+import { filmMapper, IMapperFromDto } from '../entities/mappers/filmMapper';
 
 import { FILMS_COLLECTION } from '../utils/constants';
 
@@ -14,10 +13,10 @@ export const auth = getAuth();
 /**
  *  Universal manager class that allows to work with the data of any collection.
  */
-export class ListManager {
+export class ListManager<TDto, TModel> {
 
   /** Method to get dataOfListItems. */
-  public get dataOfListItems(): DocumentData {
+  public get dataOfListItems(): TModel[] {
     return this._dataOfListItems;
   }
 
@@ -31,7 +30,7 @@ export class ListManager {
     return this._currentPageNumber;
   }
 
-  private _dataOfListItems: [] | DocumentData = [];
+  private _dataOfListItems: TModel[] = [];
 
   private _numberOfPages = 1;
 
@@ -47,8 +46,11 @@ export class ListManager {
 
   private _limitDocs = 3;
 
-  public constructor(collectionName: string) {
+  private readonly mapper: IMapperFromDto<TDto, TModel>;
+
+  public constructor(collectionName: string, mapper: IMapperFromDto<TDto, TModel>) {
     this._collectionName = collectionName;
+    this.mapper = mapper;
   }
 
   /**
@@ -96,10 +98,10 @@ export class ListManager {
 
   private async getDocsList(queryForDocs): Promise<void> {
     const docsSnapshot = await getDocs(queryForDocs);
-    const docs = docsSnapshot.docs.map(doc => ({ ...doc.data() as FilmDocumentDTO, id: doc.id }));
+    const docs = docsSnapshot.docs.map(doc => ({ ...doc.data() as TDto, id: doc.id }));
     this._firstVisibleDoc = docsSnapshot.docs[0];
     this._lastVisibleDoc = docsSnapshot.docs[docsSnapshot.docs.length - 1];
-    this._dataOfListItems = docs.map(filmDocument => filmMapper.fromDto(filmDocument));
+    this._dataOfListItems = docs.map(filmDocument => this.mapper.fromDto(filmDocument));
   }
 }
-export const filmsList = new ListManager(FILMS_COLLECTION);
+export const filmsList = new ListManager(FILMS_COLLECTION, filmMapper);

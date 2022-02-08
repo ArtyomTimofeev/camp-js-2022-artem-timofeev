@@ -1,5 +1,4 @@
-import { DocumentData } from 'firebase/firestore';
-
+import { Film } from './entities/models/film';
 import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
@@ -15,7 +14,7 @@ const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next
 
 await filmsList.firstPage();
 
-const createFilmsPage = (filmsData: DocumentData): void => {
+const createFilmsPage = (filmsData: Film[]): void => {
   disableTableButtons(prevPageBtn, nextPageBtn);
   createTable(tableBody, filmsData);
 };

@@ -1,7 +1,16 @@
 import { FilmDocumentDTO } from '../DTOs/filmDTO';
 import { Film } from '../models/film';
 
-export const filmMapper = {
+/**
+ * MapperFromDto interface.
+ */
+export interface IMapperFromDto<TDto, TModel> {
+
+  /** From Dto to Model.  */
+  fromDto: (dto: TDto) => TModel;
+}
+
+export const filmMapper: IMapperFromDto<FilmDocumentDTO, Film> = {
   fromDto(dto: FilmDocumentDTO): Film {
     return {
       id: dto.pk,
