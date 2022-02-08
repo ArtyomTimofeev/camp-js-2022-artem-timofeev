@@ -71,3 +71,11 @@ mdl-layout__header-row {
   justify-content: flex-end;
   margin-top: 5px;
 }
+
+.details-card {
+  height: 70%;
+  width: 40%;
+  margin: 100px auto;
+  background-color: white;
+  border-radius: 4px;
+}

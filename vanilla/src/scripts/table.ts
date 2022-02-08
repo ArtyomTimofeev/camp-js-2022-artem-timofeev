@@ -15,7 +15,7 @@ export const createTable = (tableBody: HTMLElement | null, filmsData: Film[]): v
     (film: Film) =>
       ` <tr class="table-rows-with-films">
           <td class="mdl-data-table__cell--non-numeric">
-            <a href="/film-details-page/">
+            <a href="/film-details-page/?id=${film.id}">
             ${film.title}
             </a>
           </td>

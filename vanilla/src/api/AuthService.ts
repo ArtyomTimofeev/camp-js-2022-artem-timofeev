@@ -19,6 +19,7 @@ class AuthService {
   public async logout(auth: Auth): Promise<void> {
     await signOut(auth);
     this._isUserAuthorized = false;
+    localStorage.isUserAuthorized = JSON.stringify(false);
   }
 
   /**
@@ -29,6 +30,7 @@ class AuthService {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
     this._isUserAuthorized = true;
+    localStorage.isUserAuthorized = JSON.stringify(true);
   }
 }
 

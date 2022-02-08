@@ -13,6 +13,7 @@ const prevPageBtn = document.querySelector<HTMLButtonElement>('.films-form__prev
 const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next-page-btn');
 
 await filmsList.firstPage();
+localStorage.isUserAuthorized = false;
 
 const createFilmsPage = (filmsData: Film[]): void => {
   disableTableButtons(prevPageBtn, nextPageBtn);
