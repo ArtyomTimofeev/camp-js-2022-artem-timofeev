@@ -11,6 +11,7 @@ const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
 const sortingSelect = document.querySelector<HTMLSelectElement>('.sort-form__control');
 const prevPageBtn = document.querySelector<HTMLButtonElement>('.films-form__prev-page-btn');
 const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next-page-btn');
+const titleSearchingInput = document.querySelector<HTMLInputElement>('.title-searching-input');
 
 await filmsList.firstPage();
 
@@ -51,4 +52,9 @@ loginButton?.addEventListener('click', async() => {
     await authService.logout(auth);
     loginButton.textContent = LOGIN_TEXT;
   }
+});
+
+titleSearchingInput?.addEventListener('input', async() => {
+    await filmsList.getDocsByTitleSubstring(titleSearchingInput.value);
+    createFilmsPage(filmsList.dataOfListItems);
 });

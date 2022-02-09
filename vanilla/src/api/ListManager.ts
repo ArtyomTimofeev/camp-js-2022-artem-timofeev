@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot } from 'firebase/firestore';
+import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot, where } from 'firebase/firestore';
 
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
 import { filmMapper, IMapperFromDto } from '../entities/mappers/filmMapper';
@@ -87,6 +87,21 @@ export class ListManager<TDto, TModel> {
       limitToLast(this._limitDocs),
       endBefore(this._firstVisibleDoc));
     await this.getDocsList(queryForDocs);
+  }
+
+  /**
+   * Method for geting all documents from the firestore which contain the given substring in the title.
+   * @param titleSubstring - Substring which should be searched for in the title.
+   */
+  public async getDocsByTitleSubstring(titleSubstring: string): Promise<void> {
+    this._currentPageNumber = 1;
+    this._sortingType = FilmsSortingType.Title;
+
+    const docsQuery = query(collection(db, this._collectionName),
+      where(this._sortingType, '>=', titleSubstring),
+      where(this._sortingType, '<=', `${titleSubstring}\uf8ff`));
+
+    await this.getDocsList(docsQuery);
   }
 
   private async getNumberOfPages(): Promise<void> {
