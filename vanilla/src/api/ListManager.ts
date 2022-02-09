@@ -16,8 +16,13 @@ export const auth = getAuth();
 export class ListManager<TDto, TModel> {
 
   /** Method to set searchString. */
-  public set searchString(searchString: string) {
+  public set setSearchString(searchString: string) {
     this._searchString = searchString;
+  }
+
+  /** Method to set sortingType. */
+  public set setSortingType(newSortingType: FilmsSortingType) {
+    this._sortingType = newSortingType;
   }
 
   /** Method to get dataOfListItems. */
@@ -75,10 +80,10 @@ export class ListManager<TDto, TModel> {
       queryForDocs = query(collection(db, this._collectionName), orderBy(String(sortingType), 'asc'), limit(this._limitDocs));
     } else {
       queryForDocs = query(collection(db, this._collectionName),
-        orderBy(FilmsSortingType.Title, 'asc'),
+        orderBy(this._sortingType, 'asc'),
         limit(this._limitDocs),
-        where(FilmsSortingType.Title, '>=', this._searchString),
-        where(FilmsSortingType.Title, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
     }
 
     await this.getDocsList(queryForDocs);
@@ -97,11 +102,11 @@ export class ListManager<TDto, TModel> {
         startAfter(this._lastVisibleDoc));
     } else {
       queryForDocs = query(collection(db, this._collectionName),
-        orderBy(FilmsSortingType.Title, 'asc'),
+        orderBy(this._sortingType, 'asc'),
         limit(this._limitDocs),
         startAfter(this._lastVisibleDoc),
-        where(FilmsSortingType.Title, '>=', this._searchString),
-        where(FilmsSortingType.Title, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
     }
 
     await this.getDocsList(queryForDocs);
@@ -120,11 +125,11 @@ export class ListManager<TDto, TModel> {
         endBefore(this._firstVisibleDoc));
     } else {
       queryForDocs = query(collection(db, this._collectionName),
-        orderBy(FilmsSortingType.Title, 'asc'),
+        orderBy(this._sortingType, 'asc'),
         limitToLast(this._limitDocs),
         endBefore(this._firstVisibleDoc),
-        where(FilmsSortingType.Title, '>=', this._searchString),
-        where(FilmsSortingType.Title, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
     }
 
     await this.getDocsList(queryForDocs);
@@ -136,8 +141,8 @@ export class ListManager<TDto, TModel> {
       queryForItems = query(collection(db, this._collectionName));
     } else {
       queryForItems = query(collection(db, this._collectionName),
-        where(FilmsSortingType.Title, '>=', this._searchString),
-        where(FilmsSortingType.Title, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
     }
 
     const docsSnapshot = await getDocs(queryForItems);

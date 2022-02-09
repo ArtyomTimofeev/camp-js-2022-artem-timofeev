@@ -56,11 +56,25 @@ loginButton?.addEventListener('click', async() => {
 });
 
 const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
-  filmsList.searchString = titleSubstring.trim();
-  await filmsList.firstPage();
-  createFilmsPage(filmsList.dataOfListItems);
+  filmsList.setSearchString = titleSubstring.trim();
 
+  if (titleSubstring.trim() !== '') {
+    if (sortingSelect !== null) {
+      sortingSelect.disabled = true;
+
+      sortingSelect.value = FilmsSortingType.Title;
+
+      filmsList.setSortingType = FilmsSortingType.Title;
+    }
+  } else if (sortingSelect !== null) {
+      sortingSelect.disabled = false;
+    }
+
+  await filmsList.firstPage();
+
+  createFilmsPage(filmsList.dataOfListItems);
 });
+
 titleSearchingInput?.addEventListener('input', () => {
   сreateFilmsPageOnSearch(titleSearchingInput.value);
 });
