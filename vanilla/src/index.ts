@@ -1,3 +1,4 @@
+import { debounce } from './scripts/debounce';
 import { Film } from './entities/models/film';
 import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
@@ -54,7 +55,16 @@ loginButton?.addEventListener('click', async() => {
   }
 });
 
-titleSearchingInput?.addEventListener('input', async() => {
-    await filmsList.getDocsByTitleSubstring(titleSearchingInput.value);
+const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
+  if (titleSubstring.trim() !== '') {
+    await filmsList.getDocsByTitleSubstring(titleSubstring);
     createFilmsPage(filmsList.dataOfListItems);
+  } else {
+    await filmsList.firstPage();
+    createFilmsPage(filmsList.dataOfListItems);
+  }
+  
+});
+titleSearchingInput?.addEventListener('input', async() => {
+  сreateFilmsPageOnSearch(titleSearchingInput.value);
 });
