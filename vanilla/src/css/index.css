@@ -71,3 +71,8 @@ mdl-layout__header-row {
   justify-content: flex-end;
   margin-top: 5px;
 }
+
+.title-searching-form {
+  display: flex;
+  justify-content: center;
+}
