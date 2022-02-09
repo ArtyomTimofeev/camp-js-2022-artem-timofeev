@@ -56,15 +56,11 @@ loginButton?.addEventListener('click', async() => {
 });
 
 const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
-  if (titleSubstring.trim() !== '') {
-    await filmsList.getDocsByTitleSubstring(titleSubstring);
-    createFilmsPage(filmsList.dataOfListItems);
-  } else {
-    await filmsList.firstPage();
-    createFilmsPage(filmsList.dataOfListItems);
-  }
-  
+  filmsList.searchString = titleSubstring.trim();
+  await filmsList.firstPage();
+  createFilmsPage(filmsList.dataOfListItems);
+
 });
-titleSearchingInput?.addEventListener('input', async() => {
+titleSearchingInput?.addEventListener('input', () => {
   сreateFilmsPageOnSearch(titleSearchingInput.value);
 });
