@@ -12,8 +12,8 @@ export function debounce<Params extends any[]>(callback: (...args: Params) => un
       clearTimeout(timeoutId);
     }
 
-    timeoutId = window.setTimeout(async() => {
-      await callback(...args);
+    timeoutId = window.setTimeout(() => {
+      callback(...args);
     }, delay);
   };
 }
