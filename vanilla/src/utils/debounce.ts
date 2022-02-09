@@ -4,10 +4,10 @@
  * @param delay - Miliseconds of delay.
  * @returns Function which executes callback and redelay it.
  */
-export const debounce = (callback: Function, delay = 1000): Function => {
+export function debounce<Params extends any[]>(callback: (...args: Params) => unknown, delay = 1000): Function {
   let timeoutId: number | null = null;
 
-  return (...args: any) => {
+  return (...args: Params) => {
     if (timeoutId !== null) {
       clearTimeout(timeoutId);
     }
@@ -16,4 +16,4 @@ export const debounce = (callback: Function, delay = 1000): Function => {
       await callback(...args);
     }, delay);
   };
-};
+}

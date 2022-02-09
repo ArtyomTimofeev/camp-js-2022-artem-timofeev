@@ -1,4 +1,4 @@
-import { debounce } from './scripts/debounce';
+import { debounce } from './utils/debounce';
 import { Film } from './entities/models/film';
 import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
