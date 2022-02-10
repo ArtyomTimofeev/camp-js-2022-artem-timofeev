@@ -10,6 +10,9 @@ import { db } from './firebase-config';
 
 export const auth = getAuth();
 
+/** Constant for title searching. */
+const veryBigSymbol = '\uf8ff';
+
 /**
  *  Universal manager class that allows to work with the data of any collection.
  */
@@ -83,7 +86,7 @@ export class ListManager<TDto, TModel> {
         orderBy(this._sortingType, 'asc'),
         limit(this._limitDocs),
         where(this._sortingType, '>=', this._searchString),
-        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
     }
 
     await this.getDocsList(queryForDocs);
@@ -106,7 +109,7 @@ export class ListManager<TDto, TModel> {
         limit(this._limitDocs),
         startAfter(this._lastVisibleDoc),
         where(this._sortingType, '>=', this._searchString),
-        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
     }
 
     await this.getDocsList(queryForDocs);
@@ -129,7 +132,7 @@ export class ListManager<TDto, TModel> {
         limitToLast(this._limitDocs),
         endBefore(this._firstVisibleDoc),
         where(this._sortingType, '>=', this._searchString),
-        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
     }
 
     await this.getDocsList(queryForDocs);
@@ -142,7 +145,7 @@ export class ListManager<TDto, TModel> {
     } else {
       queryForItems = query(collection(db, this._collectionName),
         where(this._sortingType, '>=', this._searchString),
-        where(this._sortingType, '<=', `${this._searchString}\uf8ff`));
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
     }
 
     const docsSnapshot = await getDocs(queryForItems);
