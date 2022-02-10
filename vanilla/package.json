@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint -c .eslintrc.json src",
+    "lint": "eslint src",
     "stylelint": "npx stylelint 'src/**/*.css'"
   },
   "devDependencies": {
@@ -17,6 +17,8 @@
     "vite": "^2.7.2"
   },
   "dependencies": {
-    "firebase": "^9.6.5"
+    "@types/underscore": "^1.11.4",
+    "firebase": "^9.6.5",
+    "underscore": "^1.13.2"
   }
 }

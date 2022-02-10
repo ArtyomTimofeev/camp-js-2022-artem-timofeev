@@ -1,4 +1,4 @@
-export const getSlicedArrayOfIds = (ids: number[], size: number): number[][] => {
+export const getSlicedArrayOfIds = (ids: readonly number[], size: number): number[][] => {
   const array = ids;
   const slicedArray: number[][] = [];
   for (let i = 0; i < Math.ceil(array.length / size); i++) {

@@ -1,8 +1,8 @@
+import { fillLoginBtn } from './film-details-page/scripts/fillLoginBtn';
 import { Film } from './entities/models/film';
 import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
-import { LOGOUT_TEXT, LOGIN_TEXT } from './utils/constants';
 import { createTable } from './scripts/table';
 import { auth, filmsList } from './api/ListManager';
 
@@ -13,7 +13,7 @@ const prevPageBtn = document.querySelector<HTMLButtonElement>('.films-form__prev
 const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next-page-btn');
 
 await filmsList.firstPage();
-localStorage.isUserAuthorized = false;
+fillLoginBtn(loginButton);
 
 const createFilmsPage = (filmsData: Film[]): void => {
   disableTableButtons(prevPageBtn, nextPageBtn);
@@ -45,11 +45,13 @@ prevPageBtn?.addEventListener('click', async() => {
 });
 
 loginButton?.addEventListener('click', async() => {
-  if (!authService.isUserAuthorize) {
+  const isUserAuthorized = JSON.parse(localStorage.isUserAuthorized);
+
+  if (!isUserAuthorized) {
     await authService.login(auth);
-    loginButton.textContent = LOGOUT_TEXT;
+    fillLoginBtn(loginButton);
   } else {
     await authService.logout(auth);
-    loginButton.textContent = LOGIN_TEXT;
+    fillLoginBtn(loginButton);
   }
 });

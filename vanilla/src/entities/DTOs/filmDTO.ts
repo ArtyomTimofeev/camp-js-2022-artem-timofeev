@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
 /** Film data that stored in firestore. */
 export interface FilmDocumentDTO {
 

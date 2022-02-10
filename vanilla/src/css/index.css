@@ -73,7 +73,7 @@ mdl-layout__header-row {
 }
 
 .details-card {
-  height: 70%;
+  min-height: 70%;
   width: 40%;
   margin: 100px auto;
   padding: 20px;
