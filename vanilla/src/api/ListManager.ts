@@ -3,7 +3,6 @@ import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limi
 
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
 import { filmMapper, IMapperFromDto } from '../entities/mappers/filmMapper';
-
 import { FILMS_COLLECTION } from '../utils/constants';
 
 import { db } from './firebase-config';

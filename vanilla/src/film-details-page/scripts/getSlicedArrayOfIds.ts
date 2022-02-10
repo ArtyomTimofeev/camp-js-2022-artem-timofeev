@@ -1,8 +1,8 @@
 export const getSlicedArrayOfIds = (ids: readonly number[], size: number): number[][] => {
-  const array = ids;
-  const slicedArray: number[][] = [];
-  for (let i = 0; i < Math.ceil(array.length / size); i++) {
-    slicedArray[i] = array.slice((i * size), (i * size) + size);
+  const idsArray = ids;
+  const slicedIdsArray: number[][] = [];
+  for (let i = 0; i < Math.ceil(idsArray.length / size); i++) {
+    slicedIdsArray[i] = idsArray.slice((i * size), (i * size) + size);
   }
-  return slicedArray;
+  return slicedIdsArray;
 };
