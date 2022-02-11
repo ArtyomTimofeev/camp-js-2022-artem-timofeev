@@ -45,4 +45,7 @@ export interface Film {
 
   /** Model. */
   readonly model: string;
+
+  /** Unique hash id. */
+  readonly uniqHashId: string;
 }

@@ -49,4 +49,7 @@ export interface FilmDocumentDTO {
 
   /** Primary key. */
   readonly pk: number;
+
+  /** Uniqгу hash id. */
+  readonly id: string;
 }

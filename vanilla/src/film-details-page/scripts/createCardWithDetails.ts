@@ -1,4 +1,5 @@
-import { Film } from './../entities/models/film';
+import { Film } from './../../entities/models/film';
+
 export const createCardWithDetails =
 (detailsCard: HTMLElement | null, selectedFilm: Film, planetsNames: string, charactersNames: string): void => {
   if (!detailsCard) {
@@ -14,6 +15,9 @@ export const createCardWithDetails =
   <p><b>Episode №:</b> ${selectedFilm.episodeId}</p>
   <p><b>The planets on which the action took place:</b> ${planetsNames}</p>
   <p><b>Characters featured in the film:</b> ${charactersNames}</p>
+  <button class="delete-film-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+    Delete Card
+  </button>
   `;
   detailsCard.innerHTML = filmDetailsFieldsHTML;
 };

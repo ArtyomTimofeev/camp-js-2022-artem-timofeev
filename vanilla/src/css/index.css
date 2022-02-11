@@ -73,10 +73,14 @@ mdl-layout__header-row {
 }
 
 .details-card {
-  min-height: 70%;
+  min-height: 60%;
   width: 40%;
   margin: 100px auto;
-  padding: 20px;
+  padding: 20px 20px 50px;
   background-color: white;
   border-radius: 4px;
+}
+
+.delete-film-btn {
+  float: right;
 }

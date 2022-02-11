@@ -28,6 +28,7 @@ export const filmMapper: IMapperFromDto<FilmDocumentDTO, Film> = {
       releaseDate: new Date(dto.fields.release_date),
       title: dto.fields.title,
       model: dto.model,
+      uniqHashId: dto.id,
     };
   },
 };

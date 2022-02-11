@@ -1,10 +1,11 @@
-import { fillLoginBtn } from './film-details-page/scripts/fillLoginBtn';
+import { fillLoginBtn } from './scripts/fillLoginBtn';
 import { Film } from './entities/models/film';
 import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
 import { createTable } from './scripts/table';
 import { auth, filmsList } from './api/ListManager';
+import { isUserAuthorized } from './utils/services';
 
 const tableBody = document.querySelector<HTMLTableElement>('.films-table__body');
 const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
@@ -14,6 +15,10 @@ const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next
 
 await filmsList.firstPage();
 fillLoginBtn(loginButton);
+
+if (sortingSelect) {
+  sortingSelect.selectedIndex = 0;
+}
 
 const createFilmsPage = (filmsData: Film[]): void => {
   disableTableButtons(prevPageBtn, nextPageBtn);
@@ -45,9 +50,7 @@ prevPageBtn?.addEventListener('click', async() => {
 });
 
 loginButton?.addEventListener('click', async() => {
-  const isUserAuthorized = JSON.parse(localStorage.isUserAuthorized);
-
-  if (!isUserAuthorized) {
+  if (!isUserAuthorized()) {
     await authService.login(auth);
     fillLoginBtn(loginButton);
   } else {

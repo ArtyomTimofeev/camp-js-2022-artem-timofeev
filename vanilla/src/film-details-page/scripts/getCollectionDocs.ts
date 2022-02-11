@@ -16,7 +16,7 @@ export const getCollectionDocs = async<TDto, TModel>(ids: readonly number[], map
     return getDocs(itemsQuery);
   });
   const snapshotPromises = await Promise.all(queryPromises);
-  const docs = snapshotPromises.map(item => item.docs.map(doc => doc.data()));
+  const docs = snapshotPromises.map(item => item.docs.map(doc => ({ ...doc.data(), id: doc.id })));
   const flatArray = docs.flatMap(items => items.map(dto => mapper.fromDto(dto)));
   return flatArray;
 };

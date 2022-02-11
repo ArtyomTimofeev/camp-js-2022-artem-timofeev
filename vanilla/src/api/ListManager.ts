@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot } from 'firebase/firestore';
+import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot, doc, deleteDoc } from 'firebase/firestore';
 
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
 import { filmMapper, IMapperFromDto } from '../entities/mappers/filmMapper';
@@ -60,7 +60,7 @@ export class ListManager<TDto, TModel> {
     this._currentPageNumber = 1;
     this._sortingType = sortingType;
     this.getNumberOfPages();
-    const queryForDocs = query(collection(db, this._collectionName), orderBy(String(sortingType), 'asc'), limit(this._limitDocs));
+    const queryForDocs = query(collection(db, this._collectionName), orderBy(this._sortingType, 'asc'), limit(this._limitDocs));
     await this.getDocsList(queryForDocs);
   }
 
@@ -88,6 +88,15 @@ export class ListManager<TDto, TModel> {
     await this.getDocsList(queryForDocs);
   }
 
+  /**
+   * Function to delete item of collection.
+   * @param id - Unique hash id of collection item.
+   */
+  public async deleteItemOfCollection(id: string): Promise<void> {
+    const itemDoc = doc(db, this._collectionName, id);
+    await deleteDoc(itemDoc);
+  }
+
   private async getNumberOfPages(): Promise<void> {
     const queryForItems = query(collection(db, this._collectionName));
     const docsSnapshot = await getDocs(queryForItems);
@@ -97,7 +106,7 @@ export class ListManager<TDto, TModel> {
 
   private async getDocsList(queryForDocs): Promise<void> {
     const docsSnapshot = await getDocs(queryForDocs);
-    const docs = docsSnapshot.docs.map(doc => ({ ...doc.data() as TDto, id: doc.id }));
+    const docs = docsSnapshot.docs.map(docElem => ({ ...docElem.data() as TDto, id: docElem.id }));
     this._firstVisibleDoc = docsSnapshot.docs[0];
     this._lastVisibleDoc = docsSnapshot.docs[docsSnapshot.docs.length - 1];
     this._dataOfListItems = docs.map(filmDocument => this.mapper.fromDto(filmDocument));
