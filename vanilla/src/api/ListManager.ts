@@ -19,12 +19,12 @@ const veryBigSymbol = '\uf8ff';
 export class ListManager<TDto, TModel> {
 
   /** Method to set searchString. */
-  public set setSearchString(searchString: string) {
+  public set searchString(searchString: string) {
     this._searchString = searchString;
   }
 
   /** Method to set sortingType. */
-  public set setSortingType(newSortingType: FilmsSortingType) {
+  public set sortingType(newSortingType: FilmsSortingType) {
     this._sortingType = newSortingType;
   }
 

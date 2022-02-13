@@ -56,7 +56,7 @@ loginButton?.addEventListener('click', async() => {
 });
 
 const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
-  filmsList.setSearchString = titleSubstring.trim();
+  filmsList.searchString = titleSubstring.trim();
 
   if (titleSubstring.trim() !== '') {
     if (sortingSelect !== null) {
@@ -64,7 +64,7 @@ const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
 
       sortingSelect.value = FilmsSortingType.Title;
 
-      filmsList.setSortingType = FilmsSortingType.Title;
+      filmsList.sortingType = FilmsSortingType.Title;
     }
   } else if (sortingSelect !== null) {
       sortingSelect.disabled = false;
