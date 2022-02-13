@@ -1,3 +1,4 @@
+import { debounce } from './utils/debounce';
 import { Film } from './entities/models/film';
 import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
@@ -11,6 +12,7 @@ const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
 const sortingSelect = document.querySelector<HTMLSelectElement>('.sort-form__control');
 const prevPageBtn = document.querySelector<HTMLButtonElement>('.films-form__prev-page-btn');
 const nextPageBtn = document.querySelector<HTMLButtonElement>('.films-form__next-page-btn');
+const titleSearchingInput = document.querySelector<HTMLInputElement>('.title-searching-input');
 
 await filmsList.firstPage();
 
@@ -51,4 +53,28 @@ loginButton?.addEventListener('click', async() => {
     await authService.logout(auth);
     loginButton.textContent = LOGIN_TEXT;
   }
+});
+
+const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
+  filmsList.searchString = titleSubstring.trim();
+
+  if (titleSubstring.trim() !== '') {
+    if (sortingSelect !== null) {
+      sortingSelect.disabled = true;
+
+      sortingSelect.value = FilmsSortingType.Title;
+
+      filmsList.sortingType = FilmsSortingType.Title;
+    }
+  } else if (sortingSelect !== null) {
+      sortingSelect.disabled = false;
+    }
+
+  await filmsList.firstPage();
+
+  createFilmsPage(filmsList.dataOfListItems);
+});
+
+titleSearchingInput?.addEventListener('input', () => {
+  сreateFilmsPageOnSearch(titleSearchingInput.value);
 });
