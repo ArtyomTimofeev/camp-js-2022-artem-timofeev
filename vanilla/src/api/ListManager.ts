@@ -75,9 +75,7 @@ export class ListManager<TDto, TModel> {
     this._currentPageNumber = 1;
     this._sortingType = sortingType;
     this.getNumberOfPages();
-
     let queryForDocs: Query;
-
     if (this._searchString === '') {
       queryForDocs = query(collection(db, this._collectionName), orderBy(String(sortingType), 'asc'), limit(this._limitDocs));
     } else {
@@ -87,7 +85,6 @@ export class ListManager<TDto, TModel> {
         where(this._sortingType, '>=', this._searchString),
         where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
     }
-
     await this.getDocsList(queryForDocs);
   }
 
@@ -110,7 +107,6 @@ export class ListManager<TDto, TModel> {
         where(this._sortingType, '>=', this._searchString),
         where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
     }
-
     await this.getDocsList(queryForDocs);
   }
 
@@ -133,7 +129,6 @@ export class ListManager<TDto, TModel> {
         where(this._sortingType, '>=', this._searchString),
         where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
     }
-
     await this.getDocsList(queryForDocs);
   }
 

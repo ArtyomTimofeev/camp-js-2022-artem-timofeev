@@ -67,17 +67,13 @@ const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
   if (titleSubstring.trim() !== '') {
     if (sortingSelect !== null) {
       sortingSelect.disabled = true;
-
       sortingSelect.value = FilmsSortingType.Title;
-
       filmsList.sortingType = FilmsSortingType.Title;
     }
   } else if (sortingSelect !== null) {
       sortingSelect.disabled = false;
     }
-
   await filmsList.firstPage();
-
   createFilmsPage(filmsList.dataOfListItems);
 });
 
