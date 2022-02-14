@@ -84,3 +84,7 @@ mdl-layout__header-row {
 .delete-film-btn {
   float: right;
 }
+.title-searching-form {
+  display: flex;
+  justify-content: center;
+}

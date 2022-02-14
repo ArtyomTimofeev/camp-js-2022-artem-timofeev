@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot, where, Query, doc, deleteDoc } from 'firebase/firestore';
 
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
 import { filmMapper, IMapperFromDto } from '../entities/mappers/filmMapper';
@@ -9,10 +9,23 @@ import { db } from './firebase-config';
 
 export const auth = getAuth();
 
+/** Constant for title searching. */
+const veryBigSymbol = '\uf8ff';
+
 /**
  *  Universal manager class that allows to work with the data of any collection.
  */
 export class ListManager<TDto, TModel> {
+
+  /** Method to set searchString. */
+  public set searchString(searchString: string) {
+    this._searchString = searchString;
+  }
+
+  /** Method to set sortingType. */
+  public set sortingType(newSortingType: FilmsSortingType) {
+    this._sortingType = newSortingType;
+  }
 
   /** Method to get dataOfListItems. */
   public get dataOfListItems(): TModel[] {
@@ -37,13 +50,15 @@ export class ListManager<TDto, TModel> {
 
   private _currentPageNumber = 1;
 
-  private _sortingType: string = FilmsSortingType.Default;
+  private _sortingType: FilmsSortingType = FilmsSortingType.Default;
 
   private _firstVisibleDoc: QueryDocumentSnapshot<unknown> | null = null;
 
   private _lastVisibleDoc: QueryDocumentSnapshot<unknown> | null = null;
 
   private _limitDocs = 3;
+
+  private _searchString = '';
 
   private readonly mapper: IMapperFromDto<TDto, TModel>;
 
@@ -60,7 +75,19 @@ export class ListManager<TDto, TModel> {
     this._currentPageNumber = 1;
     this._sortingType = sortingType;
     this.getNumberOfPages();
-    const queryForDocs = query(collection(db, this._collectionName), orderBy(this._sortingType, 'asc'), limit(this._limitDocs));
+
+    let queryForDocs: Query;
+
+    if (this._searchString === '') {
+      queryForDocs = query(collection(db, this._collectionName), orderBy(String(sortingType), 'asc'), limit(this._limitDocs));
+    } else {
+      queryForDocs = query(collection(db, this._collectionName),
+        orderBy(this._sortingType, 'asc'),
+        limit(this._limitDocs),
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
+    }
+
     await this.getDocsList(queryForDocs);
   }
 
@@ -69,10 +96,21 @@ export class ListManager<TDto, TModel> {
    */
   public async nextPage(): Promise<void> {
     this._currentPageNumber++;
-    const queryForDocs = query(collection(db, this._collectionName),
-      orderBy(this._sortingType, 'asc'),
-      limit(this._limitDocs),
-      startAfter(this._lastVisibleDoc));
+    let queryForDocs: Query;
+    if (this._searchString === '') {
+      queryForDocs = query(collection(db, this._collectionName),
+        orderBy(this._sortingType, 'asc'),
+        limit(this._limitDocs),
+        startAfter(this._lastVisibleDoc));
+    } else {
+      queryForDocs = query(collection(db, this._collectionName),
+        orderBy(this._sortingType, 'asc'),
+        limit(this._limitDocs),
+        startAfter(this._lastVisibleDoc),
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
+    }
+
     await this.getDocsList(queryForDocs);
   }
 
@@ -81,10 +119,21 @@ export class ListManager<TDto, TModel> {
    */
   public async prevPage(): Promise<void> {
     this._currentPageNumber--;
-    const queryForDocs = query(collection(db, this._collectionName),
-      orderBy(this._sortingType, 'asc'),
-      limitToLast(this._limitDocs),
-      endBefore(this._firstVisibleDoc));
+    let queryForDocs: Query;
+    if (this._searchString === '') {
+      queryForDocs = query(collection(db, this._collectionName),
+        orderBy(this._sortingType, 'asc'),
+        limitToLast(this._limitDocs),
+        endBefore(this._firstVisibleDoc));
+    } else {
+      queryForDocs = query(collection(db, this._collectionName),
+        orderBy(this._sortingType, 'asc'),
+        limitToLast(this._limitDocs),
+        endBefore(this._firstVisibleDoc),
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
+    }
+
     await this.getDocsList(queryForDocs);
   }
 
@@ -98,13 +147,21 @@ export class ListManager<TDto, TModel> {
   }
 
   private async getNumberOfPages(): Promise<void> {
-    const queryForItems = query(collection(db, this._collectionName));
+    let queryForItems: Query;
+    if (this._searchString === '') {
+      queryForItems = query(collection(db, this._collectionName));
+    } else {
+      queryForItems = query(collection(db, this._collectionName),
+        where(this._sortingType, '>=', this._searchString),
+        where(this._sortingType, '<=', `${this._searchString}${veryBigSymbol}`));
+    }
+
     const docsSnapshot = await getDocs(queryForItems);
     const numberOfAllDocs = docsSnapshot.docs.length;
     this._numberOfPages = Math.ceil(numberOfAllDocs / this._limitDocs);
   }
 
-  private async getDocsList(queryForDocs): Promise<void> {
+  private async getDocsList(queryForDocs: Query): Promise<void> {
     const docsSnapshot = await getDocs(queryForDocs);
     const docs = docsSnapshot.docs.map(docElem => ({ ...docElem.data() as TDto, id: docElem.id }));
     this._firstVisibleDoc = docsSnapshot.docs[0];
