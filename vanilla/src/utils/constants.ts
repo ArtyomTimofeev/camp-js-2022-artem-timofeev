@@ -12,3 +12,6 @@ export const LOGIN_TEXT = 'Log in';
 
 /** Button text content when user is logged in.*/
 export const LOGOUT_TEXT = 'Log out';
+
+/** Size of portion to get items from db.*/
+export const PORTION_SIZE = 10;

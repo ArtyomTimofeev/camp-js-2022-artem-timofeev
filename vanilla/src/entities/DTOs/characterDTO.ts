@@ -1,5 +1,4 @@
 /** Character DTO. */
-/** Character data that stored in firestore. */
 export interface CharacterDTO {
 
   /** Character fields. */

@@ -1,4 +1,4 @@
-/** Film data that stored in firestore. */
+/** Film Dto. */
 export interface FilmDocumentDTO {
 
   /** Film fields. */

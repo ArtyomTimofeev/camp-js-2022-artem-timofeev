@@ -4,20 +4,22 @@ import { Auth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/aut
  * Class for working with authorization.
  */
 class AuthService {
+  public isUserAuthorized = false;
 
   /**
    * Function to set isUserAuthorized flag to local storage.
    * @param isUserAuthFlag - Flag indicating whether the user is logged in (true/false).
    */
-  public set setIsUserAuthorized(isUserAuthFlag: boolean) {
-    localStorage.isUserAuthorized = isUserAuthFlag;
+  public set isUserAuthorizedLocalStorage(isUserAuthFlag: boolean) {
+    localStorage.isUserAuthorized = this.isUserAuthorized;
+    this.isUserAuthorized = isUserAuthFlag;
   }
 
   /**
    * Function to return isUserAuthorized flag from local storage.
    * @returns IsUserAuthorized flag from local storage.
    */
-  public get getIsUserAuthorized(): boolean {
+  public get isUserAuthorizedLocalStorage(): boolean {
     return JSON.parse(localStorage.isUserAuthorized);
   }
 
@@ -27,7 +29,7 @@ class AuthService {
    */
   public async logout(auth: Auth): Promise<void> {
     await signOut(auth);
-    this.setIsUserAuthorized = false;
+    this.isUserAuthorizedLocalStorage = false;
   }
 
   /**
@@ -37,7 +39,7 @@ class AuthService {
   public async login(auth: Auth): Promise <void> {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
-    this.setIsUserAuthorized = true;
+    this.isUserAuthorizedLocalStorage = true;
   }
 }
 

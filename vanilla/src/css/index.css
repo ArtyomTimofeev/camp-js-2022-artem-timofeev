@@ -2,6 +2,7 @@
   --main-bg-color: rgb(232, 232, 232);
   --sort-select-font-color: rgb(46, 46, 46);
   --select-border-color: rgb(68, 68, 68);
+  --card-background-color: white;
 }
 
 main {
@@ -77,13 +78,14 @@ mdl-layout__header-row {
   width: 40%;
   margin: 100px auto;
   padding: 20px 20px 50px;
-  background-color: white;
+  background-color: var(--card-background-color);
   border-radius: 4px;
 }
 
 .delete-film-btn {
   float: right;
 }
+
 .title-searching-form {
   display: flex;
   justify-content: center;

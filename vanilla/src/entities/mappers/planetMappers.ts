@@ -1,7 +1,7 @@
 import { Planet } from './../models/planet';
 import { PlanetDto } from './../DTOs/planetDTO';
 
-export namespace planetMappers {
+export namespace PlanetMappers {
 
   /**
    * Maps Planet DTO to Planet model.

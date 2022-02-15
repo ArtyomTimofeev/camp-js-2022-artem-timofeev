@@ -1,7 +1,7 @@
 import { Character } from './../models/character';
 import { CharacterDTO } from './../DTOs/characterDTO';
 
-export namespace characterMappers {
+export namespace CharacterMappers {
 
   /**
    * Maps Character DTO to Character model.

@@ -10,7 +10,6 @@
       },
       "extends": ["@chernodub/eslint-config"],
       "rules": {
-        "@typescript-eslint/no-explicit-any": 0,
         "linebreak-style": 0
       }
     }

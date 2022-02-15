@@ -4,7 +4,7 @@
  * @param delay - Miliseconds of delay. Default value is 1000ms.
  * @returns Function which executes callback and redelays it.
  */
-export function debounce<Params extends any[]>(callback: (...args: Params) => unknown, delay = 1000): Function {
+export function debounce<Params extends unknown[]>(callback: (...args: Params) => unknown, delay = 1000): Function {
   let timeoutId: number | null = null;
 
   return (...args: Params) => {

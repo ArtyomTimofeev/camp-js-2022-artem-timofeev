@@ -8,7 +8,7 @@ export const fillLoginBtn = (loginButton: HTMLButtonElement | null): void => {
       return;
     }
 
-    if (authService.getIsUserAuthorized) {
+    if (authService.isUserAuthorized) {
       loginButton.textContent = LOGOUT_TEXT;
     } else {
       loginButton.textContent = LOGIN_TEXT;

@@ -1,6 +1,5 @@
 {
     "rules": {
-        "@typescript-eslint/no-explicit-any": 0,
         "linebreak-style": 0,
         "@typescript-eslint/naming-convention": 0
     }

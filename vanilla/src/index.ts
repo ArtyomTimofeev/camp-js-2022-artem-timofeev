@@ -51,7 +51,7 @@ prevPageBtn?.addEventListener('click', async() => {
 });
 
 loginButton?.addEventListener('click', async() => {
-  if (!authService.getIsUserAuthorized) {
+  if (!authService.isUserAuthorizedLocalStorage) {
     await authService.login(auth);
     fillLoginBtn(loginButton);
   } else {
@@ -60,7 +60,7 @@ loginButton?.addEventListener('click', async() => {
   }
 });
 
-const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
+const createFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
   filmsList.searchString = titleSubstring.trim();
 
   if (titleSubstring.trim() !== '') {
@@ -77,5 +77,5 @@ const сreateFilmsPageOnSearch = debounce(async(titleSubstring: string) => {
 });
 
 titleSearchingInput?.addEventListener('input', () => {
-  сreateFilmsPageOnSearch(titleSearchingInput.value);
+  createFilmsPageOnSearch(titleSearchingInput.value);
 });
