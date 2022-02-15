@@ -1,8 +1,7 @@
-import { getDocs, query, where } from 'firebase/firestore';
+import { query, where } from 'firebase/firestore';
 
 import { CHARACTERS_COLLECTION, FILMS_COLLECTION, PLANETS_COLLECTION } from '../utils/constants';
 import { planetMappers } from '../entities/mappers/planetMappers';
-import { filmMapper } from '../entities/mappers/filmMapper';
 import { characterMappers } from '../entities/mappers/charactersMappers';
 import { FilmDocumentDTO } from '../entities/DTOs/filmDTO';
 import { filmsList } from '../api/ListManager';
@@ -26,8 +25,7 @@ const selectedFilmQuery = query(
   getCollectionRef<FilmDocumentDTO>(FILMS_COLLECTION),
   where('pk', '==', filmId),
 );
-const docs = await getDocs(selectedFilmQuery);
-const selectedFilm = filmMapper.fromDto({ ...docs.docs[0].data(), id: docs.docs[0].id });
+const selectedFilm = await filmsList.getDocItem(selectedFilmQuery);
 
 const planets = await getCollectionDocs(selectedFilm.planetsIds, planetMappers, PLANETS_COLLECTION);
 const planetsNames = getNamesOfCollectionItems(planets);
@@ -40,6 +38,6 @@ createCardWithDetails(detailsCard, selectedFilm, planetsNames, charactersNames);
 const deleteFilmBtn = document.querySelector<HTMLButtonElement>('.delete-film-btn');
 deleteFilmBtn?.addEventListener('click', async() => {
   deleteFilmBtn.disabled = true;
-  await filmsList.deleteItemOfCollection(selectedFilm.uniqHashId);
+  await filmsList.deleteItemOfCollection(selectedFilm.firebaseId);
   window.history.back();
 });

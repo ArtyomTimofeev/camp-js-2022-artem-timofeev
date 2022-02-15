@@ -133,6 +133,16 @@ export class ListManager<TDto, TModel> {
   }
 
   /**
+   * Function to get doc item of collection.
+   * @param queryForDocItem Query for doc item.
+   * @returns Model of doc item.
+   */
+  public async getDocItem(queryForDocItem): Promise<TModel> {
+    const filmDoc = await getDocs(queryForDocItem);
+    return this.mapper.fromDto({ ...filmDoc.docs[0].data() as TDto, id: filmDoc.docs[0].id });
+  }
+
+  /**
    * Function to delete item of collection.
    * @param id - Unique hash id of collection item.
    */
