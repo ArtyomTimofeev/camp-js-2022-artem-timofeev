@@ -6,7 +6,6 @@ import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
 import { createTable } from './scripts/table';
 import { auth, filmsList } from './api/ListManager';
-import { isUserAuthorized } from './utils/services';
 
 const tableBody = document.querySelector<HTMLTableElement>('.films-table__body');
 const loginButton = document.querySelector<HTMLButtonElement>('.login-button');
@@ -52,7 +51,7 @@ prevPageBtn?.addEventListener('click', async() => {
 });
 
 loginButton?.addEventListener('click', async() => {
-  if (!isUserAuthorized()) {
+  if (!authService.getIsUserAuthorized) {
     await authService.login(auth);
     fillLoginBtn(loginButton);
   } else {

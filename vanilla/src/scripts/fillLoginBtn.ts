@@ -1,5 +1,6 @@
 import { LOGOUT_TEXT, LOGIN_TEXT } from '../utils/constants';
-import { isUserAuthorized } from '../utils/services';
+
+import { authService } from './../api/AuthService';
 
 export const fillLoginBtn = (loginButton: HTMLButtonElement | null): void => {
 
@@ -7,7 +8,7 @@ export const fillLoginBtn = (loginButton: HTMLButtonElement | null): void => {
       return;
     }
 
-    if (isUserAuthorized()) {
+    if (authService.getIsUserAuthorized) {
       loginButton.textContent = LOGOUT_TEXT;
     } else {
       loginButton.textContent = LOGIN_TEXT;

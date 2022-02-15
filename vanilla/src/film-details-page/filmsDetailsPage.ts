@@ -6,14 +6,14 @@ import { filmMapper } from '../entities/mappers/filmMapper';
 import { characterMappers } from '../entities/mappers/charactersMappers';
 import { FilmDocumentDTO } from '../entities/DTOs/filmDTO';
 import { filmsList } from '../api/ListManager';
-import { isUserAuthorized } from '../utils/services';
+import { authService } from '../api/AuthService';
 
 import { getCollectionDocs } from './scripts/getCollectionDocs';
 import { getNamesOfCollectionItems } from './scripts/getNamesOfCollectionItems';
 import { getCollectionRef } from './scripts/getCollectionRef';
 import { createCardWithDetails } from './scripts/createCardWithDetails';
 
-if (!isUserAuthorized()) {
+if (!authService.getIsUserAuthorized) {
   window.history.back();
 }
 
