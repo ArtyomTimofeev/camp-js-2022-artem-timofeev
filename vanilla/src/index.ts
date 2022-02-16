@@ -51,7 +51,7 @@ prevPageBtn?.addEventListener('click', async() => {
 });
 
 loginButton?.addEventListener('click', async() => {
-  if (!authService.isUserAuthorizedLocalStorage) {
+  if (!authService.isUserAuthorized) {
     await authService.login(auth);
     fillLoginBtn(loginButton);
   } else {
