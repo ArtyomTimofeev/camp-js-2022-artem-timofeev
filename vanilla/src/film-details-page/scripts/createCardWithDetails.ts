@@ -1,5 +1,13 @@
 import { Film } from './../../entities/models/film';
 
+/**
+ * Function for creating html elements for details card.
+ * @param detailsCard - Root div for html elements.
+ * @param selectedFilm - Selected film.
+ * @param planetsNames - Names of planets.
+ * @param planetsNames - Names of characters.
+ */
+
 export const createCardWithDetails =
 (detailsCard: HTMLElement | null, selectedFilm: Film, planetsNames: string, charactersNames: string): void => {
   if (!detailsCard) {

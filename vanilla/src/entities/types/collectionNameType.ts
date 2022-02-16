@@ -1,1 +1,1 @@
-export type CollectionName = 'films' | 'planets' | 'characters';
+export type CollectionName = 'films' | 'planets' | 'people';

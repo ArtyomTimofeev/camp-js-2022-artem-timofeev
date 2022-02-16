@@ -3,6 +3,8 @@ import { where, getDocs, query } from 'firebase/firestore';
 import { IMapperFromDto } from '../../entities/mappers/filmMapper';
 import { PORTION_SIZE } from '../../utils/constants';
 
+import { CollectionName } from './../../entities/types/collectionNameType';
+
 import { getSlicedArrayOfIds } from './getSlicedArrayOfIds';
 import { getCollectionRef } from './getCollectionRef';
 
@@ -13,8 +15,8 @@ import { getCollectionRef } from './getCollectionRef';
  * @param collectionName Name of collection.
  * @returns Flat array with collection items.
  */
-export const getCollectionDocs = async<TDto, TModel>(ids: readonly number[], mapper: IMapperFromDto<TDto, TModel>, collectionName: string):
-  Promise<TModel[]> => {
+export const getCollectionDocs = async<TDto, TModel>(ids: readonly number[], mapper: IMapperFromDto<TDto, TModel>,
+  collectionName: CollectionName): Promise<TModel[]> => {
   const slicedIdsArr = getSlicedArrayOfIds(ids, PORTION_SIZE);
   const queryPromises = slicedIdsArr.map(chunk => {
     const itemsQuery = query(
