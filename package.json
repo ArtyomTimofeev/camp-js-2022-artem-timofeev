@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@angular-eslint/builder": "^13.1.0",
+    "@angular-eslint/eslint-plugin": "^13.1.0",
+    "@angular-eslint/eslint-plugin-template": "^13.1.0",
+    "@angular-eslint/schematics": "^13.1.0",
+    "@angular-eslint/template-parser": "^13.1.0",
+    "@chernodub/eslint-config": "^2.1.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.4",
+    "prettier": "^2.5.1",
+    "stylelint": "^14.5.1",
+    "stylelint-config-recommended-scss": "^5.0.2"
+  },
+  "lint-staged": {
+    "**/*.{ts,html}": "eslint --cache --fix",
+    "**/*.*css": "stylelint --fix",
+    "**/*.html": "prettier --write"
+  }
+}
