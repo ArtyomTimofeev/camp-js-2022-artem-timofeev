@@ -54,7 +54,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/theme/angular-material-custom-theme.scss",
+              "src/theme/theme.scss",
               "src/styles.css"
             ],
             "scripts": []

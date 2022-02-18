@@ -8,8 +8,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 
 /**
- *Sad as.
+ * Class Navbar.
  */
 export class NavbarComponent {
+  /** IsUserAuthorized flag. */
+  public isUserAuthorized = true;
 
 }

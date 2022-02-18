@@ -1,6 +1,18 @@
 <p>
-  <mat-toolbar color="accent">
+  <mat-toolbar color="primary">
     <span>SW Films</span>
-    <button mat-flat-button color="primary">Login</button>
+    <button
+      *ngIf="isUserAuthorized; else elseCase"
+      mat-flat-button
+      color="accent"
+    >
+      Login
+    </button>
   </mat-toolbar>
 </p>
+
+<ng-template #elseCase>
+  <button mat-flat-button color="accent">Logout</button>
+</ng-template>
+
+<button (click)="isUserAuthorized = !isUserAuthorized">Toggle</button>
