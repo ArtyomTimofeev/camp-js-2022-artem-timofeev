@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+}

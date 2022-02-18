@@ -1,0 +1,38 @@
+/* Custom application color and font settings */
+:root {
+  /* Font */
+  --font-size: 14px;
+  --font-family: sans-serif;
+  --h1-font-size: 21px;
+  --h2-font-size: 14px;
+
+  /* Styles that don't represent the brand (stole this phrase from material.io) */
+
+  /* Base color for a body text. */
+  --base-color: #000000;
+
+  /* Background color appears behind scrollable content. */
+  --base-background-color: #ffffff;
+
+  /* Brand colors */
+  --primary-color: #aa2367;
+  --primary-dark-color: #283593;
+  --primary-light-color: #c5cae9;
+  --primary-contrast-color: #ffffff;
+  --primary-dark-contrast-color: #ffffff;
+  --primary-light-contrast-color: #000000;
+
+  --accent-color: #da9233;
+  --accent-dark-color: #cc7e18;
+  --accent-light-color: #e4c8a3;
+  --accent-contrast-color: #ffffff;
+  --accent-dark-contrast-color: #ffffff;
+  --accent-light-contrast-color: #000000;
+
+  --warn-color: #da3e33;
+  --warn-dark-color: #aa190f;
+  --warn-light-color: #e4746c;
+  --warn-contrast-color: #ffffff;
+  --warn-dark-contrast-color: #ffffff;
+  --warn-light-contrast-color: #000000;
+}
