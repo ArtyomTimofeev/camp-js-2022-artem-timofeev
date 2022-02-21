@@ -4,6 +4,14 @@
 
 export const environment = {
   production: false,
+  firebase: {
+    apiKey: 'AIzaSyBVP4nW_mUDrsy7XfLA50maV4t4b-E9gao',
+    authDomain: 'vanilla-704bf.firebaseapp.com',
+    projectId: 'vanilla-704bf',
+    storageBucket: 'vanilla-704bf.appspot.com',
+    messagingSenderId: '712963765026',
+    appId: '1:712963765026:web:e2b3e16ed3cb6ca6ea6b7b',
+  },
 };
 
 /*

@@ -1,0 +1,11 @@
+{
+  "overrides": [
+    {
+      "rules": {
+        "linebreak-style": 0,
+        "@typescript-eslint/naming-convention": 0
+      },
+      "files": ["**/*.ts"]
+    }
+  ]
+}
