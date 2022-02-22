@@ -52,8 +52,8 @@ export class DataService {
    * Function to delete film doc from films collection.
    * @param film - Removable film doc.
    */
-  public deleteFilm(film: FilmDTO): Observable<void> {
-    const filmDocRef = doc(this.firestore, `films/${film.id}`) as DocumentReference<FilmDTO>;
+  public deleteFilm(id: string): Observable<void> {
+    const filmDocRef = doc(this.firestore, `films/${id}`) as DocumentReference<FilmDTO>;
     return defer(() => deleteDoc(filmDocRef));
   }
 
@@ -61,8 +61,9 @@ export class DataService {
    * Function to update film doc in films collection.
    * @param film - Updated film doc.
    */
-  public updateFilm(film: FilmDTO): Observable<void> {
+  public updateFilm(film: Film): Observable<void> {
+    const dto = filmMapper.toDto(film);
     const filmDocRef = doc(this.firestore, `films/${film.id}`);
-    return defer(() => updateDoc(filmDocRef, { ...film }));
+    return defer(() => updateDoc(filmDocRef, { ...dto }));
   }
 }
