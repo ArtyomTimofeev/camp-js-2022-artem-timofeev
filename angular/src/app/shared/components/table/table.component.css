@@ -1,3 +1,7 @@
 :host {
   display: block;
 }
+
+table {
+  min-width: 1000px;
+}

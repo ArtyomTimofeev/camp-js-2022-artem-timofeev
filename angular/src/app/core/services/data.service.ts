@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { collection, Firestore, collectionData, doc, addDoc, docData, deleteDoc, updateDoc } from '@angular/fire/firestore';
-import { DocumentData } from 'rxfire/firestore/interfaces';
-import { Observable } from 'rxjs';
+import { collection, Firestore, collectionData, doc, addDoc, docData, deleteDoc, updateDoc, CollectionReference, DocumentReference } from '@angular/fire/firestore';
+import { defer, map, Observable } from 'rxjs';
 
 import { FilmDTO } from './mappers/dto/film.dto';
+import { filmMapper } from './mappers/film.mapper';
+import { Film } from './models/film';
 
 /**
  * Data service.
@@ -13,49 +14,55 @@ import { FilmDTO } from './mappers/dto/film.dto';
 })
 export class DataService {
 
-  private constructor(private firestore: Firestore) { }
+  private constructor(private readonly firestore: Firestore) {}
 
   /**
    * Function to get data of films collection.
    */
-  public getFilms(): Observable<FilmDTO[]> {
-    const filmsRef = collection(this.firestore, 'films');
-    return collectionData(filmsRef, { idField: 'id' }) as Observable<FilmDTO[]>;
+  public getFilms(): Observable<Film[]> {
+    const filmsRef = collection(this.firestore, 'films') as CollectionReference<FilmDTO>;
+    return collectionData(filmsRef, { idField: 'id' }).pipe(
+      map(list => list.map(dto => filmMapper.fromDto(dto))),
+    );
   }
 
   /**
    * Function to get film doc by id.
    * @param id - Doc id.
    */
-  public getFilmById(id: string): Observable<FilmDTO[]> {
-    const filmDocRef = doc(this.firestore, `films/${id}`);
-    return docData(filmDocRef, { idField: 'id' }) as Observable<FilmDTO[]>;
+  public getFilmById(id: string): Observable<Film> {
+    const filmDocRef = doc(this.firestore, `films/${id}`) as DocumentReference<FilmDTO>;
+    return docData(filmDocRef, { idField: 'id' }).pipe(
+      map(filmDto => filmMapper.fromDto(filmDto)),
+    );
   }
 
   /**
    * Function to add film doc to films collection.
    * @param film - Added film doc.
    */
-  public addFilm(film: FilmDTO): Promise<DocumentData> {
-    const filmsRef = collection(this.firestore, 'films');
-    return addDoc(filmsRef, film);
+  public addFilm(film: FilmDTO): Observable<string> {
+    const filmsRef = collection(this.firestore, 'films') as CollectionReference<FilmDTO>;
+    return defer(() => addDoc(filmsRef, film)).pipe(
+      map(dto => dto.id),
+    );
   }
 
   /**
    * Function to delete film doc from films collection.
    * @param film - Removable film doc.
    */
-  public deleteFilm(film: FilmDTO): Promise<void> {
-    const filmDocRef = doc(this.firestore, `films/${film.id}`);
-    return deleteDoc(filmDocRef);
+  public deleteFilm(film: FilmDTO): Observable<void> {
+    const filmDocRef = doc(this.firestore, `films/${film.id}`) as DocumentReference<FilmDTO>;
+    return defer(() => deleteDoc(filmDocRef));
   }
 
   /**
    * Function to update film doc in films collection.
    * @param film - Updated film doc.
    */
-  public updateFilm(film: FilmDTO): Promise<void> {
+  public updateFilm(film: FilmDTO): Observable<void> {
     const filmDocRef = doc(this.firestore, `films/${film.id}`);
-    return updateDoc(filmDocRef, {/** Todo.*/});
+    return defer(() => updateDoc(filmDocRef, { ...film }));
   }
 }

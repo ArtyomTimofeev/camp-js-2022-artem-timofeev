@@ -1,8 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnChanges } from '@angular/core';
-
-import { Film } from 'src/app/core/services/models/film';
-
-import { filmMapper } from '../../../core/services/mappers/film.mapper';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { DataService } from './../../../core/services/data.service';
 
@@ -15,29 +11,12 @@ import { DataService } from './../../../core/services/data.service';
   styleUrls: ['./table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnInit, OnChanges {
-
-  private films: Film[] | [] = [];
+export class TableComponent {
+  public readonly films$ = this.dataService.getFilms();
 
   public constructor(private dataService: DataService) {
-
-  }
-
-  public ngOnInit(): void {
-    this.dataService.getFilms().subscribe(response => {
-      this.films = response.map(filmDocument => filmMapper.fromDto(filmDocument));
-      console.log(this.films);
-    });
-  }
-
-  public ngOnChanges(): void {
-    this.dataService.getFilms().subscribe(response => {
-      this.films = response.map(filmDocument => filmMapper.fromDto(filmDocument));
-      console.log(this.films);
-    });
   }
 
   public displayedColumns: string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
 
-  public dataSource = this.films;
 }
