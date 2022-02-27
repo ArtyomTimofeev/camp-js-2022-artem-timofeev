@@ -1,5 +1,5 @@
 /** Film data that stored in firestore. */
-export interface FilmDTO {
+export interface FilmDto {
 
   /** Film fields. */
   readonly fields: {
@@ -7,26 +7,11 @@ export interface FilmDTO {
     /** Character ids. */
     readonly characters: readonly number[];
 
-    /** Specie ids. */
-    readonly species: readonly number[];
-
-    /** Starship ids. */
-    readonly starships: readonly number[];
-
-    /** Vehicle ids. */
-    readonly vehicles: readonly number[];
-
     /** Planets ids. */
     readonly planets: readonly number[];
 
-    /** Create time (ISO format). */
-    readonly created: string;
-
     /** Director name. */
     readonly director: string;
-
-    /** Edit time (ISO format). */
-    readonly edited: string;
 
     /** Episode id. */
     readonly episode_id: number;
@@ -43,12 +28,6 @@ export interface FilmDTO {
     /** Title. */
     readonly title: string;
   };
-
-  /** Model. */
-  readonly model: string;
-
-  /** Primary key. */
-  readonly pk: number;
 
   /** Id. */
   readonly id: string;

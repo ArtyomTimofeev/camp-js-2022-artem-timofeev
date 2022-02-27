@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+table {
+  min-width: 800px;
+}
+
+.mat-elevation-z8 {
+  width: 800px;
+}
