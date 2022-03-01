@@ -36,5 +36,4 @@ export class TableComponent implements OnInit {
   public filterData($event: any): void {
     this.dataSource.filter = $event.target.value;
   }
-
 }

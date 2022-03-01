@@ -9,3 +9,10 @@ table {
 .mat-elevation-z8 {
   width: 800px;
 }
+
+.sw-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+}

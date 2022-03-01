@@ -3,7 +3,6 @@ import { collection, Firestore, collectionData, doc, addDoc, docData, deleteDoc,
 import { defer, map, Observable } from 'rxjs';
 
 import { FilmMapper } from './mappers/film.mapper';
-
 import { FilmDto } from './mappers/dto/film.dto';
 import { Film } from './models/film';
 
@@ -14,7 +13,7 @@ import { Film } from './models/film';
   providedIn: 'root',
 })
 export class DataService {
-  private constructor (
+  private constructor(
     private readonly firestore: Firestore,
     private readonly filmMapper: FilmMapper,
   ) {}

@@ -4,6 +4,7 @@
     <button
       *ngIf="isUserAuthorized; else elseCase"
       mat-flat-button
+      (click)="login()"
       color="accent"
     >
       Login
