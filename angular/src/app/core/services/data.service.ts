@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { collection, Firestore, collectionData, doc, addDoc, docData, deleteDoc, updateDoc, DocumentReference, CollectionReference } from '@angular/fire/firestore';
+import {
+  collection, Firestore, collectionData, doc, addDoc, docData,
+  deleteDoc, updateDoc, DocumentReference, CollectionReference,
+} from '@angular/fire/firestore';
 import { defer, map, Observable } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
 import { FilmMapper } from './mappers/film.mapper';
 import { FilmDto } from './mappers/dto/film.dto';

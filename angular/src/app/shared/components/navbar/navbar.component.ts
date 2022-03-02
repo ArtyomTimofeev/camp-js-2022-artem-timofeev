@@ -1,7 +1,6 @@
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
-import { Auth } from '@angular/fire/auth';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 /**
  * Class Navbar.
@@ -14,13 +13,5 @@ import { Auth } from '@angular/fire/auth';
 })
 export class NavbarComponent {
 
-  public constructor(private readonly auth: Auth) {}
-
-  /** IsUserAuthorized flag. */
-  public isUserAuthorized = true;
-
-  public login(): void {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(this.auth, provider);
-  }
+  public constructor(public readonly authenticationService: AuthenticationService) {}
 }

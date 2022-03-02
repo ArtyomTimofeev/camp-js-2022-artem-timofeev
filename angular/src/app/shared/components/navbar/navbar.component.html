@@ -2,16 +2,22 @@
   <mat-toolbar color="primary">
     <span>SW Films</span>
     <button
-      *ngIf="isUserAuthorized; else elseCase"
+      *ngIf="authenticationService.isUserAuthorized$ | async; else elseCase"
       mat-flat-button
-      (click)="login()"
+      (click)="authenticationService.logout()"
       color="accent"
     >
-      Login
+      Logout
     </button>
   </mat-toolbar>
 </p>
 
 <ng-template #elseCase>
-  <button mat-flat-button color="accent">Logout</button>
+  <button
+    mat-flat-button
+    (click)="authenticationService.login()"
+    color="accent"
+  >
+    Login
+  </button>
 </ng-template>

@@ -16,6 +16,9 @@ const routes: Routes = [
   },
 ];
 
+/**
+ * FilmsModule.
+ */
 @NgModule({
   declarations: [TableComponent],
   imports: [

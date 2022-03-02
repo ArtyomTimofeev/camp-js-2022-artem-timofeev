@@ -1,4 +1,3 @@
-import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -33,5 +32,6 @@ import { FilmsModule } from './features/films/films.module';
     provideAuth(() => getAuth()),
   ],
   bootstrap: [AppComponent],
+  providers: [],
 })
 export class AppModule { }
