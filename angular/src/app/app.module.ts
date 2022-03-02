@@ -9,6 +9,8 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 
+import { AngularFireModule } from '@angular/fire/compat';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
@@ -30,6 +32,7 @@ import { FilmsModule } from './features/films/films.module';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
+    AngularFireModule.initializeApp(environment.firebase),
   ],
   bootstrap: [AppComponent],
   providers: [],

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  collection, Firestore, collectionData, doc, addDoc, docData,
+  collection, Firestore, doc, addDoc, docData,
   deleteDoc, updateDoc, DocumentReference, CollectionReference,
 } from '@angular/fire/firestore';
 import { defer, map, Observable } from 'rxjs';
@@ -17,17 +17,44 @@ import { Film } from './models/film';
   providedIn: 'root',
 })
 export class DataService {
+
+  private defaultPageSize = 3;
+
+  private filmsCollection: AngularFirestoreCollection<FilmDto>;
+
+  public films$: Observable<FilmDto[]>;
+
+  /** Last visible doc as cursor to paginate data. */
+  public lastVisibleDoc: any = null;
+
+  /** First visible doc as cursor to paginate data. */
+  public firstVisibleDoc: any = null;
+
   private constructor(
     private readonly firestore: Firestore,
     private readonly filmMapper: FilmMapper,
-  ) {}
+    private afs: AngularFirestore,
+  ) {
+    this.filmsCollection = afs.collection<FilmDto>('films', ref => ref.limit(this.defaultPageSize));
+    this.films$ = this.filmsCollection.valueChanges();
+  }
+
+  public nextPage(): void {
+    this.afs.collection<FilmDto>('films', ref => ref.limit(this.defaultPageSize).startAfter(this.lastVisibleDoc));
+  }
 
   /**
    * Function to get data of films collection.
+   * @param pageSize - Number of elements on page.
    */
-  public getFilms(): Observable<Film[]> {
-    const filmsRef = collection(this.firestore, 'films') as CollectionReference<FilmDto>;
-    return collectionData(filmsRef, { idField: 'id' }).pipe(
+  public getFilms(pageSize: number = this.defaultPageSize): Observable<Film[]> {
+    this.defaultPageSize = pageSize;
+    const filmsCollection = this.afs.collection<FilmDto>('films', ref => ref.limit(this.defaultPageSize));
+    filmsCollection.snapshotChanges().subscribe(res => {
+      this.lastVisibleDoc = res[res.length - 1].payload.doc;
+      this.firstVisibleDoc = res[0].payload.doc;
+    });
+    return filmsCollection.valueChanges().pipe(
       map(list => list.map(dto => this.filmMapper.fromDto(dto))),
     );
   }
