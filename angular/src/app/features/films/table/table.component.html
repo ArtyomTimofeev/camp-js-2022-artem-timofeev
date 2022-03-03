@@ -5,7 +5,13 @@
     </mat-form-field>
   </div>
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table
+      *ngIf="films$ | async as films"
+      mat-table
+      [dataSource]="films"
+      matSort
+      (matSortChange)="($event); announceSortChange($event)"
+    >
       <!-- Position Column -->
       <ng-container matColumnDef="title">
         <th
@@ -18,7 +24,6 @@
         </th>
         <td mat-cell *matCellDef="let element">{{ element.title }}</td>
       </ng-container>
-
       <!-- Name Column -->
       <ng-container matColumnDef="episodeId">
         <th
@@ -64,10 +69,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
     <mat-paginator
-      #paginator
-      pageSize="3"
+      pageSize="6"
       [pageSizeOptions]="[2, 3, 6]"
-      showFirstLastButtons
       aria-label="Select page of periodic elements"
       (page)="($event); onPaginateChange($event)"
     >

@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatest, switchMap } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from 'src/app/core/services/data.service';
 
@@ -13,33 +14,36 @@ import { DataService } from 'src/app/core/services/data.service';
   styleUrls: ['./table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnInit {
+export class TableComponent {
   /** Stream wih films data.*/
   public displayedColumns: string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
 
-  public dataSource!: MatTableDataSource<any>;
+  private readonly pageSize$ = new BehaviorSubject(6);
 
-  @ViewChild('paginator') public paginator!: MatPaginator;
+  private readonly sortField$ = new BehaviorSubject<Sort>({
+    direction: 'asc',
+    active: 'title',
+  });
 
-  @ViewChild(MatSort) public matSort!: MatSort;
+  public readonly films$ = combineLatest([
+    this.pageSize$,
+    this.sortField$,
+  ]).pipe(
+    switchMap(([pageSize, sortField]) => this.dataService.getFilms(pageSize, sortField)),
+  );
 
   public constructor(private dataService: DataService) {}
 
-  public ngOnInit(): void {
-    this.dataService.getFilms().subscribe(response => {
-      this.dataSource = new MatTableDataSource(response);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.matSort;
-    });
-  }
-
   public filterData($event: any): void {
-    this.dataSource.filter = $event.target.value;
+
   }
 
   public onPaginateChange($event: PageEvent): void {
-    this.dataService.getFilms($event.pageSize).subscribe(response => {
-      this.dataSource = new MatTableDataSource(response);
-    });
+    this.pageSize$.next($event.pageSize);
+  }
+
+  public announceSortChange(sort: Sort): void {
+    console.log(sort);
+    this.sortField$.next(sort);
   }
 }

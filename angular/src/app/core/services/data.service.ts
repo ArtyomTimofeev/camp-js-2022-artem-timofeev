@@ -3,8 +3,9 @@ import {
   collection, Firestore, doc, addDoc, docData,
   deleteDoc, updateDoc, DocumentReference, CollectionReference,
 } from '@angular/fire/firestore';
-import { defer, map, Observable } from 'rxjs';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { defer, map, Observable, tap } from 'rxjs';
+import { AngularFirestore, QueryDocumentSnapshot } from '@angular/fire/compat/firestore';
+import { Sort } from '@angular/material/sort';
 
 import { FilmMapper } from './mappers/film.mapper';
 import { FilmDto } from './mappers/dto/film.dto';
@@ -18,45 +19,44 @@ import { Film } from './models/film';
 })
 export class DataService {
 
-  private defaultPageSize = 3;
-
-  private filmsCollection: AngularFirestoreCollection<FilmDto>;
-
-  public films$: Observable<FilmDto[]>;
-
   /** Last visible doc as cursor to paginate data. */
-  public lastVisibleDoc: any = null;
+  public lastVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
 
   /** First visible doc as cursor to paginate data. */
-  public firstVisibleDoc: any = null;
+  public firstVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
 
   private constructor(
     private readonly firestore: Firestore,
     private readonly filmMapper: FilmMapper,
     private afs: AngularFirestore,
-  ) {
-    this.filmsCollection = afs.collection<FilmDto>('films', ref => ref.limit(this.defaultPageSize));
-    this.films$ = this.filmsCollection.valueChanges();
-  }
-
-  public nextPage(): void {
-    this.afs.collection<FilmDto>('films', ref => ref.limit(this.defaultPageSize).startAfter(this.lastVisibleDoc));
-  }
+  ) {}
 
   /**
    * Function to get data of films collection.
    * @param pageSize - Number of elements on page.
+   * @param sortingType - Type of sorting.
    */
-  public getFilms(pageSize: number = this.defaultPageSize): Observable<Film[]> {
-    this.defaultPageSize = pageSize;
-    const filmsCollection = this.afs.collection<FilmDto>('films', ref => ref.limit(this.defaultPageSize));
-    filmsCollection.snapshotChanges().subscribe(res => {
-      this.lastVisibleDoc = res[res.length - 1].payload.doc;
-      this.firstVisibleDoc = res[0].payload.doc;
+  public getFilms(pageSize: number, sortingType: Sort): Observable<Film[]> {
+    const sortQuery = this.filmMapper.toDtoSortQuery(sortingType);
+    const filmsCollection = this.afs.collection<FilmDto>('films', ref => {
+      if (sortQuery) {
+        return ref.limit(pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr);
+      }
+      return ref.limit(pageSize);
     });
-    return filmsCollection.valueChanges().pipe(
+    return filmsCollection.snapshotChanges().pipe(
+      tap(snapshot => {
+        this.lastVisibleDoc = snapshot[snapshot.length - 1].payload.doc;
+        this.firstVisibleDoc = snapshot[0].payload.doc;
+      }),
+      map(snapshot => snapshot.map(s => s.payload.doc.data())),
       map(list => list.map(dto => this.filmMapper.fromDto(dto))),
     );
+  }
+
+  public nextPage(pageSize: number): Observable<FilmDto[]> {
+    const filmsCollection = this.afs.collection<FilmDto>('films', ref => ref.limit(pageSize).startAfter(this.lastVisibleDoc));
+    return filmsCollection.valueChanges();
   }
 
   /**

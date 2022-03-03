@@ -1,15 +1,31 @@
+
 import { Injectable } from '@angular/core';
+import { OrderByDirection } from '@angular/fire/firestore';
+import { Sort } from '@angular/material/sort';
 
 import { Film } from '../models/film';
 
 import { FilmDto } from './dto/film.dto';
 import { IMapperFromDto } from './mappers';
 
+const DEFAULT_SORTING = '';
+interface FirebaseSort {
+  fieldPath: string;
+  directionStr?: OrderByDirection;
+}
+
 /** Film mapper. */
 @Injectable({
   providedIn: 'root',
 })
 export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
+
+  public querySortMap: Map<string, string> = new Map([
+    ['releaseDate', 'release_date'],
+    ['episodeId', 'episode_id'],
+    ['title', 'title'],
+    ['producer', 'producer'],
+  ]);
 
   /** @inheritdoc */
   public fromDto(dto: FilmDto): Film {
@@ -41,5 +57,15 @@ export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
         episode_id: model.episodeId,
       },
     };
+  }
+
+  public toDtoSortQuery(sort: Sort): FirebaseSort | '' {
+    if (sort?.direction && this.querySortMap.has(sort.active)) {
+      return {
+        fieldPath: `fields.${this.querySortMap.get(sort.active)}`,
+        directionStr: sort.direction,
+      };
+    }
+    return DEFAULT_SORTING;
   }
 }
