@@ -1,13 +1,14 @@
+import { PageEvent } from '@angular/material/paginator';
 import { Injectable } from '@angular/core';
 import {
   collection, Firestore, doc, addDoc, docData,
   deleteDoc, updateDoc, DocumentReference, CollectionReference,
 } from '@angular/fire/firestore';
 import { defer, map, Observable, tap } from 'rxjs';
-import { AngularFirestore, QueryDocumentSnapshot } from '@angular/fire/compat/firestore';
+import { AngularFirestore, QueryDocumentSnapshot, AngularFirestoreCollection, QueryFn } from '@angular/fire/compat/firestore';
 import { Sort } from '@angular/material/sort';
 
-import { FilmMapper } from './mappers/film.mapper';
+import { FilmMapper, FirebaseSort } from './mappers/film.mapper';
 import { FilmDto } from './mappers/dto/film.dto';
 import { Film } from './models/film';
 
@@ -25,6 +26,8 @@ export class DataService {
   /** First visible doc as cursor to paginate data. */
   public firstVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
 
+  private sortConfig: FirebaseSort | null = null;
+
   private constructor(
     private readonly firestore: Firestore,
     private readonly filmMapper: FilmMapper,
@@ -33,17 +36,23 @@ export class DataService {
 
   /**
    * Function to get data of films collection.
-   * @param pageSize - Number of elements on page.
-   * @param sortingType - Type of sorting.
+   * @param pageConfig - Number of elements on page.
+   * @param sortConfig - Type of sorting.
    */
-  public getFilms(pageSize: number, sortingType: Sort): Observable<Film[]> {
-    const sortQuery = this.filmMapper.toDtoSortQuery(sortingType);
-    const filmsCollection = this.afs.collection<FilmDto>('films', ref => {
-      if (sortQuery) {
-        return ref.limit(pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr);
-      }
-      return ref.limit(pageSize);
-    });
+  public getFilms(pageConfig: PageEvent, sortConfig: Sort | null): Observable<Film[]> {
+
+    // const sortQuery = this.filmMapper.toDtoSortQuery(sortConfig as Sort);
+    // if (pageConfig.previousPageIndex && pageConfig.pageIndex > pageConfig.previousPageIndex) {
+    //   return this.nextPage(pageConfig, sortConfig);
+    // }
+    const filmsCollection = this.afs.collection<FilmDto>('films', this.getQueryFunc(pageConfig, sortConfig));
+
+    // const filmsCollection = this.afs.collection<FilmDto>('films', ref => {
+    //   if (sortQuery) {
+    //     return ref.limit(pageConfig.pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr);
+    //   }
+    //   return ref.limit(pageConfig.pageSize);
+    // });
     return filmsCollection.snapshotChanges().pipe(
       tap(snapshot => {
         this.lastVisibleDoc = snapshot[snapshot.length - 1].payload.doc;
@@ -54,9 +63,49 @@ export class DataService {
     );
   }
 
-  public nextPage(pageSize: number): Observable<FilmDto[]> {
-    const filmsCollection = this.afs.collection<FilmDto>('films', ref => ref.limit(pageSize).startAfter(this.lastVisibleDoc));
-    return filmsCollection.valueChanges();
+  private getQueryFunc(pageConfig: PageEvent, sortConfig: Sort | null): QueryFn {
+    return ref => {
+      const sortQuery = this.filmMapper.toDtoSortQuery(sortConfig as Sort);
+      let query = ref.limit(pageConfig.pageSize);
+      if (sortQuery) {
+        query = query.orderBy(sortQuery.fieldPath, sortQuery.directionStr);
+        if (pageConfig.pageIndex > Number(pageConfig.previousPageIndex)) {
+          query = query.startAfter(this.lastVisibleDoc);
+        }
+        if (Number(pageConfig.pageIndex) < Number(pageConfig.previousPageIndex)) {
+          query = ref.limitToLast(pageConfig.pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr)
+            .endBefore(this.firstVisibleDoc);
+        }
+
+      }
+      if (!sortQuery) {
+        if (pageConfig.pageIndex > Number(pageConfig.previousPageIndex)) {
+          query = query.startAfter(this.lastVisibleDoc);
+        }
+        if (Number(pageConfig.pageIndex) < Number(pageConfig.previousPageIndex)) {
+          query = query.endBefore(this.firstVisibleDoc);
+        }
+
+      }
+      return query;
+    };
+  }
+
+  /**
+   * Function to get next page of table.
+   * @param pageConfig - Number of elements on page.
+   * @param sortConfig - Type of sorting.
+   */
+  public nextPage(pageConfig: PageEvent, sortConfig: Sort | null): AngularFirestoreCollection<FilmDto> {
+    const sortQuery = this.filmMapper.toDtoSortQuery(sortConfig as Sort);
+    const filmsCollection = this.afs.collection<FilmDto>('films', ref => {
+      if (sortQuery) {
+        return ref.limit(pageConfig.pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr)
+          .startAfter(this.lastVisibleDoc);
+      }
+      return ref.limit(pageConfig.pageSize).startAfter(this.lastVisibleDoc);
+    });
+    return filmsCollection;
   }
 
   /**

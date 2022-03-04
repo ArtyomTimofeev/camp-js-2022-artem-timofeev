@@ -1,9 +1,9 @@
 import { BehaviorSubject, combineLatest, switchMap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
+import { Sort } from '@angular/material/sort';
 import { DataService } from 'src/app/core/services/data.service';
+import { FormBuilder } from '@angular/forms';
 
 /**
  * Table component.
@@ -18,32 +18,30 @@ export class TableComponent {
   /** Stream wih films data.*/
   public displayedColumns: string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
 
-  private readonly pageSize$ = new BehaviorSubject(6);
+  public readonly pageConfig$ = new BehaviorSubject<PageEvent>({ pageSize: 6, pageIndex: 0, length: 6, previousPageIndex: 0 });
 
-  private readonly sortField$ = new BehaviorSubject<Sort>({
-    direction: 'asc',
-    active: 'title',
-  });
+  private readonly sortConfig$ = new BehaviorSubject<Sort | null>({ active: 'title', direction: 'asc' });
 
   public readonly films$ = combineLatest([
-    this.pageSize$,
-    this.sortField$,
+    this.pageConfig$,
+    this.sortConfig$,
   ]).pipe(
-    switchMap(([pageSize, sortField]) => this.dataService.getFilms(pageSize, sortField)),
+    switchMap(([pageConfig, sortConfig]) => this.dataService.getFilms(pageConfig, sortConfig)),
   );
 
   public constructor(private dataService: DataService) {}
 
-  public filterData($event: any): void {
-
+  public filterData(): void {
   }
 
-  public onPaginateChange($event: PageEvent): void {
-    this.pageSize$.next($event.pageSize);
+  public onPaginateChange(pageEvent: PageEvent): void {
+
+    console.log(pageEvent);
+    this.pageConfig$.next(pageEvent);
   }
 
   public announceSortChange(sort: Sort): void {
-    console.log(sort);
-    this.sortField$.next(sort);
+    this.sortConfig$.next(sort);
   }
+
 }

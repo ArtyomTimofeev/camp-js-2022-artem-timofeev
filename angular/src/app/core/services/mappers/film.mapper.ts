@@ -8,9 +8,15 @@ import { Film } from '../models/film';
 import { FilmDto } from './dto/film.dto';
 import { IMapperFromDto } from './mappers';
 
-const DEFAULT_SORTING = '';
-interface FirebaseSort {
+const DEFAULT_SORTING = null;
+
+/** Firebase sorting config interface. */
+export interface FirebaseSort {
+
+  /** The field by which sorting occurs. */
   fieldPath: string;
+
+  /** Sorting direction. */
   directionStr?: OrderByDirection;
 }
 
@@ -20,6 +26,7 @@ interface FirebaseSort {
 })
 export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
 
+  /** @inheritdoc */
   public querySortMap: Map<string, string> = new Map([
     ['releaseDate', 'release_date'],
     ['episodeId', 'episode_id'],
@@ -59,7 +66,8 @@ export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
     };
   }
 
-  public toDtoSortQuery(sort: Sort): FirebaseSort | '' {
+  /** @inheritdoc */
+  public toDtoSortQuery(sort: Sort): FirebaseSort | null {
     if (sort?.direction && this.querySortMap.has(sort.active)) {
       return {
         fieldPath: `fields.${this.querySortMap.get(sort.active)}`,

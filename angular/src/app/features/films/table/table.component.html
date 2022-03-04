@@ -1,8 +1,9 @@
 <div class="sw-table">
   <div class="search-container">
     <mat-form-field>
-      <input matInput placeholder="Search" (keyup)="filterData($event)" />
+      <input matInput type="search" />
     </mat-form-field>
+    <button type="submit" (click)="filterData()">Search</button>
   </div>
   <div class="mat-elevation-z8">
     <table
@@ -69,8 +70,11 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
     <mat-paginator
-      pageSize="6"
-      [pageSizeOptions]="[2, 3, 6]"
+      *ngIf="pageConfig$ | async as pageConfig"
+      [pageIndex]="pageConfig.pageIndex"
+      [pageSize]="pageConfig.pageSize"
+      [pageSizeOptions]="[6, 3, 2]"
+      [length]="pageConfig.length"
       aria-label="Select page of periodic elements"
       (page)="($event); onPaginateChange($event)"
     >
