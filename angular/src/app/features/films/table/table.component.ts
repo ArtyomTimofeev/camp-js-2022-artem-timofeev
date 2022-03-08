@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
@@ -15,33 +15,45 @@ import { FormBuilder } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent {
-  /** Stream wih films data.*/
-  public displayedColumns: string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
 
-  public readonly pageConfig$ = new BehaviorSubject<PageEvent>({ pageSize: 6, pageIndex: 0, length: 6, previousPageIndex: 0 });
+  public constructor(private dataService: DataService, private readonly fb: FormBuilder) {}
+
+  /** Names of displayed columns array.*/
+  public readonly displayedColumns: string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
+
+  /** Stream with page config. */
+  public readonly pageConfig$ = new BehaviorSubject<PageEvent>({
+    pageSize: 6,
+    pageIndex: 0,
+    length: 6,
+    previousPageIndex: 0,
+    currentPageNumber: 0,
+  });
 
   private readonly sortConfig$ = new BehaviorSubject<Sort | null>({ active: 'title', direction: 'asc' });
 
+  public readonly searchControl = this.fb.control('');
+
+  /** Stream with films data. */
   public readonly films$ = combineLatest([
     this.pageConfig$,
     this.sortConfig$,
+    this.searchControl.valueChanges.pipe(startWith(this.searchControl.value), debounceTime(1000), distinctUntilChanged()),
   ]).pipe(
-    switchMap(([pageConfig, sortConfig]) => this.dataService.getFilms(pageConfig, sortConfig)),
+    switchMap(([pageConfig, sortConfig, subjectKeyUp]) => this.dataService.getFilms(pageConfig, sortConfig, subjectKeyUp)),
   );
 
-  public constructor(private dataService: DataService) {}
-
-  public filterData(): void {
-  }
-
+  /** On paginate change function.
+   * @param pageEvent - PageEvent.
+   */
   public onPaginateChange(pageEvent: PageEvent): void {
-
-    console.log(pageEvent);
     this.pageConfig$.next(pageEvent);
   }
 
-  public announceSortChange(sort: Sort): void {
+  /** On sorting change function.
+   * @param sort - SortEvent.
+   */
+  public onSortChange(sort: Sort): void {
     this.sortConfig$.next(sort);
   }
-
 }

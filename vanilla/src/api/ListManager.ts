@@ -57,7 +57,7 @@ export class ListManager<TDto, TModel> {
 
   private _lastVisibleDoc: QueryDocumentSnapshot<unknown> | null = null;
 
-  private _limitDocs = 3;
+  private _limitDocs = 6;
 
   private _searchString = '';
 

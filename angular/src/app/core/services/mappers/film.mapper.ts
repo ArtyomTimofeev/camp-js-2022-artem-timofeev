@@ -67,7 +67,7 @@ export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
   }
 
   /** @inheritdoc */
-  public toDtoSortQuery(sort: Sort): FirebaseSort | null {
+  public toDtoSortConfig(sort: Sort): FirebaseSort | null {
     if (sort?.direction && this.querySortMap.has(sort.active)) {
       return {
         fieldPath: `fields.${this.querySortMap.get(sort.active)}`,

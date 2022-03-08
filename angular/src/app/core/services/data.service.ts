@@ -5,10 +5,10 @@ import {
   deleteDoc, updateDoc, DocumentReference, CollectionReference,
 } from '@angular/fire/firestore';
 import { defer, map, Observable, tap } from 'rxjs';
-import { AngularFirestore, QueryDocumentSnapshot, AngularFirestoreCollection, QueryFn } from '@angular/fire/compat/firestore';
+import { AngularFirestore, Query, QueryDocumentSnapshot, QueryFn } from '@angular/fire/compat/firestore';
 import { Sort } from '@angular/material/sort';
 
-import { FilmMapper, FirebaseSort } from './mappers/film.mapper';
+import { FilmMapper } from './mappers/film.mapper';
 import { FilmDto } from './mappers/dto/film.dto';
 import { Film } from './models/film';
 
@@ -20,13 +20,15 @@ import { Film } from './models/film';
 })
 export class DataService {
 
-  /** Last visible doc as cursor to paginate data. */
-  public lastVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
+  private lastVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
 
-  /** First visible doc as cursor to paginate data. */
-  public firstVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
+  private firstVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
 
-  private sortConfig: FirebaseSort | null = null;
+  private currentPageNumber = 0;
+
+  private currentPageSize = 6;
+
+  private isLengthEdit = false;
 
   private constructor(
     private readonly firestore: Firestore,
@@ -36,76 +38,65 @@ export class DataService {
 
   /**
    * Function to get data of films collection.
-   * @param pageConfig - Number of elements on page.
-   * @param sortConfig - Type of sorting.
+   * @param pageConfig - Page config.
+   * @param sortConfig - Sort config.
+   * @param sd - Sort config.
    */
-  public getFilms(pageConfig: PageEvent, sortConfig: Sort | null): Observable<Film[]> {
-
-    // const sortQuery = this.filmMapper.toDtoSortQuery(sortConfig as Sort);
-    // if (pageConfig.previousPageIndex && pageConfig.pageIndex > pageConfig.previousPageIndex) {
-    //   return this.nextPage(pageConfig, sortConfig);
-    // }
-    const filmsCollection = this.afs.collection<FilmDto>('films', this.getQueryFunc(pageConfig, sortConfig));
-
-    // const filmsCollection = this.afs.collection<FilmDto>('films', ref => {
-    //   if (sortQuery) {
-    //     return ref.limit(pageConfig.pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr);
-    //   }
-    //   return ref.limit(pageConfig.pageSize);
-    // });
+  public getFilms(pageConfig: PageEvent, sortConfig: Sort | null, sd: any): Observable<Film[]> {
+    const filmsCollection = this.afs.collection<FilmDto>('films', this.getQueryFunc(pageConfig, sortConfig, sd));
     return filmsCollection.snapshotChanges().pipe(
       tap(snapshot => {
-        this.lastVisibleDoc = snapshot[snapshot.length - 1].payload.doc;
-        this.firstVisibleDoc = snapshot[0].payload.doc;
+        if (snapshot.length > 0) {
+          this.currentPageNumber = pageConfig.pageIndex;
+          this.currentPageSize = pageConfig.pageSize;
+          this.lastVisibleDoc = snapshot[snapshot.length - 1].payload.doc;
+          this.firstVisibleDoc = snapshot[0].payload.doc;
+        }
       }),
       map(snapshot => snapshot.map(s => s.payload.doc.data())),
       map(list => list.map(dto => this.filmMapper.fromDto(dto))),
     );
   }
 
-  private getQueryFunc(pageConfig: PageEvent, sortConfig: Sort | null): QueryFn {
+  /**
+   * Function to get query.
+   * @param pageConfig - Page config.
+   * @param sortConfig - Sort config.
+   */
+  private getQueryFunc(pageConfig: PageEvent, sortConfig: Sort | null, sd: any): QueryFn {
     return ref => {
-      const sortQuery = this.filmMapper.toDtoSortQuery(sortConfig as Sort);
+      const sortQuery = this.filmMapper.toDtoSortConfig(sortConfig as Sort);
       let query = ref.limit(pageConfig.pageSize);
+      if (sd !== '') {
+        const veryBigSymbol = '\uf8ff';
+        query = query.where('fields.title', '>=', sd)
+          .where('fields.title', '<=', `${sd}${veryBigSymbol}`);
+      }
       if (sortQuery) {
         query = query.orderBy(sortQuery.fieldPath, sortQuery.directionStr);
-        if (pageConfig.pageIndex > Number(pageConfig.previousPageIndex)) {
-          query = query.startAfter(this.lastVisibleDoc);
-        }
-        if (Number(pageConfig.pageIndex) < Number(pageConfig.previousPageIndex)) {
-          query = ref.limitToLast(pageConfig.pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr)
-            .endBefore(this.firstVisibleDoc);
-        }
-
+        query = this.getQueryOnPagination(pageConfig, query);
       }
       if (!sortQuery) {
-        if (pageConfig.pageIndex > Number(pageConfig.previousPageIndex)) {
-          query = query.startAfter(this.lastVisibleDoc);
-        }
-        if (Number(pageConfig.pageIndex) < Number(pageConfig.previousPageIndex)) {
-          query = query.endBefore(this.firstVisibleDoc);
-        }
-
+        query = this.getQueryOnPagination(pageConfig, query);
       }
       return query;
     };
   }
 
   /**
-   * Function to get next page of table.
-   * @param pageConfig - Number of elements on page.
-   * @param sortConfig - Type of sorting.
+   * Function to get query when using pagination.
+   * @param pageConfig - Page config.
+   * @param query - Initial query.
    */
-  public nextPage(pageConfig: PageEvent, sortConfig: Sort | null): AngularFirestoreCollection<FilmDto> {
-    const sortQuery = this.filmMapper.toDtoSortQuery(sortConfig as Sort);
-    const filmsCollection = this.afs.collection<FilmDto>('films', ref => {
-      if (sortQuery) {
-        return ref.limit(pageConfig.pageSize).orderBy(sortQuery.fieldPath, sortQuery.directionStr)
-          .startAfter(this.lastVisibleDoc);
-      }
-      return ref.limit(pageConfig.pageSize).startAfter(this.lastVisibleDoc);
-    });
-    return filmsCollection;
+  private getQueryOnPagination(pageConfig: PageEvent, query: Query): Query {
+    if (pageConfig.pageIndex > this.currentPageNumber && pageConfig.pageSize === this.currentPageSize) {
+      return query.startAfter(this.lastVisibleDoc);
+    }
+    if (pageConfig.pageIndex < this.currentPageNumber && pageConfig.pageSize === this.currentPageSize) {
+      return query.endAt(this.firstVisibleDoc);
+    }
+    pageConfig.pageIndex = 0;
+    return query;
   }
 
   /**

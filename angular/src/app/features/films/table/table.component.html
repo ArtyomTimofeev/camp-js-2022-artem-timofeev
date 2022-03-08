@@ -1,9 +1,9 @@
 <div class="sw-table">
   <div class="search-container">
     <mat-form-field>
-      <input matInput type="search" />
+      <mat-label>Search By Title</mat-label>
+      <input matInput type="search" [formControl]="searchControl" />
     </mat-form-field>
-    <button type="submit" (click)="filterData()">Search</button>
   </div>
   <div class="mat-elevation-z8">
     <table
@@ -11,7 +11,9 @@
       mat-table
       [dataSource]="films"
       matSort
-      (matSortChange)="($event); announceSortChange($event)"
+      matSortActive="title"
+      matSortDirection="asc"
+      (matSortChange)="($event); onSortChange($event)"
     >
       <!-- Position Column -->
       <ng-container matColumnDef="title">
