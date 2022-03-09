@@ -1,16 +1,18 @@
+import { defer, map, Observable, tap } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { Injectable } from '@angular/core';
 import {
   collection, Firestore, doc, addDoc, docData,
   deleteDoc, updateDoc, DocumentReference, CollectionReference,
 } from '@angular/fire/firestore';
-import { defer, map, Observable, tap } from 'rxjs';
-import { AngularFirestore, Query, QueryDocumentSnapshot, QueryFn } from '@angular/fire/compat/firestore';
+import { AngularFirestore, QueryDocumentSnapshot, QueryFn } from '@angular/fire/compat/firestore';
 import { Sort } from '@angular/material/sort';
+
+import { Film } from '../models/film';
+import { ASCENDING_SORT_DIRECTION, FILMS_COLLECTION, TITLE_PROPERTY, VERY_BIG_SYMBOL } from '../utils/constants';
 
 import { FilmMapper } from './mappers/film.mapper';
 import { FilmDto } from './mappers/dto/film.dto';
-import { Film } from './models/film';
 
 /**
  * Data service.
@@ -24,12 +26,6 @@ export class DataService {
 
   private firstVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
 
-  private currentPageNumber = 0;
-
-  private currentPageSize = 6;
-
-  private isLengthEdit = false;
-
   private constructor(
     private readonly firestore: Firestore,
     private readonly filmMapper: FilmMapper,
@@ -39,16 +35,14 @@ export class DataService {
   /**
    * Function to get data of films collection.
    * @param pageConfig - Page config.
-   * @param sortConfig - Sort config.
-   * @param sd - Sort config.
+   * @param sortConfig - Sorting config.
+   * @param searchValue - Search value.
    */
-  public getFilms(pageConfig: PageEvent, sortConfig: Sort | null, sd: any): Observable<Film[]> {
-    const filmsCollection = this.afs.collection<FilmDto>('films', this.getQueryFunc(pageConfig, sortConfig, sd));
+  public getFilms(pageConfig: PageEvent, sortConfig: Sort, searchValue: string): Observable<Film[]> {
+    const filmsCollection = this.afs.collection<FilmDto>(FILMS_COLLECTION, this.getQueryFunc(pageConfig, sortConfig, searchValue));
     return filmsCollection.snapshotChanges().pipe(
       tap(snapshot => {
         if (snapshot.length > 0) {
-          this.currentPageNumber = pageConfig.pageIndex;
-          this.currentPageSize = pageConfig.pageSize;
           this.lastVisibleDoc = snapshot[snapshot.length - 1].payload.doc;
           this.firstVisibleDoc = snapshot[0].payload.doc;
         }
@@ -61,42 +55,41 @@ export class DataService {
   /**
    * Function to get query.
    * @param pageConfig - Page config.
-   * @param sortConfig - Sort config.
+   * @param sortConfig - Sorting config.
+   * @param searchValue - Search value.
    */
-  private getQueryFunc(pageConfig: PageEvent, sortConfig: Sort | null, sd: any): QueryFn {
+  private getQueryFunc(pageConfig: PageEvent, sortConfig: Sort, searchValue: string): QueryFn {
     return ref => {
-      const sortQuery = this.filmMapper.toDtoSortConfig(sortConfig as Sort);
-      let query = ref.limit(pageConfig.pageSize);
-      if (sd !== '') {
-        const veryBigSymbol = '\uf8ff';
-        query = query.where('fields.title', '>=', sd)
-          .where('fields.title', '<=', `${sd}${veryBigSymbol}`);
+      const sortQuery = this.filmMapper.toDtoSortConfig(sortConfig);
+      const { pageIndex, previousPageIndex, pageSize } = pageConfig;
+      const defaultQuery = ref.limit(pageSize);
+      if (searchValue !== '') {
+        return ref.limit(pageSize)
+          .where(TITLE_PROPERTY, '>=', searchValue)
+          .where(TITLE_PROPERTY, '<=', `${searchValue}${VERY_BIG_SYMBOL}`)
+          .orderBy(TITLE_PROPERTY, ASCENDING_SORT_DIRECTION);
       }
-      if (sortQuery) {
-        query = query.orderBy(sortQuery.fieldPath, sortQuery.directionStr);
-        query = this.getQueryOnPagination(pageConfig, query);
+      if (sortQuery?.direction) {
+      const { direction, activeField } = sortQuery;
+        if (pageIndex > Number(previousPageIndex)) {
+          return defaultQuery.orderBy(activeField, direction).startAfter(this.lastVisibleDoc);
+        }
+        if (pageIndex < Number(previousPageIndex)) {
+          return ref.limitToLast(pageSize).orderBy(activeField, direction)
+            .endAt(this.firstVisibleDoc);
+        }
+        return defaultQuery.orderBy(activeField, direction);
       }
       if (!sortQuery) {
-        query = this.getQueryOnPagination(pageConfig, query);
+        if (pageIndex > Number(previousPageIndex)) {
+          return defaultQuery.startAfter(this.lastVisibleDoc);
+        }
+        if (pageIndex < Number(previousPageIndex)) {
+          return ref.limitToLast(pageSize).endAt(this.firstVisibleDoc);
+        }
       }
-      return query;
+      return defaultQuery;
     };
-  }
-
-  /**
-   * Function to get query when using pagination.
-   * @param pageConfig - Page config.
-   * @param query - Initial query.
-   */
-  private getQueryOnPagination(pageConfig: PageEvent, query: Query): Query {
-    if (pageConfig.pageIndex > this.currentPageNumber && pageConfig.pageSize === this.currentPageSize) {
-      return query.startAfter(this.lastVisibleDoc);
-    }
-    if (pageConfig.pageIndex < this.currentPageNumber && pageConfig.pageSize === this.currentPageSize) {
-      return query.endAt(this.firstVisibleDoc);
-    }
-    pageConfig.pageIndex = 0;
-    return query;
   }
 
   /**
@@ -104,7 +97,7 @@ export class DataService {
    * @param id - Doc id.
    */
   public getFilmById(id: string): Observable<Film> {
-    const filmDocRef = doc(this.firestore, `films/${id}`) as DocumentReference<FilmDto>;
+    const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
     return docData(filmDocRef, { idField: 'id' }).pipe(
       map(filmDto => this.filmMapper.fromDto(filmDto)),
     );
@@ -115,7 +108,7 @@ export class DataService {
    * @param film - Added film doc.
    */
   public addFilm(film: FilmDto): Observable<string> {
-    const filmsRef = collection(this.firestore, 'films') as CollectionReference<FilmDto>;
+    const filmsRef = collection(this.firestore, FILMS_COLLECTION) as CollectionReference<FilmDto>;
     return defer(() => addDoc(filmsRef, film)).pipe(
       map(dto => dto.id),
     );
@@ -126,7 +119,7 @@ export class DataService {
    * @param id - Removable film doc.
    */
   public deleteFilm(id: string): Observable<void> {
-    const filmDocRef = doc(this.firestore, `films/${id}`) as DocumentReference<FilmDto>;
+    const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
     return defer(() => deleteDoc(filmDocRef));
   }
 
@@ -136,7 +129,7 @@ export class DataService {
    */
   public updateFilm(film: Film): Observable<void> {
     const dto = this.filmMapper.toDto(film);
-    const filmDocRef = doc(this.firestore, `films/${film.id}`);
+    const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${film.id}`);
     return defer(() => updateDoc(filmDocRef, { ...dto }));
   }
 }

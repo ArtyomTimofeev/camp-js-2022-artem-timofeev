@@ -11,9 +11,10 @@
       mat-table
       [dataSource]="films"
       matSort
-      matSortActive="title"
-      matSortDirection="asc"
-      (matSortChange)="($event); onSortChange($event)"
+      [matSortDisabled]="!!searchControl.value"
+      [matSortActive]="(sortConfig$ | async)?.active ?? 'title'"
+      [matSortDirection]="(sortConfig$ | async)?.direction ?? 'asc'"
+      (matSortChange)="onSortChange($event)"
     >
       <!-- Position Column -->
       <ng-container matColumnDef="title">
@@ -77,7 +78,7 @@
       [pageSize]="pageConfig.pageSize"
       [pageSizeOptions]="[6, 3, 2]"
       [length]="pageConfig.length"
-      aria-label="Select page of periodic elements"
+      aria-label="Select page"
       (page)="($event); onPaginateChange($event)"
     >
     </mat-paginator>

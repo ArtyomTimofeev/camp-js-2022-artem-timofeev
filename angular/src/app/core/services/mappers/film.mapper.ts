@@ -3,21 +3,19 @@ import { Injectable } from '@angular/core';
 import { OrderByDirection } from '@angular/fire/firestore';
 import { Sort } from '@angular/material/sort';
 
-import { Film } from '../models/film';
+import { Film } from '../../models/film';
 
 import { FilmDto } from './dto/film.dto';
 import { IMapperFromDto } from './mappers';
 
-const DEFAULT_SORTING = null;
-
 /** Firebase sorting config interface. */
-export interface FirebaseSort {
+export interface FirebaseSortQuery {
 
   /** The field by which sorting occurs. */
-  fieldPath: string;
+  activeField: string;
 
   /** Sorting direction. */
-  directionStr?: OrderByDirection;
+  direction: OrderByDirection | '';
 }
 
 /** Film mapper. */
@@ -26,15 +24,17 @@ export interface FirebaseSort {
 })
 export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
 
-  /** @inheritdoc */
-  public querySortMap: Map<string, string> = new Map([
+  /** From sort config to sort query. */
+  public querySortMap: Map<keyof Film, keyof FilmDto['fields']> = new Map([
     ['releaseDate', 'release_date'],
     ['episodeId', 'episode_id'],
     ['title', 'title'],
     ['producer', 'producer'],
   ]);
 
-  /** @inheritdoc */
+  /** From Dto to Model.
+   * @param dto - Dto.
+   */
   public fromDto(dto: FilmDto): Film {
     return {
       id: dto.id,
@@ -49,7 +49,9 @@ export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
     };
   }
 
-  /** @inheritdoc */
+  /** From Model to Dto.
+   * @param model - Model.
+   */
   public toDto(model: Film): FilmDto {
     return {
       id: model.id,
@@ -66,14 +68,14 @@ export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
     };
   }
 
-  /** @inheritdoc */
-  public toDtoSortConfig(sort: Sort): FirebaseSort | null {
-    if (sort?.direction && this.querySortMap.has(sort.active)) {
-      return {
-        fieldPath: `fields.${this.querySortMap.get(sort.active)}`,
-        directionStr: sort.direction,
-      };
-    }
-    return DEFAULT_SORTING;
+  /** From Model to Dto.
+   * @param sortConfig - Sorting config.
+   */
+  public toDtoSortConfig(sortConfig: Sort): FirebaseSortQuery | null {
+    const sortFiled = sortConfig.active as keyof Film;
+    return {
+      activeField: `fields.${this.querySortMap.get(sortFiled)}`,
+      direction: sortConfig.direction ?? 'asc',
+    };
   }
 }
