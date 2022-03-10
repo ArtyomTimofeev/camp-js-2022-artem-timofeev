@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.film-details-card {
+  max-width: 40%;
+  min-height: 70vh;
+  margin: auto;
+  margin-top: 100px;
+  padding: 40px;
+  font-size: var(--font-size);
+}
+
+h1 {
+  font-size: var(--h1-font-size);
+}

@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAuth, provideAuth } from '@angular/fire/auth';
-
 import { AngularFireModule } from '@angular/fire/compat';
 
 import { AppRoutingModule } from './app-routing.module';
