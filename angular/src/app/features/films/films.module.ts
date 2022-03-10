@@ -9,12 +9,12 @@ import { CommonModule } from '@angular/common';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { TableComponent } from './table/table.component';
+import { FilmsPageComponent } from './films-page/films-page.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: TableComponent,
+    component: FilmsPageComponent,
   },
 ];
 
@@ -22,7 +22,7 @@ const routes: Routes = [
  * FilmsModule.
  */
 @NgModule({
-  declarations: [TableComponent],
+  declarations: [FilmsPageComponent],
   imports: [
     CommonModule,
     MatTableModule,

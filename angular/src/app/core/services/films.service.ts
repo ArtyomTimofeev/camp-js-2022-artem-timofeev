@@ -15,12 +15,12 @@ import { FilmMapper } from './mappers/film.mapper';
 import { FilmDto } from './mappers/dto/film.dto';
 
 /**
- * Data service.
+ * Films Data service.
  */
 @Injectable({
   providedIn: 'root',
 })
-export class DataService {
+export class FilmsService {
 
   private lastVisibleDoc: QueryDocumentSnapshot<FilmDto> | null = null;
 

@@ -6,10 +6,9 @@ import { Sort } from '@angular/material/sort';
 import { Film } from '../../models/film';
 
 import { FilmDto } from './dto/film.dto';
-import { IMapperFromDto } from './mappers';
 
 /** Firebase sorting config interface. */
-export interface FirebaseSortQuery {
+interface FirebaseSortQuery {
 
   /** The field by which sorting occurs. */
   activeField: string;
@@ -22,7 +21,7 @@ export interface FirebaseSortQuery {
 @Injectable({
   providedIn: 'root',
 })
-export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
+export class FilmMapper {
 
   /** From sort config to sort query. */
   public querySortMap: Map<keyof Film, keyof FilmDto['fields']> = new Map([
@@ -68,7 +67,7 @@ export class FilmMapper implements IMapperFromDto<FilmDto, Film> {
     };
   }
 
-  /** From Model to Dto.
+  /** From Model SortConfig to Dto Sort query.
    * @param sortConfig - Sorting config.
    */
   public toDtoSortConfig(sortConfig: Sort): FirebaseSortQuery | null {

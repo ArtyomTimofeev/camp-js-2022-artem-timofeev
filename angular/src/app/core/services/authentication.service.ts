@@ -4,7 +4,7 @@ import { Auth } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 
 /**
- * AuthenticationService.
+ * Authentication Service.
  */
 @Injectable({
   providedIn: 'root',

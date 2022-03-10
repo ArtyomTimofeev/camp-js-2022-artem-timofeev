@@ -10,4 +10,5 @@ export const TITLE_PROPERTY = 'fields.title';
 /** Ascending type of Sorting. */
 export const ASCENDING_SORT_DIRECTION = 'asc';
 
+/** Default sorting active field. */
 export const DEFAULT_SORT_ACTIVE = 'title';
