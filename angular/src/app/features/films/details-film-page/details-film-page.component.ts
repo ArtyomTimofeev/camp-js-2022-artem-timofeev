@@ -3,6 +3,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Film } from 'src/app/core/models/film';
 import { Observable } from 'rxjs';
 
+import { Planet } from 'src/app/core/models/planet';
+
 import { AdditionalCollectionsService } from '../../../core/services/additional-collections.service';
 
 import { FilmsService } from './../../../core/services/films.service';
@@ -22,7 +24,7 @@ export class DetailsFilmPageComponent implements OnInit {
 
   public filmData$!: Observable<Film>;
 
-  public charactersData$!: Observable<any>;
+  public planetsData$!: Observable<Planet[]>;
 
   private planetsIds!: any;
 
@@ -32,7 +34,8 @@ export class DetailsFilmPageComponent implements OnInit {
     this.filmData$ = this.filmsService.getFilmById(filmId);
     this.filmData$.subscribe(res => {
       this.planetsIds = res.planetsIds;
-      this.charactersData$ = this.additionalCollectionsService.getCharacters(this.planetsIds);
+      this.planetsData$ = this.additionalCollectionsService.getPlanets(this.planetsIds);
+      console.log(this.planetsData$);
     });
   }
 }
