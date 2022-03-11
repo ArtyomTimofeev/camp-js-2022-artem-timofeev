@@ -16,3 +16,7 @@ table {
   align-items: center;
   padding-top: 100px;
 }
+
+a {
+  color: var(--accent-color);
+}

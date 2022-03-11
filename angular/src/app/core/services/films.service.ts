@@ -47,7 +47,7 @@ export class FilmsService {
           this.firstVisibleDoc = snapshot[0].payload.doc;
         }
       }),
-      map(snapshot => snapshot.map(s => s.payload.doc.data())),
+      map(snapshot => snapshot.map(s => ({ ...s.payload.doc.data(), id: s.payload.doc.id }))),
       map(list => list.map(dto => this.filmMapper.fromDto(dto))),
     );
   }

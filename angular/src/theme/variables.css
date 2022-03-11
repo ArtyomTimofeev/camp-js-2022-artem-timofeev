@@ -1,9 +1,9 @@
 /* Custom application color and font settings */
 :root {
   /* Font */
-  --font-size: 14px;
-  --font-family: sans-serif;
-  --h1-font-size: 21px;
+  --font-size: 18px;
+  --font-family: Roboto, sans-serif;
+  --h1-font-size: 26px;
   --h2-font-size: 14px;
 
   /* Styles that don't represent the brand (stole this phrase from material.io) */
