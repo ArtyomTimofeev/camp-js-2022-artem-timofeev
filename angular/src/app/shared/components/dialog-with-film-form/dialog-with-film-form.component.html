@@ -1,0 +1,59 @@
+<h1 mat-dialog-title>Film Fields</h1>
+<form class="sw-film-form" [formGroup]="form" (ngSubmit)="submitForm()">
+  <mat-form-field>
+    <mat-label>Title</mat-label>
+    <input matInput autocomplete="off" formControlName="title" />
+    <mat-error *ngIf="form.hasError('required', 'title')"> Required </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Director</mat-label>
+    <input matInput autocomplete="off" formControlName="director" />
+    <mat-error *ngIf="form.hasError('required', 'director')">
+      Required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Producer</mat-label>
+    <input matInput autocomplete="off" formControlName="producer" />
+    <mat-error *ngIf="form.hasError('required', 'producer')">
+      Required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Opening Crawl</mat-label>
+    <input matInput autocomplete="off" formControlName="openingCrawl" />
+    <mat-error *ngIf="form.hasError('required', 'openingCrawl')">
+      Required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Characters</mat-label>
+    <input matInput autocomplete="off" formControlName="characterIds" />
+    <mat-error *ngIf="form.hasError('required', 'characterIds')">
+      Required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Planets</mat-label>
+    <input matInput autocomplete="off" formControlName="planetsIds" />
+    <mat-error *ngIf="form.hasError('required', 'planetsIds')">
+      Required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Release date</mat-label>
+    <input type="date" matInput formControlName="releaseDate" />
+    <mat-error *ngIf="form.hasError('required', 'releaseDate')">
+      Required
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" type="submit">Add Film</button>
+
+  <button mat-button mat-dialog-close>Cancel</button>
+</form>

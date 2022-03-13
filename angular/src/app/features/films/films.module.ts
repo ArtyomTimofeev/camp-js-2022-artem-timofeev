@@ -7,11 +7,12 @@ import { MatInputModule } from '@angular/material/input';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-
+import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FilmsPageComponent } from './films-page/films-page.component';
 import { DetailsFilmPageComponent } from './details-film-page/details-film-page.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -29,6 +30,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [FilmsPageComponent, DetailsFilmPageComponent],
   imports: [
+    MatButtonModule,
     CommonModule,
     MatTableModule,
     MatPaginatorModule,

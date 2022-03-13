@@ -1,10 +1,28 @@
-<mat-card *ngIf="filmData$ | async as filmData" class="film-details-card">
-  <h1><b>Title:</b> {{ filmData.title }}</h1>
-  <p><b>Release date:</b> {{ filmData.releaseDate.toLocaleDateString() }}</p>
-  <p><b>Description:</b> {{ filmData.openingCrawl }}</p>
-  <p><b>Producer:</b> {{ filmData.producer }}</p>
-  <p><b>Director:</b> {{ filmData.director }}</p>
-  <p><b>Episode №:</b> {{ filmData.episodeId }}</p>
-  <!-- <p><b>The planets on which the action took place:</b> ${planetsNames}</p>
-  <p><b>Characters featured in the film:</b> ${charactersNames}</p> -->
+<mat-card *ngIf="filmData$ | async as film" class="film-details-card">
+  <div class="film-details-card__data-fields">
+    <h1><b>Title:</b> {{ film.title }}</h1>
+    <p><b>Release date:</b> {{ film.releaseDate.toLocaleDateString() }}</p>
+    <p><b>Description:</b> {{ film.openingCrawl }}</p>
+    <p><b>Producer:</b> {{ film.producer }}</p>
+    <p><b>Director:</b> {{ film.director }}</p>
+    <p><b>Episode №:</b> {{ film.episodeId }}</p>
+    <p *ngIf="planetsData$ | async as planets">
+      <b>The planets on which the action took place:</b>
+      <span *ngFor="let planet of planets; let isLast = last">
+        {{ planet.name }}{{ isLast ? "" : "," }}
+      </span>
+    </p>
+    <p *ngIf="charactersData$ | async as characters">
+      <b>Characters featured in the film:</b>
+      <span *ngFor="let character of characters; let isLast = last">
+        {{ character.name }}{{ isLast ? "" : "," }}
+      </span>
+    </p>
+  </div>
+  <div class="buttons">
+    <button mat-flat-button color="accent">Edit Card</button>
+    <button mat-flat-button color="warn" (click)="deleteFilm(film.id)">
+      Delete Card
+    </button>
+  </div>
 </mat-card>

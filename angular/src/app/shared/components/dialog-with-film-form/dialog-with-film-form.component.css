@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+.sw-film-form {
+  display: flex;
+  flex-direction: column;
+}
+form {
+  width: 50vh;
+}

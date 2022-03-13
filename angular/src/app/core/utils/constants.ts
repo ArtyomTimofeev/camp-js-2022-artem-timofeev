@@ -1,6 +1,12 @@
 /** Films collection name for firebase connection.*/
 export const FILMS_COLLECTION = 'films';
 
+/** Characters collection name for firebase connection.*/
+export const CHARACTERS_COLLECTION = 'people';
+
+/** Planets collection name for firebase connection.*/
+export const PLANETS_COLLECTION = 'planets';
+
 /** Symbol encoding. */
 export const VERY_BIG_SYMBOL = '\uf8ff';
 
