@@ -107,20 +107,19 @@ export class FilmsService {
    * Function to add film doc to films collection.
    * @param film - Added film doc.
    */
-  public addFilm(film: FilmDto): Observable<string> {
+  public addFilm(film: Film): any {
+    const filmDto = this.filmMapper.toDto(film);
     const filmsRef = collection(this.firestore, FILMS_COLLECTION) as CollectionReference<FilmDto>;
-    return defer(() => addDoc(filmsRef, film)).pipe(
-      map(dto => dto.id),
-    );
+    return addDoc(filmsRef, filmDto);
   }
 
   /**
    * Function to delete film doc from films collection.
    * @param id - Removable film doc.
    */
-  public deleteFilm(id: string): Observable<void> {
+  public deleteFilm(id: string): any {
     const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
-    return defer(() => deleteDoc(filmDocRef));
+    return deleteDoc(filmDocRef);
   }
 
   /**

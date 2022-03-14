@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
-import { MatCommonModule } from '@angular/material/core';
+import { MatCommonModule, MatOptionModule } from '@angular/material/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -12,9 +12,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-
 import { MatFormFieldModule } from '@angular/material/form-field';
-
 import { MatInputModule } from '@angular/material/input';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -28,6 +26,7 @@ import { DialogWithFilmFormComponent } from './shared/components/dialog-with-fil
 @NgModule({
   declarations: [AppComponent, NavbarComponent, DialogWithFilmFormComponent],
   imports: [
+    MatOptionModule,
     MatInputModule,
     MatFormFieldModule,
     ReactiveFormsModule,

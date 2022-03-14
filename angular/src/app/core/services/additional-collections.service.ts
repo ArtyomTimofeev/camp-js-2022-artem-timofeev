@@ -1,3 +1,4 @@
+import { collection } from 'firebase/firestore';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -43,5 +44,17 @@ export class AdditionalCollectionsService {
       slicedIdsArray[i] = ids.slice((i * size), (i * size) + size);
     }
     return slicedIdsArray;
+  }
+
+  public getAllCollectionItems<TDto, TModel>(
+    collectionName: string,
+    mapper: IMapperFromDto<TDto, TModel>,
+  ): Observable<TModel[]> {
+    const itemsCollection = this.afs.collection<TDto>(collectionName);
+    return itemsCollection.snapshotChanges()
+      .pipe(
+        map(snapshot => snapshot.map(s => s.payload.doc.data())),
+        map(list => list.map(dto => mapper.fromDto(dto))),
+      );
   }
 }

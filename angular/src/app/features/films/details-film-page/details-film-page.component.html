@@ -1,4 +1,4 @@
-<mat-card *ngIf="filmData$ | async as film" class="film-details-card">
+<mat-card *ngIf="selectedFilm$ | async as film" class="film-details-card">
   <div class="film-details-card__data-fields">
     <h1><b>Title:</b> {{ film.title }}</h1>
     <p><b>Release date:</b> {{ film.releaseDate.toLocaleDateString() }}</p>
@@ -6,13 +6,13 @@
     <p><b>Producer:</b> {{ film.producer }}</p>
     <p><b>Director:</b> {{ film.director }}</p>
     <p><b>Episode №:</b> {{ film.episodeId }}</p>
-    <p *ngIf="planetsData$ | async as planets">
+    <p *ngIf="planets$ | async as planets">
       <b>The planets on which the action took place:</b>
       <span *ngFor="let planet of planets; let isLast = last">
         {{ planet.name }}{{ isLast ? "" : "," }}
       </span>
     </p>
-    <p *ngIf="charactersData$ | async as characters">
+    <p *ngIf="characters$ | async as characters">
       <b>Characters featured in the film:</b>
       <span *ngFor="let character of characters; let isLast = last">
         {{ character.name }}{{ isLast ? "" : "," }}
@@ -20,7 +20,9 @@
     </p>
   </div>
   <div class="buttons">
-    <button mat-flat-button color="accent">Edit Card</button>
+    <button mat-flat-button color="accent" (click)="editFilm()">
+      Edit Card
+    </button>
     <button mat-flat-button color="warn" (click)="deleteFilm(film.id)">
       Delete Card
     </button>

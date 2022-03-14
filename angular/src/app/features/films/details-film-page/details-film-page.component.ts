@@ -6,8 +6,9 @@ import { PlanetMapper } from 'src/app/core/services/mappers/planet.mapper';
 import { CharacterMapper } from 'src/app/core/services/mappers/character.mapper';
 import { Planet } from 'src/app/core/models/planet';
 import { CHARACTERS_COLLECTION, PLANETS_COLLECTION } from 'src/app/core/utils/constants';
+import { MatDialog } from '@angular/material/dialog';
 
-import { ErrorData } from '@firebase/util';
+import { DialogWithFilmFormComponent } from 'src/app/shared/components/dialog-with-film-form/dialog-with-film-form.component';
 
 import { AdditionalCollectionsService } from './../../../core/services/additional-collections.service';
 import { FilmsService } from './../../../core/services/films.service';
@@ -23,11 +24,11 @@ import { CharacterDto } from './../../../core/services/mappers/dto/character.dto
 })
 export class DetailsFilmPageComponent implements OnInit {
 
-  public filmData$: Observable<Film> = this.filmsService.getFilmById(this.getSelectedFilmId());
+  public selectedFilm$: Observable<Film> = this.filmsService.getFilmById(this.getSelectedFilmId());
 
-  public planetsData$!: Observable<Planet[]>;
+  public planets$!: Observable<Planet[]>;
 
-  public charactersData$!: Observable<Character[]>;
+  public characters$!: Observable<Character[]>;
 
   public constructor(
     private readonly filmsService: FilmsService,
@@ -35,14 +36,15 @@ export class DetailsFilmPageComponent implements OnInit {
     private readonly planetMapper: PlanetMapper,
     private readonly characterMapper: CharacterMapper,
     private readonly router: Router,
+    private readonly dialog: MatDialog,
   ) {}
 
   public ngOnInit(): void {
-    this.filmData$.subscribe(filmData => {
+    this.selectedFilm$.subscribe(filmData => {
       const { planetsIds, characterIds } = filmData;
-      this.planetsData$ = this.additionalCollectionsService
+      this.planets$ = this.additionalCollectionsService
         .getCollectionItems<PlanetDto, Planet>(planetsIds, this.planetMapper, PLANETS_COLLECTION);
-      this.charactersData$ = this.additionalCollectionsService
+      this.characters$ = this.additionalCollectionsService
         .getCollectionItems<CharacterDto, Character>(characterIds, this.characterMapper, CHARACTERS_COLLECTION);
     });
   }
@@ -52,12 +54,16 @@ export class DetailsFilmPageComponent implements OnInit {
     return String(params.get('id'));
   }
 
-  public deleteFilm(id: string): void {
+  public async deleteFilm(id: string): Promise<void> {
     try {
-      this.filmsService.deleteFilm(`asddas${id}sad`);
+      await this.filmsService.deleteFilm(id);
       this.router.navigate(['']);
     } catch (error) {
       console.error(error);
     }
+  }
+
+  public editFilm() {
+    this.dialog.open(DialogWithFilmFormComponent);
   }
 }

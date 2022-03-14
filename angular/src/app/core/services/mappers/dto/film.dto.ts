@@ -30,5 +30,5 @@ export interface FilmDto {
   };
 
   /** Id. */
-  readonly id: string;
+  readonly id?: string | undefined;
 }

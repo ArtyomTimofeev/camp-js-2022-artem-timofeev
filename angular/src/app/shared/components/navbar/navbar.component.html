@@ -1,6 +1,13 @@
-<p>
-  <mat-toolbar color="primary">
-    <span>SW Films</span>
+<mat-toolbar class="navbar" color="primary">
+  <span>SW Films</span>
+  <div class="navbar__controls">
+    <mat-icon
+      class="navbar__add-icon"
+      aria-hidden="false"
+      aria-label="Add New Film"
+      (click)="openDialog()"
+      >add</mat-icon
+    >
     <button
       *ngIf="authenticationService.isUserAuthorized$ | async; else elseCase"
       mat-flat-button
@@ -9,14 +16,8 @@
     >
       Logout
     </button>
-    <mat-icon
-      aria-hidden="false"
-      aria-label="Add New Film"
-      (click)="openDialog()"
-      >add</mat-icon
-    >
-  </mat-toolbar>
-</p>
+  </div>
+</mat-toolbar>
 
 <ng-template #elseCase>
   <button

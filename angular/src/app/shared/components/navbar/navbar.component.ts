@@ -19,10 +19,6 @@ export class NavbarComponent {
   public constructor(public readonly authenticationService: AuthenticationService, public dialog: MatDialog) {}
 
   public openDialog(): void {
-    const dialogRef = this.dialog.open(DialogWithFilmFormComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    this.dialog.open(DialogWithFilmFormComponent);
   }
 }

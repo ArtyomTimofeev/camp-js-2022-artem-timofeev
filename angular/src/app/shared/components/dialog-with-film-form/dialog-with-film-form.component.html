@@ -1,10 +1,16 @@
 <h1 mat-dialog-title>Film Fields</h1>
-<form class="sw-film-form" [formGroup]="form" (ngSubmit)="submitForm()">
+<form
+  *ngIf="films$ | async as films"
+  class="sw-film-form"
+  [formGroup]="form"
+  (ngSubmit)="submitForm()"
+>
   <mat-form-field>
     <mat-label>Title</mat-label>
-    <input matInput autocomplete="off" formControlName="title" />
+    <input matInput autocomplete="off" value="" formControlName="title" />
     <mat-error *ngIf="form.hasError('required', 'title')"> Required </mat-error>
   </mat-form-field>
+
   <mat-form-field>
     <mat-label>Director</mat-label>
     <input matInput autocomplete="off" formControlName="director" />
@@ -29,18 +35,39 @@
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field *ngIf="characters$ | async as characters">
     <mat-label>Characters</mat-label>
-    <input matInput autocomplete="off" formControlName="characterIds" />
+    <mat-select formControlName="characterIds" multiple>
+      <mat-option *ngFor="let character of characters" [value]="character.pk">
+        {{ character.name }}
+      </mat-option>
+    </mat-select>
     <mat-error *ngIf="form.hasError('required', 'characterIds')">
       Required
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field *ngIf="planets$ | async as planets">
     <mat-label>Planets</mat-label>
-    <input matInput autocomplete="off" formControlName="planetsIds" />
+    <mat-select formControlName="planetsIds" multiple>
+      <mat-option *ngFor="let planet of planets" [value]="planet.pk"
+        >{{ planet.name }}
+      </mat-option>
+    </mat-select>
     <mat-error *ngIf="form.hasError('required', 'planetsIds')">
+      Required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Episode №</mat-label>
+    <input
+      type="number"
+      matInput
+      autocomplete="off"
+      formControlName="episodeId"
+    />
+    <mat-error *ngIf="form.hasError('required', 'episodeId')">
       Required
     </mat-error>
   </mat-form-field>
@@ -53,7 +80,6 @@
     </mat-error>
   </mat-form-field>
 
-  <button mat-flat-button color="primary" type="submit">Add Film</button>
-
+  <button type="submit" mat-flat-button color="primary">Add Film</button>
   <button mat-button mat-dialog-close>Cancel</button>
 </form>
