@@ -13,7 +13,7 @@
   <div class="mat-elevation-z8">
     <table
       aria-label="SW Films data table"
-      *ngIf="films$ | async as films"
+      *ngIf="requestedFilms$ | async as films"
       mat-table
       [dataSource]="films"
       matSort
@@ -81,8 +81,8 @@
       *ngIf="pageConfig$ | async as pageConfig"
       [pageIndex]="pageConfig.pageIndex"
       [pageSize]="pageConfig.pageSize"
-      [pageSizeOptions]="[6, 3, 2]"
-      [length]="pageConfig.length"
+      [pageSizeOptions]="[2, 3, 10]"
+      [length]="(allFilms$ | async)?.length"
       aria-label="Select page"
       (page)="($event); onPaginateChange($event)"
     >

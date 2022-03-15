@@ -6,7 +6,6 @@ import { Sort } from '@angular/material/sort';
 import { Film } from '../../models/film';
 
 import { IMapper } from './mappers';
-
 import { FilmCreateDto, FilmDto } from './dto/film.dto';
 
 /** Firebase sorting config interface. */

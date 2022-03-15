@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Planet } from '../../models/planet';
 
 import { PlanetDto } from './dto/planet.dto';
-import { IMapperFromDto, IMapperToDto } from './mappers';
+import { IMapper } from './mappers';
 
 /** Planet mapper. */
 @Injectable({
   providedIn: 'root',
 })
-export class PlanetMapper implements IMapperFromDto<PlanetDto, Planet>, IMapperToDto<PlanetDto, Planet> {
+export class PlanetMapper implements IMapper<PlanetDto, Planet> {
 
   /**
    * Maps Planet DTO to Planet model.

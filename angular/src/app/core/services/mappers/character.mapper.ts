@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Character } from '../../models/character';
 
 import { CharacterDto } from './dto/character.dto';
-import { IMapperFromDto, IMapperToDto } from './mappers';
+import { IMapper } from './mappers';
 
 /** Character mapper. */
 @Injectable({
   providedIn: 'root',
 })
-export class CharacterMapper implements IMapperFromDto<CharacterDto, Character>, IMapperToDto<CharacterDto, Character> {
+export class CharacterMapper implements IMapper<CharacterDto, Character> {
 
   /**
    * Maps Character DTO to Character model.

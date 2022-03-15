@@ -1,7 +1,7 @@
 /**
  * Mapper of DTO to domain model.
  */
-export interface IMapperFromDto<TDto, TModel> {
+interface IMapperFromDto<TDto, TModel> {
 
   /**
    * Maps from DTO to Domain model.
@@ -12,7 +12,7 @@ export interface IMapperFromDto<TDto, TModel> {
 /**
  * Mapper of domain model to DTO.
  */
-export interface IMapperToDto<TDto, TModel> {
+interface IMapperToDto<TDto, TModel> {
 
   /**
    * Maps from Domain to DTO model.
@@ -20,4 +20,7 @@ export interface IMapperToDto<TDto, TModel> {
   toDto(model: TModel): TDto;
 }
 
+/**
+ * Common mapper.
+ */
 export interface IMapper<TDto, TModel> extends IMapperFromDto<TDto, TModel>, IMapperToDto<TDto, TModel> {}

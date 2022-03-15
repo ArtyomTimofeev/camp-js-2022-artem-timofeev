@@ -4,7 +4,7 @@
     mat-fab
     color="primary"
     aria-label="Example icon button with a delete icon"
-    (click)="addFilm()"
+    (click)="openDialogForAddFilm()"
   >
     <mat-icon aria-hidden="true" aria-label="Add New Film">add</mat-icon>
   </button>
@@ -20,13 +20,13 @@
       <p><b>Producer:</b> {{ film.producer }}</p>
       <p><b>Director:</b> {{ film.director }}</p>
       <p><b>Episode №:</b> {{ film.episodeId }}</p>
-      <p *ngIf="planetsList$ | async as planets">
+      <p *ngIf="relatedPlanetsList$ | async as planets">
         <b>The planets on which the action took place:</b>
         <span *ngFor="let planet of planets; let isLast = last">
           {{ planet.name }}{{ isLast ? "" : "," }}
         </span>
       </p>
-      <p *ngIf="charactersList$ | async as characters">
+      <p *ngIf="relatedCharactersList$ | async as characters">
         <b>Characters featured in the film:</b>
         <span *ngFor="let character of characters; let isLast = last">
           {{ character.name }}{{ isLast ? "" : "," }}
@@ -34,7 +34,11 @@
       </p>
     </div>
     <div class="buttons">
-      <button mat-flat-button color="accent" (click)="editFilm(film)">
+      <button
+        mat-flat-button
+        color="accent"
+        (click)="openDialogForEditFilm(film)"
+      >
         Edit Card
       </button>
       <button mat-flat-button color="warn" (click)="deleteFilm(film.id)">

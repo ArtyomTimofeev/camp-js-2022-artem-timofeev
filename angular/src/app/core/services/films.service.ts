@@ -46,7 +46,6 @@ export class FilmsService {
           this.lastVisibleDoc = snapshot[snapshot.length - 1].payload.doc;
           this.firstVisibleDoc = snapshot[0].payload.doc;
         }
-        debugger;
       }),
       map(snapshot => snapshot.map(s => ({ ...s.payload.doc.data(), id: s.payload.doc.id }))),
       map(list => list.map(dto => this.filmMapper.fromDto(dto))),
@@ -94,6 +93,18 @@ export class FilmsService {
   }
 
   /**
+   * Function to get all films.
+   */
+  public getAllFilms(): Observable<Film[]> {
+    const itemsCollection = this.afs.collection<FilmDto>(FILMS_COLLECTION);
+    return itemsCollection.snapshotChanges()
+      .pipe(
+        map(snapshot => snapshot.map(s => s.payload.doc.data())),
+        map(list => list.map(dto => this.filmMapper.fromDto(dto))),
+      );
+  }
+
+  /**
    * Function to get film doc by id.
    * @param id - Doc id.
    */
@@ -119,7 +130,7 @@ export class FilmsService {
    * @param id - Removable film doc.
    */
   public deleteFilm(id: string): Observable<void> {
-    const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
+    const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`);
     return defer(() => deleteDoc(filmDocRef));
   }
 

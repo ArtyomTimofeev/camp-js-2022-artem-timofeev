@@ -4,9 +4,8 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FilmsService } from 'src/app/core/services/films.service';
-import { CHARACTERS_COLLECTION, FILMS_COLLECTION, PLANETS_COLLECTION } from 'src/app/core/utils/constants';
+import { CHARACTERS_COLLECTION, PLANETS_COLLECTION } from 'src/app/core/utils/constants';
 
-import { FilmMapper } from '../../../../core/services/mappers/film.mapper';
 import { CharacterMapper } from '../../../../core/services/mappers/character.mapper';
 import { PlanetMapper } from '../../../../core/services/mappers/planet.mapper';
 import { AdditionalCollectionsService } from '../../../../core/services/additional-collections.service';
@@ -30,12 +29,11 @@ export interface DialogWithFilmFormData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogWithFilmFormComponent {
+  /** All planets in the database. */
+  public allPlanets$ = this.additionalCollectionsService.getAllCollectionItems(PLANETS_COLLECTION, this.planetMapper);
 
-  public planets$ = this.additionalCollectionsService.getAllCollectionItems(PLANETS_COLLECTION, this.planetMapper);
-
-  public characters$ = this.additionalCollectionsService.getAllCollectionItems(CHARACTERS_COLLECTION, this.characterMapper);
-
-  public films$ = this.additionalCollectionsService.getAllCollectionItems(FILMS_COLLECTION, this.filmMapper);
+  /** All characters in the database. */
+  public allCharacters$ = this.additionalCollectionsService.getAllCollectionItems(CHARACTERS_COLLECTION, this.characterMapper);
 
   public constructor(
     private readonly fb: FormBuilder,
@@ -43,12 +41,10 @@ export class DialogWithFilmFormComponent {
     private readonly additionalCollectionsService: AdditionalCollectionsService,
     private readonly planetMapper: PlanetMapper,
     private readonly characterMapper: CharacterMapper,
-    private readonly filmMapper: FilmMapper,
     private readonly dialogRef: MatDialogRef<DialogWithFilmFormComponent, Film>,
     private readonly router: Router,
     @Inject(MAT_DIALOG_DATA) private readonly data: DialogWithFilmFormData,
-  ) {
-  }
+  ) {}
 
   /** Form config. */
   public form = this.fb.group({
@@ -62,7 +58,7 @@ export class DialogWithFilmFormComponent {
     releaseDate: [this.data?.film?.releaseDate ?? '', [Validators.required]],
   });
 
-  /** Function to submit form. */
+  /** Submit form function. */
   public submitForm(): void {
     this.dialogRef.close(this.form.value);
     if (!this.data) {
@@ -78,5 +74,4 @@ export class DialogWithFilmFormComponent {
         .subscribe(() => this.router.navigate(['']));
     }
   }
-
 }

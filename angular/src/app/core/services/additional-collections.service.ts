@@ -2,7 +2,7 @@ import { combineLatest, map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
-import { IMapperFromDto } from './mappers/mappers';
+import { IMapper } from './mappers/mappers';
 
 /**
  *
@@ -16,13 +16,13 @@ export class AdditionalCollectionsService {
     private readonly afs: AngularFirestore,
   ) {}
 
-  /**
-   * @param ids =fd.
-   * @param mapper -d.
-   * @param collectionName - S.
+  /** Function to get items from any collection related by ids.
+   * @param ids - Items ids.
+   * @param mapper - Mapper for items.
+   * @param collectionName - Name of collection.
    */
   public getCollectionItems<TDto, TModel>(
-    ids: readonly number[], mapper: IMapperFromDto<TDto, TModel>, collectionName: string,
+    ids: readonly number[], mapper: IMapper<TDto, TModel>, collectionName: string,
   ): Observable<TModel[]> {
     const slicedIds = this.getSlicedArrayOfIds(ids, 10);
     const allItems: Observable<TModel[]>[] = slicedIds.map(chunk =>
@@ -45,9 +45,14 @@ export class AdditionalCollectionsService {
     return slicedIdsArray;
   }
 
+  /**
+   * Function to get all collection items.
+   * @param collectionName - Name of collection.
+   * @param mapper -  Mapper for items.
+   */
   public getAllCollectionItems<TDto, TModel>(
     collectionName: string,
-    mapper: IMapperFromDto<TDto, TModel>,
+    mapper: IMapper<TDto, TModel>,
   ): Observable<TModel[]> {
     const itemsCollection = this.afs.collection<TDto>(collectionName);
     return itemsCollection.snapshotChanges()

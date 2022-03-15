@@ -22,6 +22,12 @@ export class FilmsPageComponent {
   /** Names of displayed columns array.*/
   public readonly displayedColumns: string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
 
+  /** All films in the database (necessary for the correct operation of the paginator). */
+  public readonly allFilms$: Observable<Film[]> = this.filmsService.getAllFilms();
+
+  /** Observable with requested films data. */
+  public readonly requestedFilms$: Observable<Film[]>;
+
   /** Search control with search value. */
   public readonly searchControl = this.fb.control('');
 
@@ -31,13 +37,10 @@ export class FilmsPageComponent {
   /** Sorting config.*/
   public readonly sortConfig$: BehaviorSubject<Sort>;
 
-  /** Observable with films data. */
-  public readonly films$: Observable<Film[]>;
-
   private readonly defaultPageConfig = {
-    pageSize: 6,
+    pageSize: 3,
     pageIndex: 0,
-    length: 6,
+    length: 0,
     previousPageIndex: 0,
   };
 
@@ -58,16 +61,19 @@ export class FilmsPageComponent {
       }),
   );
 
-  public constructor(private filmsService: FilmsService, private readonly fb: FormBuilder) {
+  public constructor(
+    private filmsService: FilmsService,
+    private readonly fb: FormBuilder,
+  ) {
     this.pageConfig$ = new BehaviorSubject<PageEvent>(this.defaultPageConfig);
     this.sortConfig$ = new BehaviorSubject<Sort>(this.defaultSortConfig);
-    this.films$ = combineLatest([
+    this.requestedFilms$ = combineLatest([
       this.pageConfig$,
       this.sortConfig$,
       this.searchValue$,
     ]).pipe(
 
-      // Debounce is necessary so that the getfilms() function is not called twice due to the repeated call
+      // Debounce is necessary so that the getFilms() function is not called twice due to the repeated call
       // of the next() method in the onSortChange() function.
       debounceTime(100),
       switchMap(([pageConfig, sortConfig, subjectKeyUp]) => this.filmsService.getFilms(pageConfig, sortConfig, subjectKeyUp)),

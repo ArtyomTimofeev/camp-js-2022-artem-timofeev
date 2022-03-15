@@ -15,6 +15,9 @@ import { PlanetDto } from './../../../core/services/mappers/dto/planet.dto';
 import { AdditionalCollectionsService } from './../../../core/services/additional-collections.service';
 import { FilmsService } from './../../../core/services/films.service';
 
+/**
+ * DetailsFilmPage Component.
+ */
 @Component({
   selector: 'sw-details-film-page',
   templateUrl: './details-film-page.component.html',
@@ -22,12 +25,13 @@ import { FilmsService } from './../../../core/services/films.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsFilmPageComponent {
-
+  /** Selected film. */
   public readonly selectedFilm$ = this.filmsService.getFilmById(this.route.snapshot.paramMap.get('id') ?? '').pipe(
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
-  public readonly planetsList$ = this.selectedFilm$.pipe(
+  /** List of related planets. */
+  public readonly relatedPlanetsList$ = this.selectedFilm$.pipe(
     switchMap(film => {
       const { planetsIds } = film;
       return this.additionalCollectionsService
@@ -35,7 +39,8 @@ export class DetailsFilmPageComponent {
     }),
   );
 
-  public readonly charactersList$ = this.selectedFilm$.pipe(
+  /** List of related characters. */
+  public readonly relatedCharactersList$ = this.selectedFilm$.pipe(
     switchMap(film => {
       const { charactersIds } = film;
       return this.additionalCollectionsService
@@ -53,6 +58,9 @@ export class DetailsFilmPageComponent {
     private readonly dialog: MatDialog,
   ) { }
 
+  /** Delete film function.
+   * @param id - Film id.
+   */
   public deleteFilm(id: string): void {
     this.filmsService.deleteFilm(id).pipe(
       first(),
@@ -60,7 +68,11 @@ export class DetailsFilmPageComponent {
       .subscribe(() => this.router.navigate(['']));
   }
 
-  public editFilm(film: Film): void {
+  /**
+   * Open dialog for edit film function.
+   * @param film - Film data after editing.
+   */
+  public openDialogForEditFilm(film: Film): void {
     this.dialog.open<DialogWithFilmFormComponent, DialogWithFilmFormData, Film>(DialogWithFilmFormComponent, {
       data: {
         film,
@@ -68,8 +80,10 @@ export class DetailsFilmPageComponent {
     });
   }
 
-  public addFilm(): void {
-    this.dialog.open(DialogWithFilmFormComponent).afterClosed()
-      .subscribe(() => this.router.navigate(['']));
+  /**
+   * Open dialog for add film function.
+   */
+  public openDialogForAddFilm(): void {
+    this.dialog.open(DialogWithFilmFormComponent);
   }
 }
