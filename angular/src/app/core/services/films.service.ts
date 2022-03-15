@@ -12,7 +12,7 @@ import { Film } from '../models/film';
 import { ASCENDING_SORT_DIRECTION, FILMS_COLLECTION, TITLE_PROPERTY, VERY_BIG_SYMBOL } from '../utils/constants';
 
 import { FilmMapper } from './mappers/film.mapper';
-import { FilmDto } from './mappers/dto/film.dto';
+import { FilmCreateDto, FilmDto } from './mappers/dto/film.dto';
 
 /**
  * Films Data service.
@@ -46,6 +46,7 @@ export class FilmsService {
           this.lastVisibleDoc = snapshot[snapshot.length - 1].payload.doc;
           this.firstVisibleDoc = snapshot[0].payload.doc;
         }
+        debugger;
       }),
       map(snapshot => snapshot.map(s => ({ ...s.payload.doc.data(), id: s.payload.doc.id }))),
       map(list => list.map(dto => this.filmMapper.fromDto(dto))),
@@ -107,19 +108,19 @@ export class FilmsService {
    * Function to add film doc to films collection.
    * @param film - Added film doc.
    */
-  public addFilm(film: Film): any {
+  public addFilm(film: Film): Observable<DocumentReference<FilmCreateDto>> {
     const filmDto = this.filmMapper.toDto(film);
-    const filmsRef = collection(this.firestore, FILMS_COLLECTION) as CollectionReference<FilmDto>;
-    return addDoc(filmsRef, filmDto);
+    const filmsRef = collection(this.firestore, FILMS_COLLECTION) as CollectionReference<FilmCreateDto>;
+    return defer(() => addDoc(filmsRef, filmDto));
   }
 
   /**
    * Function to delete film doc from films collection.
    * @param id - Removable film doc.
    */
-  public deleteFilm(id: string): any {
+  public deleteFilm(id: string): Observable<void> {
     const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
-    return deleteDoc(filmDocRef);
+    return defer(() => deleteDoc(filmDocRef));
   }
 
   /**

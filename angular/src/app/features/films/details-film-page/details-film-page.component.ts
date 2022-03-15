@@ -1,20 +1,19 @@
-import { Router } from '@angular/router';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { first, shareReplay, switchMap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Film } from 'src/app/core/models/film';
-import { Observable } from 'rxjs';
 import { PlanetMapper } from 'src/app/core/services/mappers/planet.mapper';
 import { CharacterMapper } from 'src/app/core/services/mappers/character.mapper';
-import { Planet } from 'src/app/core/models/planet';
 import { CHARACTERS_COLLECTION, PLANETS_COLLECTION } from 'src/app/core/utils/constants';
-import { MatDialog } from '@angular/material/dialog';
+import { DialogWithFilmFormComponent, DialogWithFilmFormData } from 'src/app/features/films/details-film-page/dialog-with-film-form/dialog-with-film-form.component';
 
-import { DialogWithFilmFormComponent } from 'src/app/shared/components/dialog-with-film-form/dialog-with-film-form.component';
-
+import { Character } from './../../../core/models/character';
+import { Planet } from './../../../core/models/planet';
+import { CharacterDto } from './../../../core/services/mappers/dto/character.dto';
+import { PlanetDto } from './../../../core/services/mappers/dto/planet.dto';
 import { AdditionalCollectionsService } from './../../../core/services/additional-collections.service';
 import { FilmsService } from './../../../core/services/films.service';
-import { Character } from './../../../core/models/character';
-import { PlanetDto } from './../../../core/services/mappers/dto/planet.dto';
-import { CharacterDto } from './../../../core/services/mappers/dto/character.dto';
 
 @Component({
   selector: 'sw-details-film-page',
@@ -22,13 +21,27 @@ import { CharacterDto } from './../../../core/services/mappers/dto/character.dto
   styleUrls: ['./details-film-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailsFilmPageComponent implements OnInit {
+export class DetailsFilmPageComponent {
 
-  public selectedFilm$: Observable<Film> = this.filmsService.getFilmById(this.getSelectedFilmId());
+  public readonly selectedFilm$ = this.filmsService.getFilmById(this.route.snapshot.paramMap.get('id') ?? '').pipe(
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
 
-  public planets$!: Observable<Planet[]>;
+  public readonly planetsList$ = this.selectedFilm$.pipe(
+    switchMap(film => {
+      const { planetsIds } = film;
+      return this.additionalCollectionsService
+        .getCollectionItems<PlanetDto, Planet>(planetsIds, this.planetMapper, PLANETS_COLLECTION);
+    }),
+  );
 
-  public characters$!: Observable<Character[]>;
+  public readonly charactersList$ = this.selectedFilm$.pipe(
+    switchMap(film => {
+      const { charactersIds } = film;
+      return this.additionalCollectionsService
+        .getCollectionItems<CharacterDto, Character>(charactersIds, this.characterMapper, CHARACTERS_COLLECTION);
+    }),
+  );
 
   public constructor(
     private readonly filmsService: FilmsService,
@@ -36,34 +49,27 @@ export class DetailsFilmPageComponent implements OnInit {
     private readonly planetMapper: PlanetMapper,
     private readonly characterMapper: CharacterMapper,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
-  ) {}
+  ) { }
 
-  public ngOnInit(): void {
-    this.selectedFilm$.subscribe(filmData => {
-      const { planetsIds, characterIds } = filmData;
-      this.planets$ = this.additionalCollectionsService
-        .getCollectionItems<PlanetDto, Planet>(planetsIds, this.planetMapper, PLANETS_COLLECTION);
-      this.characters$ = this.additionalCollectionsService
-        .getCollectionItems<CharacterDto, Character>(characterIds, this.characterMapper, CHARACTERS_COLLECTION);
+  public deleteFilm(id: string): void {
+    this.filmsService.deleteFilm(id).pipe(
+      first(),
+    )
+      .subscribe(() => this.router.navigate(['']));
+  }
+
+  public editFilm(film: Film): void {
+    this.dialog.open<DialogWithFilmFormComponent, DialogWithFilmFormData, Film>(DialogWithFilmFormComponent, {
+      data: {
+        film,
+      },
     });
   }
 
-  private getSelectedFilmId(): string {
-    const params = new URLSearchParams(window.location.search);
-    return String(params.get('id'));
-  }
-
-  public async deleteFilm(id: string): Promise<void> {
-    try {
-      await this.filmsService.deleteFilm(id);
-      this.router.navigate(['']);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  public editFilm() {
-    this.dialog.open(DialogWithFilmFormComponent);
+  public addFilm(): void {
+    this.dialog.open(DialogWithFilmFormComponent).afterClosed()
+      .subscribe(() => this.router.navigate(['']));
   }
 }

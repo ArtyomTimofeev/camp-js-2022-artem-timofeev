@@ -2,21 +2,27 @@
   display: block;
 }
 
-.film-details-card {
+.details-film-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.details-film-page__add-button {
+  margin-top: 30px;
+}
+
+.details-film-page__film-details-card {
   position: relative;
   max-width: 40%;
   min-height: 70vh;
   margin: auto;
-  margin-top: 100px;
+  margin-top: 30px;
   padding: 40px;
   font-size: var(--font-size);
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-}
-
-.film-details-card h1 {
-  font-size: var(--h1-font-size);
 }
 
 .buttons {

@@ -19,3 +19,5 @@ export interface IMapperToDto<TDto, TModel> {
    */
   toDto(model: TModel): TDto;
 }
+
+export interface IMapper<TDto, TModel> extends IMapperFromDto<TDto, TModel>, IMapperToDto<TDto, TModel> {}

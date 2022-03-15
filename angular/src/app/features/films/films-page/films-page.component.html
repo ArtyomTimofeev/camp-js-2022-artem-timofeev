@@ -32,9 +32,7 @@
           Title
         </th>
         <td mat-cell *matCellDef="let element">
-          <a routerLink="/film-details" [queryParams]="{ id: element.id }">{{
-            element.title
-          }}</a>
+          <a [routerLink]="['film-details', element.id]">{{ element.title }}</a>
         </td>
       </ng-container>
 

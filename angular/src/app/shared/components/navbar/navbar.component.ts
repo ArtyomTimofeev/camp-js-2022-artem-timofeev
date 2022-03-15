@@ -1,9 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
-
-import { DialogWithFilmFormComponent } from '../dialog-with-film-form/dialog-with-film-form.component';
 
 /**
  * Class Navbar.
@@ -15,10 +12,5 @@ import { DialogWithFilmFormComponent } from '../dialog-with-film-form/dialog-wit
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
-
-  public constructor(public readonly authenticationService: AuthenticationService, public dialog: MatDialog) {}
-
-  public openDialog(): void {
-    this.dialog.open(DialogWithFilmFormComponent);
-  }
+  public constructor(public readonly authenticationService: AuthenticationService) {}
 }

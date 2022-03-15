@@ -1,4 +1,3 @@
-import { collection } from 'firebase/firestore';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';

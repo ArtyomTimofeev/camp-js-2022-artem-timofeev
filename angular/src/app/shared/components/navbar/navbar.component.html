@@ -1,22 +1,13 @@
 <mat-toolbar class="navbar" color="primary">
-  <span>SW Films</span>
-  <div class="navbar__controls">
-    <mat-icon
-      class="navbar__add-icon"
-      aria-hidden="false"
-      aria-label="Add New Film"
-      (click)="openDialog()"
-      >add</mat-icon
-    >
-    <button
-      *ngIf="authenticationService.isUserAuthorized$ | async; else elseCase"
-      mat-flat-button
-      (click)="authenticationService.logout()"
-      color="accent"
-    >
-      Logout
-    </button>
-  </div>
+  <span class="navbar__title" routerLink="">SW Films</span>
+  <button
+    *ngIf="authenticationService.isUserAuthorized$ | async; else elseCase"
+    mat-flat-button
+    (click)="authenticationService.logout()"
+    color="accent"
+  >
+    Logout
+  </button>
 </mat-toolbar>
 
 <ng-template #elseCase>

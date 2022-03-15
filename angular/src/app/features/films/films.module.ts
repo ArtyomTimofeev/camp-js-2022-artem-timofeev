@@ -1,3 +1,6 @@
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterModule, Routes } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -9,9 +12,13 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+
+import { AuthorizedGuard } from 'src/app/core/guards/authorized.guard';
 
 import { FilmsPageComponent } from './films-page/films-page.component';
 import { DetailsFilmPageComponent } from './details-film-page/details-film-page.component';
+import { DialogWithFilmFormComponent } from './details-film-page/dialog-with-film-form/dialog-with-film-form.component';
 
 const routes: Routes = [
   {
@@ -19,7 +26,7 @@ const routes: Routes = [
     component: FilmsPageComponent,
   },
   {
-    path: 'film-details',
+    path: 'film-details/:id',
     component: DetailsFilmPageComponent,
   },
 ];
@@ -28,8 +35,15 @@ const routes: Routes = [
  * FilmsModule.
  */
 @NgModule({
-  declarations: [FilmsPageComponent, DetailsFilmPageComponent],
+  declarations: [FilmsPageComponent, DetailsFilmPageComponent, DialogWithFilmFormComponent],
   imports: [
+    MatSelectModule,
+    MatOptionModule,
+    MatInputModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatIconModule,
     MatButtonModule,
     CommonModule,
     MatTableModule,

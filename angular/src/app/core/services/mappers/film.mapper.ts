@@ -5,7 +5,9 @@ import { Sort } from '@angular/material/sort';
 
 import { Film } from '../../models/film';
 
-import { FilmDto } from './dto/film.dto';
+import { IMapper } from './mappers';
+
+import { FilmCreateDto, FilmDto } from './dto/film.dto';
 
 /** Firebase sorting config interface. */
 interface FirebaseSortQuery {
@@ -21,7 +23,7 @@ interface FirebaseSortQuery {
 @Injectable({
   providedIn: 'root',
 })
-export class FilmMapper {
+export class FilmMapper implements IMapper<FilmCreateDto, Film> {
 
   /** From sort config to sort query. */
   public querySortMap: Map<keyof Film, keyof FilmDto['fields']> = new Map([
@@ -36,8 +38,8 @@ export class FilmMapper {
    */
   public fromDto(dto: FilmDto): Film {
     return {
-      id: String(dto.id),
-      characterIds: dto.fields.characters,
+      id: dto.id,
+      charactersIds: dto.fields.characters,
       planetsIds: dto.fields.planets,
       director: dto.fields.director,
       episodeId: dto.fields.episode_id,
@@ -51,7 +53,7 @@ export class FilmMapper {
   /** From Model to Dto.
    * @param model - Model.
    */
-  public toDto(model: Film): FilmDto {
+  public toDto(model: Film): FilmCreateDto {
     return {
       fields: {
         title: model.title,
@@ -59,7 +61,7 @@ export class FilmMapper {
         opening_crawl: model.openingCrawl,
         producer: model.producer,
         release_date: String(model.releaseDate),
-        characters: model.characterIds,
+        characters: model.charactersIds,
         planets: model.planetsIds,
         episode_id: model.episodeId,
       },

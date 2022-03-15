@@ -30,5 +30,7 @@ export interface FilmDto {
   };
 
   /** Id. */
-  readonly id?: string | undefined;
+  readonly id: string ;
 }
+
+export type FilmCreateDto = Pick<FilmDto, 'fields'>;
