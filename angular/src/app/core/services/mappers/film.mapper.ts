@@ -37,7 +37,7 @@ export class FilmMapper {
   public fromDto(dto: FilmDto): Film {
     return {
       id: dto.id,
-      characterIds: dto.fields.characters,
+      charactersIds: dto.fields.characters,
       planetsIds: dto.fields.planets,
       director: dto.fields.director,
       episodeId: dto.fields.episode_id,
@@ -60,7 +60,7 @@ export class FilmMapper {
         opening_crawl: model.openingCrawl,
         producer: model.producer,
         release_date: model.releaseDate.toISOString(),
-        characters: model.characterIds,
+        characters: model.charactersIds,
         planets: model.planetsIds,
         episode_id: model.episodeId,
       },

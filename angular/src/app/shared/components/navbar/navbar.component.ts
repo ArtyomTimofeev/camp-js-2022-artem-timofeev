@@ -1,9 +1,10 @@
+import { first } from 'rxjs';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 /**
- * Class Navbar.
+ * Navbar Component.
  */
 @Component({
   selector: 'sw-navbar',
@@ -13,5 +14,24 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 })
 export class NavbarComponent {
 
-  public constructor(public readonly authenticationService: AuthenticationService) {}
+  public constructor(
+    public readonly auth: AngularFireAuth,
+    private readonly authenticationService: AuthenticationService,
+  ) {}
+
+  /** Log in function. */
+  public login(): void {
+    this.authenticationService.login().pipe(
+      first(),
+    )
+      .subscribe();
+  }
+
+  /** Log out function. */
+  public logout(): void {
+    this.authenticationService.logout().pipe(
+      first(),
+    )
+      .subscribe();
+  }
 }

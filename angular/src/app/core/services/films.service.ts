@@ -116,7 +116,7 @@ export class FilmsService {
 
   /**
    * Function to delete film doc from films collection.
-   * @param id - Removable film doc.
+   * @param id - Removable film id.
    */
   public deleteFilm(id: string): Observable<void> {
     const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;

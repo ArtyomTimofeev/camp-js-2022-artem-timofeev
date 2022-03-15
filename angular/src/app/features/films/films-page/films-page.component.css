@@ -2,17 +2,13 @@
   display: block;
 }
 
-table {
-  min-width: 800px;
-}
-
-.mat-elevation-z8 {
-  width: 800px;
-}
-
-.sw-table {
+.films-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 100px;
+}
+
+.films-page__sw-table table {
+  min-width: 800px;
 }

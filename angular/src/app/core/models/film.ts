@@ -5,7 +5,7 @@ export interface Film {
   readonly id: string;
 
   /** Character ids. */
-  readonly characterIds: readonly number[];
+  readonly charactersIds: readonly number[];
 
   /** Planets ids. */
   readonly planetsIds: readonly number[];
