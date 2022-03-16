@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { OrderByDirection } from '@angular/fire/firestore';
 import { Sort } from '@angular/material/sort';
@@ -17,19 +16,15 @@ interface FirebaseSortQuery {
   direction: OrderByDirection | '';
 }
 
+type sortFieldsNames = 'releaseDate' | 'episodeId' | 'title' | 'producer';
+
+type sortFieldsNamesDto = 'release_date' | 'episode_id' | 'title' | 'producer';
+
 /** Film mapper. */
 @Injectable({
   providedIn: 'root',
 })
 export class FilmMapper {
-
-  /** From sort config to sort query. */
-  public querySortMap: Map<keyof Film, keyof FilmDto['fields']> = new Map([
-    ['releaseDate', 'release_date'],
-    ['episodeId', 'episode_id'],
-    ['title', 'title'],
-    ['producer', 'producer'],
-  ]);
 
   /** From Dto to Model.
    * @param dto - Dto.
@@ -70,11 +65,18 @@ export class FilmMapper {
   /** From Model SortConfig to Dto Sort query.
    * @param sortConfig - Sorting config.
    */
-  public toDtoSortConfig(sortConfig: Sort): FirebaseSortQuery | null {
-    const sortFiled = sortConfig.active as keyof Film;
+  public toDtoSortConfig(sortConfig: Sort): FirebaseSortQuery {
+    const sortField = sortConfig.active as sortFieldsNames;
     return {
-      activeField: `fields.${this.querySortMap.get(sortFiled)}`,
+      activeField: `fields.${this.sortFieldsNamesDto[sortField]}`,
       direction: sortConfig.direction ?? 'asc',
     };
   }
+
+  private readonly sortFieldsNamesDto: Record<sortFieldsNames, sortFieldsNamesDto> = {
+    releaseDate: 'release_date',
+    episodeId: 'episode_id',
+    title: 'title',
+    producer: 'producer',
+  };
 }

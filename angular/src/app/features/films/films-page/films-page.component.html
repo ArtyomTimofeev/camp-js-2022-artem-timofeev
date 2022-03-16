@@ -12,7 +12,7 @@
       mat-table
       [dataSource]="films"
       matSort
-      [matSortDisabled]="!!searchControl.value"
+      [matSortDisabled]="searchControl.value !== ''"
       [matSortActive]="(sortConfig$ | async)?.active ?? 'title'"
       [matSortDirection]="(sortConfig$ | async)?.direction ?? 'asc'"
       (matSortChange)="onSortChange($event)"

@@ -20,7 +20,7 @@ export class NavbarComponent {
   ) {}
 
   /** Log in function. */
-  public login(): void {
+  public onLoginClick(): void {
     this.authenticationService.login().pipe(
       first(),
     )
@@ -28,7 +28,7 @@ export class NavbarComponent {
   }
 
   /** Log out function. */
-  public logout(): void {
+  public onLogoutClick(): void {
     this.authenticationService.logout().pipe(
       first(),
     )

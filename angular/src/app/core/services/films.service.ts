@@ -9,7 +9,7 @@ import { AngularFirestore, QueryDocumentSnapshot, QueryFn } from '@angular/fire/
 import { Sort } from '@angular/material/sort';
 
 import { Film } from '../models/film';
-import { ASCENDING_SORT_DIRECTION, FILMS_COLLECTION, TITLE_PROPERTY, VERY_BIG_SYMBOL } from '../utils/constants';
+import { ASCENDING_SORT_DIRECTION, FILMS_COLLECTION, TITLE_PROPERTY, FIREBASE_SYMBOL_ENCODING } from '../utils/constants';
 
 import { FilmMapper } from './mappers/film.mapper';
 import { FilmDto } from './mappers/dto/film.dto';
@@ -66,7 +66,7 @@ export class FilmsService {
       if (searchValue !== '') {
         return ref.limit(pageSize)
           .where(TITLE_PROPERTY, '>=', searchValue)
-          .where(TITLE_PROPERTY, '<=', `${searchValue}${VERY_BIG_SYMBOL}`)
+          .where(TITLE_PROPERTY, '<=', `${searchValue}${FIREBASE_SYMBOL_ENCODING}`)
           .orderBy(TITLE_PROPERTY, ASCENDING_SORT_DIRECTION);
       }
       if (sortQuery?.direction) {

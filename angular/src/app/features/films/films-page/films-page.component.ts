@@ -20,7 +20,7 @@ import { DEFAULT_SORT_ACTIVE, ASCENDING_SORT_DIRECTION } from '../../../core/uti
 export class FilmsPageComponent {
 
   /** Names of displayed columns array.*/
-  public readonly displayedColumns: string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
+  public readonly displayedColumns: readonly string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
 
   /** Search control with search value. */
   public readonly searchControl = this.fb.control('');

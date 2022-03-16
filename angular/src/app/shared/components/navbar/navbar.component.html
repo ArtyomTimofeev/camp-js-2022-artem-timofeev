@@ -1,20 +1,18 @@
-<p>
-  <mat-toolbar ngClass="navbar" color="primary">
-    <span>SW Films</span>
-    <button
-      type="button"
-      *ngIf="auth.authState | async; else elseCase"
-      mat-flat-button
-      (click)="logout()"
-      color="accent"
-    >
-      Logout
-    </button>
-  </mat-toolbar>
-</p>
+<mat-toolbar ngClass="navbar" color="primary">
+  <span>SW Films</span>
+  <button
+    type="button"
+    *ngIf="auth.authState | async; else loginCase"
+    mat-flat-button
+    (click)="onLogoutClick()"
+    color="accent"
+  >
+    Logout
+  </button>
+</mat-toolbar>
 
-<ng-template #elseCase>
-  <button type="button" mat-flat-button (click)="login()" color="accent">
+<ng-template #loginCase>
+  <button type="button" mat-flat-button (click)="onLoginClick()" color="accent">
     Login
   </button>
 </ng-template>
