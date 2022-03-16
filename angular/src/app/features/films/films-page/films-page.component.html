@@ -1,11 +1,11 @@
-<div ngClass="films-page">
+<div class="films-page">
   <div>
     <mat-form-field>
       <mat-label>Search By Title</mat-label>
       <input matInput type="search" [formControl]="searchControl" />
     </mat-form-field>
   </div>
-  <div ngClass="films-page__sw-table mat-elevation-z8">
+  <div class="films-page__sw-table mat-elevation-z8">
     <table
       aria-label="SW Films data table"
       *ngIf="films$ | async as films"
@@ -13,8 +13,10 @@
       [dataSource]="films"
       matSort
       [matSortDisabled]="searchControl.value !== ''"
-      [matSortActive]="(sortConfig$ | async)?.active ?? 'title'"
-      [matSortDirection]="(sortConfig$ | async)?.direction ?? 'asc'"
+      [matSortActive]="(tableConfig$ | async)?.sortConfig?.active ?? 'title'"
+      [matSortDirection]="
+        (tableConfig$ | async)?.sortConfig?.direction ?? 'asc'
+      "
       (matSortChange)="onSortChange($event)"
     >
       <ng-container matColumnDef="title">
@@ -71,11 +73,11 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
     <mat-paginator
-      *ngIf="pageConfig$ | async as pageConfig"
-      [pageIndex]="pageConfig.pageIndex"
-      [pageSize]="pageConfig.pageSize"
-      [pageSizeOptions]="[6, 3, 2]"
-      [length]="pageConfig.length"
+      *ngIf="tableConfig$ | async as tableConfig"
+      [pageIndex]="tableConfig.pageConfig.pageIndex"
+      [pageSize]="tableConfig.pageConfig.pageSize"
+      [pageSizeOptions]="tableConfig.pageConfig.pageSizeOptions"
+      [length]="tableConfig.pageConfig.length"
       aria-label="Select page"
       (page)="($event); onPaginateChange($event)"
     >

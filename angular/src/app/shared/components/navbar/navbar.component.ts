@@ -1,4 +1,3 @@
-import { first } from 'rxjs';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
@@ -21,17 +20,11 @@ export class NavbarComponent {
 
   /** Log in function. */
   public onLoginClick(): void {
-    this.authenticationService.login().pipe(
-      first(),
-    )
-      .subscribe();
+    this.authenticationService.login();
   }
 
   /** Log out function. */
   public onLogoutClick(): void {
-    this.authenticationService.logout().pipe(
-      first(),
-    )
-      .subscribe();
+    this.authenticationService.logout();
   }
 }

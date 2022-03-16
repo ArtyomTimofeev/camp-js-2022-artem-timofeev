@@ -12,3 +12,6 @@ export const ASCENDING_SORT_DIRECTION = 'asc';
 
 /** Default sorting active field. */
 export const DEFAULT_SORT_ACTIVE = 'title';
+
+/** Default debounce time. */
+export const DEFAULT_DEBOUNCE_TIME = 1000;

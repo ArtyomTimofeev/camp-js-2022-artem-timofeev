@@ -1,7 +1,6 @@
-import { GoogleAuthProvider, signInWithPopup, UserCredential } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { defer, Observable } from 'rxjs';
 
 /**
  * Authentication Service.
@@ -16,15 +15,15 @@ export class AuthenticationService {
   /**
    * Login through google account.
    */
-  public login(): Observable<UserCredential> {
+  public login(): void {
     const provider = new GoogleAuthProvider();
-    return defer(() => signInWithPopup(this.auth, provider));
+    signInWithPopup(this.auth, provider);
   }
 
   /**
    * Logout through google account.
    */
-  public logout(): Observable<void> {
-    return defer(() => this.auth.signOut());
+  public logout(): void {
+    this.auth.signOut();
   }
 }
