@@ -6,19 +6,26 @@ import { Film } from '../../models/film';
 
 import { FilmDto } from './dto/film.dto';
 
+type SortFieldsNames = 'releaseDate' | 'episodeId' | 'title' | 'producer';
+
+type SortFieldsNamesDto = 'release_date' | 'episode_id' | 'title' | 'producer';
+
+/**
+ * Firebase requires a sort request to use a value of type "OrderByDirection",
+ * but matSort can return not only "asc" and "desc" but also ''.
+ */
+type Direction = OrderByDirection | '';
+
 /** Firebase sorting config interface. */
 interface FirebaseSortQuery {
 
   /** The field by which sorting occurs. */
-  activeField: string;
+  readonly activeField: string;
 
-  /** Sorting direction. */
-  direction: OrderByDirection | '';
+  /** Sorting direction.
+   */
+  readonly direction: Direction;
 }
-
-type sortFieldsNames = 'releaseDate' | 'episodeId' | 'title' | 'producer';
-
-type sortFieldsNamesDto = 'release_date' | 'episode_id' | 'title' | 'producer';
 
 /** Film mapper. */
 @Injectable({
@@ -26,7 +33,8 @@ type sortFieldsNamesDto = 'release_date' | 'episode_id' | 'title' | 'producer';
 })
 export class FilmMapper {
 
-  /** From Dto to Model.
+  /**
+   * From Dto to Model.
    * @param dto - Dto.
    */
   public fromDto(dto: FilmDto): Film {
@@ -43,7 +51,8 @@ export class FilmMapper {
     };
   }
 
-  /** From Model to Dto.
+  /**
+   * From Model to Dto.
    * @param model - Model.
    */
   public toDto(model: Film): FilmDto {
@@ -62,18 +71,19 @@ export class FilmMapper {
     };
   }
 
-  /** From Model SortConfig to Dto Sort query.
+  /**
+   * From Model SortConfig to Dto Sort query.
    * @param sortConfig - Sorting config.
    */
   public toDtoSortConfig(sortConfig: Sort): FirebaseSortQuery {
-    const sortField = sortConfig.active as sortFieldsNames;
+    const sortField = sortConfig.active as SortFieldsNames;
     return {
       activeField: `fields.${this.sortFieldsNamesDto[sortField]}`,
       direction: sortConfig.direction ?? 'asc',
     };
   }
 
-  private readonly sortFieldsNamesDto: Record<sortFieldsNames, sortFieldsNamesDto> = {
+  private readonly sortFieldsNamesDto: Record<SortFieldsNames, SortFieldsNamesDto> = {
     releaseDate: 'release_date',
     episodeId: 'episode_id',
     title: 'title',

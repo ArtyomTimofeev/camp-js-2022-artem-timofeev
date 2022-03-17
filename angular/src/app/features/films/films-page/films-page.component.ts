@@ -5,25 +5,10 @@ import { Sort } from '@angular/material/sort';
 import { FilmsService } from 'src/app/core/services/films.service';
 import { FormBuilder } from '@angular/forms';
 
+import { TableConfig } from 'src/app/core/models/table-config';
+
 import { Film } from '../../../core/models/film';
-import { DEFAULT_SORT_ACTIVE, ASCENDING_SORT_DIRECTION, DEFAULT_DEBOUNCE_TIME } from '../../../core/utils/constants';
-
-/** Table Config. */
-export interface TableConfig {
-
-  /** Page Config. */
-  pageConfig: PageConfig;
-
-  /** Sort Config. */
-  sortConfig: Sort;
-}
-
-/** Page Config. */
-interface PageConfig extends PageEvent {
-
-  /** Page size Options. */
-  pageSizeOptions: number[];
-}
+import { DEFAULT_SORT_ACTIVE_FIELD, DEFAULT_SORT_DIRECTION, DEFAULT_DEBOUNCE_TIME } from '../../../core/utils/constants';
 
 /**
  * FilmsPage component.
@@ -46,7 +31,13 @@ export class FilmsPageComponent {
   public readonly tableConfig$: BehaviorSubject<TableConfig>;
 
   /** Observable with films data. */
-  public readonly films$: Observable<Film[]>;
+  public readonly films$: Observable<readonly Film[]>;
+
+  /** Default sorting active field. */
+  public readonly defaultSortActiveField: Sort['active'] = DEFAULT_SORT_ACTIVE_FIELD;
+
+  /** Default type of Sorting. */
+  public readonly defaultSortDirection: Sort['direction'] = DEFAULT_SORT_DIRECTION;
 
   /** Default table config. */
   private readonly defaultTableConfig: TableConfig = {
@@ -58,43 +49,41 @@ export class FilmsPageComponent {
       pageSizeOptions: [2, 3, 6],
     },
     sortConfig: {
-      active: DEFAULT_SORT_ACTIVE,
-      direction: ASCENDING_SORT_DIRECTION,
+      active: this.defaultSortActiveField,
+      direction: this.defaultSortDirection,
     },
   };
 
-  /** Reset pagination. */
-  private resetPagination(): void {
-    this.tableConfig$.next(this.defaultTableConfig);
-  }
-
   /** Search value. */
-  private readonly searchValue$ = this.searchControl.valueChanges.pipe(
-    startWith(this.searchControl.value),
-    debounceTime(DEFAULT_DEBOUNCE_TIME),
-    distinctUntilChanged(),
-    tap(search => {
-      if (search) {
-          this.resetPagination();
-        }
-      }),
-  );
+  private readonly searchValue$: Observable<string>;
 
   public constructor(
     private readonly filmsService: FilmsService,
     private readonly fb: FormBuilder,
   ) {
     this.tableConfig$ = new BehaviorSubject<TableConfig>(this.defaultTableConfig);
+
+    this.searchValue$ = this.searchControl.valueChanges.pipe(
+      startWith(this.searchControl.value),
+      debounceTime(DEFAULT_DEBOUNCE_TIME),
+      distinctUntilChanged(),
+      tap(search => {
+        if (search) {
+          this.tableConfig$.next(this.defaultTableConfig);
+          }
+        }),
+    );
+
     this.films$ = combineLatest([
       this.tableConfig$,
       this.searchValue$,
     ]).pipe(
       switchMap(([tableConfig, subjectKeyUp]) => this.filmsService.getFilms(tableConfig, subjectKeyUp)),
     );
-
   }
 
-  /** On paginate change function.
+  /**
+   * On paginate change function.
    * @param pageEvent - PageEvent.
    */
   public onPaginateChange(pageEvent: PageEvent): void {
@@ -106,8 +95,7 @@ export class FilmsPageComponent {
           ...pageEvent,
         },
       });
-    }
-    if (pageEvent.pageSize !== this.tableConfig$.value.pageConfig.pageSize) {
+    } else {
       this.tableConfig$.next({
         ...this.tableConfig$.value,
         pageConfig: {
@@ -120,7 +108,8 @@ export class FilmsPageComponent {
     }
   }
 
-  /** On sorting change function.
+  /**
+   * On sorting change function.
    * @param sort - SortEvent.
    */
   public onSortChange(sort: Sort): void {
