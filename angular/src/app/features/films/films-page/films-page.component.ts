@@ -1,5 +1,5 @@
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, startWith, switchMap, tap, Observable } from 'rxjs';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, startWith, switchMap, tap, Observable, takeUntil, ReplaySubject } from 'rxjs';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { FilmsService } from 'src/app/core/services/films.service';
@@ -19,7 +19,7 @@ import { DEFAULT_SORT_ACTIVE_FIELD, DEFAULT_SORT_DIRECTION, DEFAULT_DEBOUNCE_TIM
   styleUrls: ['./films-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilmsPageComponent {
+export class FilmsPageComponent implements OnInit, OnDestroy {
 
   /** Names of displayed columns array.*/
   public readonly displayedColumns: readonly string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
@@ -38,6 +38,8 @@ export class FilmsPageComponent {
 
   /** Default type of Sorting. */
   public readonly defaultSortDirection: Sort['direction'] = DEFAULT_SORT_DIRECTION;
+
+  private onDestroy = new ReplaySubject(1);
 
   /** Default table config. */
   private readonly defaultTableConfig: TableConfig = {
@@ -67,11 +69,6 @@ export class FilmsPageComponent {
       startWith(this.searchControl.value),
       debounceTime(DEFAULT_DEBOUNCE_TIME),
       distinctUntilChanged(),
-      tap(search => {
-        if (search) {
-          this.tableConfig$.next(this.defaultTableConfig);
-          }
-        }),
     );
 
     this.films$ = combineLatest([
@@ -80,6 +77,22 @@ export class FilmsPageComponent {
     ]).pipe(
       switchMap(([tableConfig, subjectKeyUp]) => this.filmsService.getFilms(tableConfig, subjectKeyUp)),
     );
+  }
+
+  /** NgOnInit. */
+  public ngOnInit(): void {
+    /** Reset pagination side effect. */
+    const resetPaginationSideEffect$ = this.searchValue$.pipe(tap(searchValue => {
+      if (searchValue) {
+        this.tableConfig$.next(this.defaultTableConfig);
+      }
+    }), takeUntil(this.onDestroy));
+    resetPaginationSideEffect$.subscribe();
+  }
+
+  /** NgOnDestroy. */
+  public ngOnDestroy(): void {
+    this.onDestroy.complete();
   }
 
   /**
