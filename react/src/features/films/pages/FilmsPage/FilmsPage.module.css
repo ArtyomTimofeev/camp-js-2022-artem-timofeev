@@ -1,0 +1,13 @@
+.filterControls {
+  display: flex;
+  justify-content: space-between;
+  padding: 60px 80px;
+}
+
+.scrollableList {
+  width: 100%;
+  max-width: 360px;
+  height: 50vh;
+  overflow: auto;
+  background-color: var(--scrollableList-background-color);
+}

@@ -1,4 +1,4 @@
-import { memo, VFC } from 'react';
+import { VFC } from 'react';
 import {
   AppBar, Button, Toolbar, Typography,
 } from '@mui/material';
@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { selectIsAuthLoading, selectIsUserAuthorized, selectLoginButtonText } from 'src/store/auth/selectors';
 import { login, logout } from 'src/store/auth/dispatchers';
 
-const AppHeaderComponent: VFC = () => {
+export const AppHeaderComponent: VFC = () => {
   const dispatch = useAppDispatch();
   const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
   const isAuthLoading = useAppSelector(selectIsAuthLoading);
@@ -38,5 +38,3 @@ const AppHeaderComponent: VFC = () => {
     </AppBar>
   );
 };
-
-export const AppHeader = memo(AppHeaderComponent);

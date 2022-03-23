@@ -1,1 +1,1 @@
-export { FilmsPage } from './FilmsPage';
+export { FilmsPageComponent as FilmsPage } from './FilmsPage';

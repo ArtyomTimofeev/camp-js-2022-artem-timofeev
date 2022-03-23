@@ -6,4 +6,7 @@ import { RootState } from '../store';
 export const selectFilms = createSelector((state: RootState) => state.films.films, film => film);
 
 /** Selects films loading state. */
-export const selectIsFilmsLoading = createSelector((state: RootState) => state.films.loading, loading => loading);
+export const selectLastDocCursor = createSelector(
+  (state: RootState) => state.films.lastDocCursor,
+  lastDocCursor => lastDocCursor,
+);

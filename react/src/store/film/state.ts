@@ -1,3 +1,4 @@
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore/lite';
 import { Film } from '../../models/film';
 
 /**
@@ -10,11 +11,11 @@ export interface FilmsState {
   /** Error. */
   readonly error?: string;
 
-  /** Loading. */
-  readonly loading: boolean;
+  /** Last document cursor. */
+  readonly lastDocCursor: QueryDocumentSnapshot<DocumentData> | null;
 }
 
 export const initialState: FilmsState = {
-  loading: false,
   films: [],
+  lastDocCursor: null,
 };

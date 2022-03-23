@@ -1,15 +1,16 @@
 interface AuthState {
-  /** */
-  authLoading: boolean;
 
-  /** */
-  isUserAuthorized: boolean;
+  /** Auth Loading. */
+  readonly authLoading: boolean;
 
-  /** */
-  loginButtonText: string;
+  /** IsUserAuthorized flag. */
+  readonly isUserAuthorized: boolean;
 
-  /** */
-  error?: string;
+  /** Login Button Text. */
+  readonly loginButtonText: string;
+
+  /** Auth Error. */
+  readonly error?: string;
 }
 
 export const initialState: AuthState = {

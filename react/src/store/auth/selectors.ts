@@ -7,7 +7,7 @@ export const selectIsUserAuthorized = createSelector(
   isUserAuthorized => isUserAuthorized,
 );
 
-/** Selects auth loading state. */
+/** Selects auth loading. */
 export const selectIsAuthLoading = createSelector(
   (state: RootState) => state.auth.authLoading,
   authLoading => authLoading,

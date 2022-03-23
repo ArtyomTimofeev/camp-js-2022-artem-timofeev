@@ -16,5 +16,8 @@ export const DEFAULT_SORTING_TYPE = TITLE_PROPERTY;
 /** Default debounce time. */
 export const DEFAULT_DEBOUNCE_TIME = 1000;
 
-/** FIrebase symbol encoding. */
+/** Firebase symbol encoding. */
 export const FIREBASE_SYMBOL_ENCODING = '\uf8ff';
+
+/** Limit for getting films query. */
+export const FILMS_DOCS_LIMIT = 7;

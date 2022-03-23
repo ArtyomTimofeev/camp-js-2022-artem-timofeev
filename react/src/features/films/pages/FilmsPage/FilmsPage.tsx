@@ -1,43 +1,56 @@
-import { Button, List, Typography } from '@mui/material';
-import {
-  memo, useEffect, useState, VFC,
-} from 'react';
+import { List, Typography } from '@mui/material';
+import { useEffect, useState, VFC } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchFilms, fetchMoreFilms } from 'src/store/post/dispatchers';
-import { selectFilms } from 'src/store/post/selectors';
+import { fetchFilms, fetchMoreFilms } from 'src/store/film/dispatchers';
+import { selectFilms, selectLastDocCursor } from 'src/store/film/selectors';
 import { DEFAULT_SORTING_TYPE } from 'src/utils/constants';
-import { PostCard } from '../../components/PostCard';
-import { Search } from '../../components/Search/Search';
+import { FilmItem } from '../../components/FilmItem';
+import { Search } from '../../components/Search';
 import { SortingSelect } from '../../components/SortingSelect';
+import styles from './FilmsPage.module.css';
 
-const FilmsPageComponent: VFC = () => {
+export const FilmsPageComponent: VFC = () => {
   const dispatch = useAppDispatch();
+
   const films = useAppSelector(selectFilms);
+  const lastDocCursor = useAppSelector(selectLastDocCursor);
 
   const [sortingType, setSortingType] = useState(DEFAULT_SORTING_TYPE);
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     dispatch(fetchFilms({ sortingType, searchValue }));
-  }, [dispatch, sortingType, searchValue, films]);
+  }, [dispatch, sortingType, searchValue]);
+
+  const fetchNextFilmsChunk = (): void => {
+    dispatch(fetchMoreFilms({ sortingType, lastDocCursor }));
+  };
 
   return (
     <>
       <Typography variant="h4" component="h1" align="center">SW Films</Typography>
-      <SortingSelect sortingType={sortingType} setSortingType={setSortingType} />
-      <Search searchValue={searchValue} setSearchValue={setSearchValue} />
+      <div className={styles.filterControls}>
+        <Search searchValue={searchValue} setSearchValue={setSearchValue} />
+        <SortingSelect sortingType={sortingType} setSortingType={setSortingType} />
+      </div>
       <List
-        sx={{
-          width: '100%', maxWidth: 360, bgcolor: 'background.paper', overflow: 'auto', maxHeight: '500px',
-        }}
+        id="scrollableList"
+        className={styles.scrollableList}
+        component="div"
       >
-        {films.map(film => (
-          <PostCard key={film.id} post={film} />
-        ))}
-        <Button onClick={() => dispatch(fetchMoreFilms())}>More </Button>
+        <InfiniteScroll
+          dataLength={films.length}
+          next={fetchNextFilmsChunk}
+          scrollableTarget="scrollableList"
+          hasMore
+          loader
+        >
+          {films.map(film => (
+            <FilmItem key={film.id} film={film} />
+          ))}
+        </InfiniteScroll>
       </List>
     </>
   );
 };
-
-export const FilmsPage = memo(FilmsPageComponent);

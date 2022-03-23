@@ -1,1 +1,1 @@
-export { SortingSelect } from './SortingSelect';
+export { SortingSelectComponent as SortingSelect } from './SortingSelect';

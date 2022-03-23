@@ -1,17 +1,18 @@
 import {
   Avatar, ListItemAvatar, ListItemText,
 } from '@mui/material';
-import { memo, VFC } from 'react';
+import { VFC } from 'react';
 import { Film } from 'src/models/film';
 import MovieIcon from '@mui/icons-material/Movie';
 import ListItemButton from '@mui/material/ListItemButton';
 
 interface Props {
+
   /** Film. */
-  readonly post: Film;
+  readonly film: Film;
 }
 
-const PostCardComponent: VFC<Props> = ({ post }) => (
+export const FilmItemComponent: VFC<Props> = ({ film }) => (
   <ListItemButton>
     <ListItemAvatar>
       <Avatar>
@@ -19,18 +20,16 @@ const PostCardComponent: VFC<Props> = ({ post }) => (
       </Avatar>
     </ListItemAvatar>
     <ListItemText
-      primary={post.title}
+      primary={film.title}
       secondary={(
         <>
           <b>Release Date: </b>
-          {post.releaseDate.toLocaleDateString()}
+          {film.releaseDate.toLocaleDateString()}
           <br />
           <b>Episode №: </b>
-          {post.episodeId}
+          {film.episodeId}
         </>
       )}
     />
   </ListItemButton>
 );
-
-export const PostCard = memo(PostCardComponent);

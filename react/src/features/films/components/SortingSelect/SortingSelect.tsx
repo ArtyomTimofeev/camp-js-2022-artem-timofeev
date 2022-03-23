@@ -14,30 +14,28 @@ interface Props {
   readonly setSortingType: Dispatch<React.SetStateAction<string>>;
 }
 
-const SortingSelectComponent: VFC<Props> = ({ sortingType, setSortingType }) => {
+export const SortingSelectComponent: VFC<Props> = ({ sortingType, setSortingType }) => {
   const handleChange = (event: SelectChangeEvent): void => {
     setSortingType(event.target.value);
   };
 
   return (
-    <Box sx={{ float: 'right' }}>
+    <Box>
       <FormControl sx={{ minWidth: 240 }}>
-        <InputLabel id="simple-select-label">Sorting</InputLabel>
+        <InputLabel id="sorting-select-label">Sorting</InputLabel>
         <Select
           color="secondary"
-          labelId="simple-select-label"
-          id="simple-select"
+          labelId="sorting-select-label"
+          id="sorting-select"
           value={sortingType}
           label="Sorting"
           onChange={handleChange}
         >
           <MenuItem value={TITLE_PROPERTY}>By Title</MenuItem>
-          <MenuItem value={EPISODE_ID_PROPERTY}>By Rating</MenuItem>
+          <MenuItem value={EPISODE_ID_PROPERTY}>By Episode №</MenuItem>
           <MenuItem value={RELEASE_DATE_PROPERTY}>By Release Date</MenuItem>
         </Select>
       </FormControl>
     </Box>
   );
 };
-
-export const SortingSelect = SortingSelectComponent;

@@ -3,7 +3,7 @@ import {
   TypedUseSelectorHook, useDispatch, useSelector,
 } from 'react-redux';
 import { authSlice } from './auth/slice';
-import { filmsSlice } from './post/slice';
+import { filmsSlice } from './film/slice';
 
 export const store = configureStore({
   reducer: {

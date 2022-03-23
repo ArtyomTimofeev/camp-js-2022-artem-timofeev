@@ -22,7 +22,7 @@ export const App: React.VFC = () => (
           }}
         >
           <AppHeader />
-          <Container component="main" sx={{ padding: 10, flexGrow: 1 }}>
+          <Container component="main" sx={{ padding: 14, flexGrow: 1 }}>
             <Suspense fallback={<AppLoadingSpinner />}>
               <RootRouter />
             </Suspense>
