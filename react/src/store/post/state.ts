@@ -1,11 +1,11 @@
-import { Post } from 'src/models/post';
+import { Film } from '../../models/film';
 
 /**
- * Posts state.
+ * Films state.
  */
-export interface PostsState {
-  /** Posts list. */
-  readonly posts: Post[];
+export interface FilmsState {
+  /** Films list. */
+  readonly films: Film[];
 
   /** Error. */
   readonly error?: string;
@@ -14,7 +14,7 @@ export interface PostsState {
   readonly loading: boolean;
 }
 
-export const initialState: PostsState = {
+export const initialState: FilmsState = {
   loading: false,
-  posts: [],
+  films: [],
 };

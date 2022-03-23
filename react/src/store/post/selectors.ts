@@ -2,8 +2,8 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { RootState } from '../store';
 
-/** Selects all posts from store. */
-export const selectPosts = createSelector((state: RootState) => state.posts.posts, post => post);
+/** Selects all films from store. */
+export const selectFilms = createSelector((state: RootState) => state.films.films, film => film);
 
-/** Selects posts loading state. */
-export const selectIsPostsLoading = createSelector((state: RootState) => state.posts.loading, loading => loading);
+/** Selects films loading state. */
+export const selectIsFilmsLoading = createSelector((state: RootState) => state.films.loading, loading => loading);

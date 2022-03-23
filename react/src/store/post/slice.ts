@@ -1,21 +1,32 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchPosts } from './dispatchers';
-
+import { fetchFilms, fetchMoreFilms } from './dispatchers';
 import { initialState } from './state';
 
-export const postsSlice = createSlice({
-  name: 'posts',
+export const filmsSlice = createSlice({
+  name: 'films',
   initialState,
   reducers: {},
   extraReducers: builder => builder
-    .addCase(fetchPosts.pending, state => {
+    .addCase(fetchFilms.pending, state => {
       state.loading = true;
     })
-    .addCase(fetchPosts.fulfilled, (state, action) => {
-      state.posts = action.payload;
+    .addCase(fetchFilms.fulfilled, (state, action) => {
+      state.films = action.payload;
       state.loading = false;
     })
-    .addCase(fetchPosts.rejected, (state, action) => {
+    .addCase(fetchFilms.rejected, (state, action) => {
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
+      state.loading = false;
+    })
+    .addCase(fetchMoreFilms.pending, state => {
+      state.loading = true;
+    })
+    .addCase(fetchMoreFilms.fulfilled, (state, action) => {
+      state.films = action.payload;
+    })
+    .addCase(fetchMoreFilms.rejected, (state, action) => {
       if (action.error.message) {
         state.error = action.error.message;
       }

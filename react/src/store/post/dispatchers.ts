@@ -1,7 +1,27 @@
+// @ts-nocheck
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { PostService } from 'src/api/services/post.service';
+import { FilmsService } from 'src/api/services/films.service';
 
-export const fetchPosts = createAsyncThunk(
-  'posts/fetch',
-  () => PostService.fetchPosts(),
+interface Payload {
+
+  /** Sorting type. */
+  readonly sortingType: string;
+
+  /** Search value. */
+  readonly searchValue: string;
+}
+
+export const fetchFilms = createAsyncThunk(
+  'films/fetchFilms',
+  (payload: Payload) => {
+    const {
+      sortingType, searchValue,
+    } = payload;
+    return (FilmsService.fetchFilms(sortingType, searchValue));
+  },
+);
+
+export const fetchMoreFilms = createAsyncThunk(
+  'films/fetchMoreFilms',
+  () => (FilmsService.fetchMoreFilms()),
 );
