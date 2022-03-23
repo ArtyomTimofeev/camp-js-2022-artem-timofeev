@@ -1,4 +1,4 @@
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, startWith, switchMap, tap, Observable, takeUntil, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, startWith, switchMap, tap, Observable, takeUntil, Subject } from 'rxjs';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
@@ -39,7 +39,7 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
   /** Default type of Sorting. */
   public readonly defaultSortDirection: Sort['direction'] = DEFAULT_SORT_DIRECTION;
 
-  private onDestroy = new ReplaySubject(1);
+  private onDestroy$ = new Subject<void>();
 
   /** Default table config. */
   private readonly defaultTableConfig: TableConfig = {
@@ -86,13 +86,14 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
       if (searchValue) {
         this.tableConfig$.next(this.defaultTableConfig);
       }
-    }), takeUntil(this.onDestroy));
+    }), takeUntil(this.onDestroy$));
     resetPaginationSideEffect$.subscribe();
   }
 
   /** NgOnDestroy. */
   public ngOnDestroy(): void {
-    this.onDestroy.complete();
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   /**

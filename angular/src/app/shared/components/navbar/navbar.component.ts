@@ -1,4 +1,4 @@
-import { takeUntil, ReplaySubject, first } from 'rxjs';
+import { takeUntil, first, Subject } from 'rxjs';
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
@@ -14,7 +14,7 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 })
 export class NavbarComponent implements OnDestroy {
 
-  private onDestroy = new ReplaySubject(1);
+  private onDestroy$ = new Subject<void>();
 
   public constructor(
     public readonly auth: AngularFireAuth,
@@ -23,14 +23,15 @@ export class NavbarComponent implements OnDestroy {
 
   /** NgOnDestroy. */
   public ngOnDestroy(): void {
-    this.onDestroy.complete();
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   /** Log in function. */
   public onLoginClick(): void {
     this.authenticationService.login().pipe(
       first(),
-      takeUntil(this.onDestroy),
+      takeUntil(this.onDestroy$),
     )
       .subscribe();
   }
@@ -39,7 +40,7 @@ export class NavbarComponent implements OnDestroy {
   public onLogoutClick(): void {
     this.authenticationService.logout().pipe(
       first(),
-      takeUntil(this.onDestroy),
+      takeUntil(this.onDestroy$),
     )
       .subscribe();
   }
