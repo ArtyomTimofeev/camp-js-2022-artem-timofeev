@@ -5,7 +5,8 @@ import { authService } from './api/AuthService';
 import { disableTableButtons } from './scripts/disablingTableButtons';
 import { FilmsSortingType } from './entities/enums/filmSortingTypeEnum';
 import { createTable } from './scripts/table';
-import { auth, filmsList } from './api/ListManager';
+import { filmsList } from './api/ListManager';
+import { auth } from './api/firebase-config';
 
 const tableBody = document.querySelector<HTMLTableElement>('.films-table__body');
 const loginButton = document.querySelector<HTMLButtonElement>('.login-button');

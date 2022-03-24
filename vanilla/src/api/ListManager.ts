@@ -1,4 +1,3 @@
-import { getAuth } from 'firebase/auth';
 import { query, collection, getDocs, orderBy, limit, startAfter, endBefore, limitToLast, QueryDocumentSnapshot, where, Query, doc, deleteDoc } from 'firebase/firestore';
 
 import { FilmsSortingType } from '../entities/enums/filmSortingTypeEnum';
@@ -6,8 +5,6 @@ import { filmMapper, IMapperFromDto } from '../entities/mappers/filmMapper';
 import { FILMS_COLLECTION } from '../utils/constants';
 
 import { db } from './firebase-config';
-
-export const auth = getAuth();
 
 /** Constant for title searching. */
 const veryBigSymbol = '\uf8ff';
