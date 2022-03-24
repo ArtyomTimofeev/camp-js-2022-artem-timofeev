@@ -14,14 +14,14 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
 })
 export class NavbarComponent implements OnDestroy {
 
-  private onDestroy$ = new Subject<void>();
+  private readonly onDestroy$ = new Subject<void>();
 
   public constructor(
     public readonly auth: AngularFireAuth,
     private readonly authenticationService: AuthenticationService,
   ) {}
 
-  /** NgOnDestroy. */
+  /**  @inheritdoc */
   public ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();

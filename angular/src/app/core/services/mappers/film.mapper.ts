@@ -6,9 +6,9 @@ import { Film } from '../../models/film';
 
 import { FilmDto } from './dto/film.dto';
 
-type SortFieldsNames = 'releaseDate' | 'episodeId' | 'title' | 'producer';
+type SortFieldsNames = keyof Pick<Film, 'releaseDate' | 'episodeId' | 'title' | 'producer'>;
 
-type SortFieldsNamesDto = 'release_date' | 'episode_id' | 'title' | 'producer';
+type SortFieldsNamesDto = keyof Pick<FilmDto['fields'], 'release_date' | 'episode_id' | 'title' | 'producer'>;
 
 /**
  * Firebase requires a sort request to use a value of type "OrderByDirection",

@@ -39,7 +39,7 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
   /** Default type of Sorting. */
   public readonly defaultSortDirection: Sort['direction'] = DEFAULT_SORT_DIRECTION;
 
-  private onDestroy$ = new Subject<void>();
+  private readonly onDestroy$ = new Subject<void>();
 
   /** Default table config. */
   private readonly defaultTableConfig: TableConfig = {
@@ -79,18 +79,21 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  /** NgOnInit. */
+  /**  @inheritdoc */
   public ngOnInit(): void {
     /** Reset pagination side effect. */
-    const resetPaginationSideEffect$ = this.searchValue$.pipe(tap(searchValue => {
+    const resetPaginationSideEffect$ = this.searchValue$.pipe(
+      tap(searchValue => {
       if (searchValue) {
         this.tableConfig$.next(this.defaultTableConfig);
       }
-    }), takeUntil(this.onDestroy$));
+    }),
+      takeUntil(this.onDestroy$),
+    );
     resetPaginationSideEffect$.subscribe();
   }
 
-  /** NgOnDestroy. */
+  /**  @inheritdoc */
   public ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
