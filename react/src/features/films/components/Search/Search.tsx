@@ -11,7 +11,7 @@ interface Props {
   readonly setSearchValue: Dispatch<React.SetStateAction<string>>;
 }
 
-export const SearchComponent: VFC<Props> = ({ setSearchValue }) => {
+export const Search: VFC<Props> = ({ setSearchValue }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(event.target.value);
   };

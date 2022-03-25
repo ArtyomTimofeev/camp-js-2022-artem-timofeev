@@ -1,3 +1,4 @@
+import { createDraft } from 'immer';
 import { } from 'src/models/film';
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchFilms, fetchMoreFilms } from './dispatchers';
@@ -8,22 +9,32 @@ export const filmsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => builder
-    .addCase(fetchFilms.fulfilled, (state, action) => {
-      state.films = action.payload.films;
-      state.lastDocCursor = action.payload.lastDocCursor;
-    })
+    .addCase(fetchFilms.fulfilled, (state, action) => ({
+      ...state,
+      films: action.payload.films,
+      lastDocCursor: action.payload.lastDocCursor,
+    }))
     .addCase(fetchFilms.rejected, (state, action) => {
       if (action.error.message) {
-        state.error = action.error.message;
+        return {
+          ...state,
+          error: action.error.message,
+        };
       }
+      return state;
     })
-    .addCase(fetchMoreFilms.fulfilled, (state, action) => {
-      state.films.push(...action.payload.films);
-      state.lastDocCursor = action.payload.lastDocCursor;
-    })
+    .addCase(fetchMoreFilms.fulfilled, (state, action) => ({
+      ...state,
+      films: state.films.concat(createDraft(action.payload.films)),
+      lastDocCursor: action.payload.lastDocCursor,
+    }))
     .addCase(fetchMoreFilms.rejected, (state, action) => {
       if (action.error.message) {
-        state.error = action.error.message;
+        return {
+          ...state,
+          error: action.error.message,
+        };
       }
+      return state;
     }),
 });

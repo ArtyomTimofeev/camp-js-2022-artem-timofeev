@@ -1,1 +1,1 @@
-export { AppLoadingSpinnerComponent as AppLoadingSpinner } from './AppLoadingSpinner';
+export { AppLoadingSpinner } from './AppLoadingSpinner';

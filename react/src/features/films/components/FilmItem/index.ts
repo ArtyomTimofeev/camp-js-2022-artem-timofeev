@@ -1,1 +1,1 @@
-export { FilmItemComponent as FilmItem } from './FilmItem';
+export { FilmItem } from './FilmItem';

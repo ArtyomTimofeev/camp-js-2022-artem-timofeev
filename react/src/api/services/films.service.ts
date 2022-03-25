@@ -1,7 +1,7 @@
+import { Film } from 'src/models/film';
 import {
   collection, DocumentData, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter, where,
 } from 'firebase/firestore/lite';
-import { FilmsState } from '../../store/film/state';
 import {
   FILMS_COLLECTION_NAME, FILMS_DOCS_LIMIT, FIREBASE_SYMBOL_ENCODING, TITLE_PROPERTY,
 } from '../../utils/constants';
@@ -12,7 +12,14 @@ import { FirebaseService } from './firebase.service';
 /**
  * Films Service returned data.
  */
-type FilmsServiceReturnedData = Pick<FilmsState, 'films' | 'lastDocCursor'>;
+interface FetchFilmsReturnedData {
+
+  /** Films list. */
+  readonly films: Film[];
+
+  /** Last document cursor. */
+  readonly lastDocCursor: QueryDocumentSnapshot<DocumentData>;
+}
 
 export namespace FilmsService {
 
@@ -24,7 +31,7 @@ export namespace FilmsService {
   export async function fetchFilms(
     sortingType: string,
     searchValue: string,
-  ): Promise<FilmsServiceReturnedData> {
+  ): Promise<FetchFilmsReturnedData> {
     let queryForFilms = query(
       collection(FirebaseService.db, FILMS_COLLECTION_NAME),
       orderBy(sortingType),
@@ -41,8 +48,8 @@ export namespace FilmsService {
     const filmsSnapshot = await getDocs(queryForFilms);
     const lastDocCursor = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
     const films = filmsSnapshot.docs
-      .map(doc => ({ ...doc.data(), id: doc.id }))
-      .map(dto => FilmMapper.fromDto(dto as FilmDto));
+      .map(doc => ({ ...doc.data() as FilmDto, id: doc.id }))
+      .map(dto => FilmMapper.fromDto(dto));
     return { lastDocCursor, films };
   }
 
@@ -54,7 +61,7 @@ export namespace FilmsService {
   export async function fetchMoreFilms(
     sortingType: string,
     currentLastDocCursor: QueryDocumentSnapshot<DocumentData> | null,
-  ): Promise<FilmsServiceReturnedData> {
+  ): Promise<FetchFilmsReturnedData> {
     const queryForFilms = query(
       collection(FirebaseService.db, FILMS_COLLECTION_NAME),
       orderBy(sortingType),

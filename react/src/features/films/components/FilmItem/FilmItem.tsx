@@ -1,7 +1,7 @@
 import {
   Avatar, ListItemAvatar, ListItemText,
 } from '@mui/material';
-import { VFC } from 'react';
+import { memo, VFC } from 'react';
 import { Film } from 'src/models/film';
 import MovieIcon from '@mui/icons-material/Movie';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -33,3 +33,5 @@ export const FilmItemComponent: VFC<Props> = ({ film }) => (
     />
   </ListItemButton>
 );
+
+export const FilmItem = memo(FilmItemComponent);

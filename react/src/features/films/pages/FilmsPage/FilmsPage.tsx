@@ -10,7 +10,7 @@ import { Search } from '../../components/Search';
 import { SortingSelect } from '../../components/SortingSelect';
 import styles from './FilmsPage.module.css';
 
-export const FilmsPageComponent: VFC = () => {
+export const FilmsPage: VFC = () => {
   const dispatch = useAppDispatch();
 
   const films = useAppSelector(selectFilms);
@@ -23,6 +23,7 @@ export const FilmsPageComponent: VFC = () => {
     dispatch(fetchFilms({ sortingType, searchValue }));
   }, [dispatch, sortingType, searchValue]);
 
+  /** Fetches next films chunk. */
   const fetchNextFilmsChunk = (): void => {
     dispatch(fetchMoreFilms({ sortingType, lastDocCursor }));
   };

@@ -14,7 +14,7 @@ interface Props {
   readonly setSortingType: Dispatch<React.SetStateAction<string>>;
 }
 
-export const SortingSelectComponent: VFC<Props> = ({ sortingType, setSortingType }) => {
+export const SortingSelect: VFC<Props> = ({ sortingType, setSortingType }) => {
   const handleChange = (event: SelectChangeEvent): void => {
     setSortingType(event.target.value);
   };
