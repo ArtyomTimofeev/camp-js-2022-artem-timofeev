@@ -1,12 +1,10 @@
 import { Film } from 'src/models/film';
 import { FilmDto } from '../dtos/film.dto';
 
-export namespace FilmMapper {
-  /**
-   * From Dto to Model.
-   * @param dto - Dto.
-   */
-  export function fromDto(dto: FilmDto): Film {
+/** Film mapper. */
+class FilmMapper {
+  /** @inheritdoc */
+  public fromDto(dto: FilmDto): Film {
     return new Film({
       id: dto.id,
       charactersIds: dto.fields.characters,
@@ -20,3 +18,5 @@ export namespace FilmMapper {
     });
   }
 }
+
+export const filmMapper = new FilmMapper();

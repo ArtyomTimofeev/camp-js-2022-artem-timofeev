@@ -6,8 +6,8 @@ import {
   FILMS_COLLECTION_NAME, FILMS_DOCS_LIMIT, FIREBASE_SYMBOL_ENCODING, TITLE_PROPERTY,
 } from '../../utils/constants';
 import { FilmDto } from '../dtos/film.dto';
-import { FilmMapper } from '../mappers/film.mapper';
 import { FirebaseService } from './firebase.service';
+import { filmMapper } from '../mappers/film.mapper';
 
 /**
  * Films Service returned data.
@@ -49,7 +49,7 @@ export namespace FilmsService {
     const lastDocCursor = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
     const films = filmsSnapshot.docs
       .map(doc => ({ ...doc.data() as FilmDto, id: doc.id }))
-      .map(dto => FilmMapper.fromDto(dto));
+      .map(dto => filmMapper.fromDto(dto as FilmDto));
     return { lastDocCursor, films };
   }
 
@@ -72,7 +72,7 @@ export namespace FilmsService {
     const lastDocCursor = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
     const films = filmsSnapshot.docs
       .map(doc => ({ ...doc.data(), id: doc.id }))
-      .map(dto => FilmMapper.fromDto(dto as FilmDto));
+      .map(dto => filmMapper.fromDto(dto as FilmDto));
     return { lastDocCursor, films };
   }
 
