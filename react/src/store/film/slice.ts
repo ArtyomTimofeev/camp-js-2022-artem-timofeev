@@ -1,5 +1,5 @@
-import { createDraft } from 'immer';
 import { createSlice } from '@reduxjs/toolkit';
+import { castDraft } from 'immer';
 import { fetchFilms, fetchMoreFilms } from './dispatchers';
 import { initialState } from './state';
 
@@ -15,25 +15,17 @@ export const filmsSlice = createSlice({
     }))
     .addCase(fetchFilms.rejected, (state, action) => {
       if (action.error.message) {
-        return {
-          ...state,
-          error: action.error.message,
-        };
+        state.error = action.error.message;
       }
-      return state;
     })
     .addCase(fetchMoreFilms.fulfilled, (state, action) => ({
       ...state,
-      films: state.films.concat(createDraft(action.payload.films)),
+      films: state.films.concat(castDraft(action.payload.films)),
       lastDocCursor: action.payload.lastDocCursor,
     }))
     .addCase(fetchMoreFilms.rejected, (state, action) => {
       if (action.error.message) {
-        return {
-          ...state,
-          error: action.error.message,
-        };
+        state.error = action.error.message;
       }
-      return state;
     }),
 });

@@ -7,52 +7,32 @@ export const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => builder
-    .addCase(login.pending, state => ({
-      ...state,
-      authLoading: true,
-    }))
-    .addCase(login.fulfilled, state => ({
-      ...state,
-      isUserAuthorized: true,
-      authLoading: false,
-    }))
+    .addCase(login.pending, state => {
+      state.authLoading = true;
+    })
+    .addCase(login.fulfilled, state => {
+      state.isUserAuthorized = true;
+      state.authLoading = false;
+    })
     .addCase(login.rejected, (state, action) => {
       if (action.error.message) {
-        return {
-          ...state,
-          isUserAuthorized: false,
-          authLoading: false,
-          error: action.error.message,
-        };
+        state.error = action.error.message;
       }
-      return {
-        ...state,
-        isUserAuthorized: false,
-        authLoading: false,
-      };
+      state.isUserAuthorized = false;
+      state.authLoading = false;
     })
-    .addCase(logout.pending, state => ({
-      ...state,
-      authLoading: true,
-    }))
-    .addCase(logout.fulfilled, state => ({
-      ...state,
-      isUserAuthorized: false,
-      authLoading: false,
-    }))
+    .addCase(logout.pending, state => {
+      state.authLoading = true;
+    })
+    .addCase(logout.fulfilled, state => {
+      state.isUserAuthorized = false;
+      state.authLoading = false;
+    })
     .addCase(logout.rejected, (state, action) => {
       if (action.error.message) {
-        return {
-          ...state,
-          isUserAuthorized: true,
-          authLoading: false,
-          error: action.error.message,
-        };
+        state.error = action.error.message;
       }
-      return {
-        ...state,
-        isUserAuthorized: true,
-        authLoading: false,
-      };
+      state.authLoading = false;
+      state.isUserAuthorized = true;
     }),
 });
