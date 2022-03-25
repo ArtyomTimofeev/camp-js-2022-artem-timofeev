@@ -1,0 +1,24 @@
+// Angular custom theme.
+
+// Custom application styles.
+@import "./variables.css";
+@import "./angular-material-custom-theme";
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+}
+
+h1 {
+  font-size: var(--h1-font-size);
+}
+
+h2 {
+  font-size: var(--h2-font-size);
+}

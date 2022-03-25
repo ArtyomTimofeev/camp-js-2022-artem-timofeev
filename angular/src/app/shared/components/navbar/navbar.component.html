@@ -1,0 +1,18 @@
+<mat-toolbar class="navbar" color="primary">
+  <span class="navbar__title" routerLink="">SW Films</span>
+  <button
+    type="button"
+    *ngIf="auth.authState | async; else loginCase"
+    mat-flat-button
+    (click)="onLogoutClick()"
+    color="accent"
+  >
+    Logout
+  </button>
+</mat-toolbar>
+
+<ng-template #loginCase>
+  <button type="button" mat-flat-button (click)="onLoginClick()" color="accent">
+    Login
+  </button>
+</ng-template>

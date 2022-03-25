@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.films-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+}
+
+.films-page__sw-table {
+  min-width: 800px;
+}
+
+.sw-table__caption {
+  padding: 15px;
+  font-size: var(--caption-font-size);
+  background-color: var(--primary-dark-contrast-color);
+  color: var(--primary-light-contrast-color);
+}

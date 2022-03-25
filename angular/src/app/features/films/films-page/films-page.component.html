@@ -1,0 +1,90 @@
+<div class="films-page">
+  <mat-form-field>
+    <mat-label>Search By Title</mat-label>
+    <input matInput type="search" [formControl]="searchControl" />
+  </mat-form-field>
+  <div class="mat-elevation-z8">
+    <table
+      class="films-page__sw-table"
+      aria-label="SW Films data table"
+      *ngIf="films$ | async as films"
+      mat-table
+      [dataSource]="films"
+      matSort
+      [matSortDisabled]="searchControl.value !== ''"
+      [matSortActive]="
+        (tableConfig$ | async)?.sortConfig?.active ?? defaultSortActiveField
+      "
+      [matSortDirection]="
+        (tableConfig$ | async)?.sortConfig?.direction ?? defaultSortDirection
+      "
+      (matSortChange)="onSortChange($event)"
+    >
+      <caption class="sw-table__caption">
+        SW Films
+      </caption>
+      <ng-container matColumnDef="title">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          sortActionDescription="Sort by title"
+        >
+          Title
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="episodeId">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          sortActionDescription="Sort by episode"
+        >
+          Episode №
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.episodeId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="producer">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          sortActionDescription="Sort by producer"
+        >
+          Producer
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.producer }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="releaseDate">
+        <th
+          mat-header-cell
+          mat-sort-header
+          *matHeaderCellDef
+          sortActionDescription="Sort by date"
+        >
+          Release date
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.releaseDate.toLocaleDateString() }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      *ngIf="tableConfig$ | async as tableConfig"
+      [pageIndex]="tableConfig.pageConfig.pageIndex"
+      [pageSize]="tableConfig.pageConfig.pageSize"
+      [pageSizeOptions]="tableConfig.pageConfig.pageSizeOptions"
+      [length]="tableConfig.pageConfig.length"
+      aria-label="Select page"
+      (page)="onPaginateChange($event)"
+    >
+    </mat-paginator>
+  </div>
+</div>

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./vanilla
+        working-directory: ./angular
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2

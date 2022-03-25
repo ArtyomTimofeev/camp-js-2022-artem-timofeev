@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () => import('./features/films/films.module').then(m => m.FilmsModule),
+  },
+];
 
 /** App routing module. */
 @NgModule({

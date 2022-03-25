@@ -7,10 +7,10 @@
 /bazel-out
 
 # Node
+.angular
 /node_modules
 npm-debug.log
 yarn-error.log
-
 # IDEs and editors
 .idea/
 .project
@@ -41,3 +41,8 @@ testem.log
 .DS_Store
 Thumbs.db
 .eslintcache
+
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json
