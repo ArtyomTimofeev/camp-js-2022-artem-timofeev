@@ -1,25 +1,25 @@
-import { useState, VFC } from 'react';
+import { VFC } from 'react';
 import {
   AppBar, Button, Toolbar, Typography,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { selectIsAuthLoading, selectIsUserAuthorized } from 'src/store/auth/selectors';
 import { login, logout } from 'src/store/auth/dispatchers';
+import { LOGIN_TEXT, LOGOUT_TEXT } from 'src/utils/constants';
 
 export const AppHeader: VFC = () => {
   const dispatch = useAppDispatch();
   const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
   const isAuthLoading = useAppSelector(selectIsAuthLoading);
 
-  const [loginButtonText, setLoginButtonText] = useState('Login');
+  const loginButtonText = isUserAuthorized ? LOGOUT_TEXT : LOGIN_TEXT;
 
+  /** Runs a function depending on the authorization status. */
   const toggleLogin = (): void => {
     if (isUserAuthorized) {
       dispatch(logout());
-      setLoginButtonText('Login');
     } else {
       dispatch(login());
-      setLoginButtonText('Logout');
     }
   };
 

@@ -1,5 +1,7 @@
 import { List, Typography } from '@mui/material';
-import { useEffect, useState, VFC } from 'react';
+import {
+  useEffect, useMemo, useState, VFC,
+} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchFilms, fetchMoreFilms } from 'src/store/film/dispatchers';
@@ -22,6 +24,10 @@ export const FilmsPage: VFC = () => {
   useEffect(() => {
     dispatch(fetchFilms({ sortingType, searchValue }));
   }, [dispatch, sortingType, searchValue]);
+
+  const filmsList = useMemo(() => films.map(film => (
+    <FilmItem key={film.id} film={film} />
+  )), [films]);
 
   /** Fetches next films chunk. */
   const fetchNextFilmsChunk = (): void => {
@@ -47,9 +53,7 @@ export const FilmsPage: VFC = () => {
           hasMore
           loader
         >
-          {films.map(film => (
-            <FilmItem key={film.id} film={film} />
-          ))}
+          {filmsList}
         </InfiniteScroll>
       </List>
     </>

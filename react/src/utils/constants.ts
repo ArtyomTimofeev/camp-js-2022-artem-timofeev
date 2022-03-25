@@ -21,3 +21,9 @@ export const FIREBASE_SYMBOL_ENCODING = '\uf8ff';
 
 /** Limit for getting films query. */
 export const FILMS_DOCS_LIMIT = 7;
+
+/** Button text content when user is logged out. */
+export const LOGIN_TEXT = 'Log in';
+
+/** Button text content when user is logged in. */
+export const LOGOUT_TEXT = 'Log out';

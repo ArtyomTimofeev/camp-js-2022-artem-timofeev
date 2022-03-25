@@ -19,6 +19,7 @@ export const Search: VFC<Props> = ({ setSearchValue }) => {
 
   return (
     <TextField
+      type="search"
       autoComplete="off"
       label="Search by title"
       color="secondary"
