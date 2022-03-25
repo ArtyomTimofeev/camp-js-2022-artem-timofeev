@@ -1,5 +1,4 @@
 import { createDraft } from 'immer';
-import { } from 'src/models/film';
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchFilms, fetchMoreFilms } from './dispatchers';
 import { initialState } from './state';
