@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import { VFC, Dispatch } from 'react';
+import { VFC } from 'react';
 import debounce from 'lodash.debounce';
 
 interface Props {
@@ -8,12 +8,12 @@ interface Props {
   readonly searchValue: string;
 
   /** Sets search value. */
-  readonly setSearchValue: Dispatch<React.SetStateAction<string>>;
+  readonly handleSearchValueChange: (value: string) => void;
 }
 
-export const Search: VFC<Props> = ({ setSearchValue }) => {
+export const Search: VFC<Props> = ({ handleSearchValueChange }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchValue(event.target.value);
+    handleSearchValueChange(event.target.value);
   };
   const debounceOnChange = debounce(handleChange, 800);
 

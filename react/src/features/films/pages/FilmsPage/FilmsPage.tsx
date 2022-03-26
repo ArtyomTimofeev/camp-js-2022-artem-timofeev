@@ -34,12 +34,20 @@ export const FilmsPage: VFC = () => {
     dispatch(fetchMoreFilms({ sortingType, lastDocCursor }));
   };
 
+  const handleSearchValueChange = (value: string): void => {
+    setSearchValue(value);
+  };
+
+  const handleSortingTypeChange = (value: string): void => {
+    setSortingType(value);
+  };
+
   return (
     <>
       <Typography variant="h4" component="h1" align="center">SW Films</Typography>
       <div className={styles.filterControls}>
-        <Search searchValue={searchValue} setSearchValue={setSearchValue} />
-        <SortingSelect sortingType={sortingType} setSortingType={setSortingType} />
+        <Search searchValue={searchValue} handleSearchValueChange={handleSearchValueChange} />
+        <SortingSelect sortingType={sortingType} handleSortingTypeChange={handleSortingTypeChange} />
       </div>
       <List
         id="scrollableList"

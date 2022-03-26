@@ -1,4 +1,4 @@
-import { VFC, Dispatch } from 'react';
+import { VFC, useMemo } from 'react';
 import {
   Box, InputLabel, MenuItem, FormControl,
 } from '@mui/material';
@@ -11,13 +11,24 @@ interface Props {
   readonly sortingType: string;
 
   /** Sets sorting type. */
-  readonly setSortingType: Dispatch<React.SetStateAction<string>>;
+  readonly handleSortingTypeChange: (value: string) => void;
 }
 
-export const SortingSelect: VFC<Props> = ({ sortingType, setSortingType }) => {
+export const SortingSelect: VFC<Props> = ({ sortingType, handleSortingTypeChange }) => {
+  const MenuItemValues = useMemo(() => [
+    { id: 1, value: TITLE_PROPERTY, label: 'By Title' },
+    { id: 2, value: EPISODE_ID_PROPERTY, label: 'By Episode №' },
+    { id: 3, value: RELEASE_DATE_PROPERTY, label: 'By Release Date' }], []);
+
   const handleChange = (event: SelectChangeEvent): void => {
-    setSortingType(event.target.value);
+    handleSortingTypeChange(event.target.value);
   };
+
+  const menuItemList = useMemo(() => MenuItemValues.map(item => (
+    <MenuItem value={item.value} key={item.id}>
+      {item.label}
+    </MenuItem>
+  )), [MenuItemValues]);
 
   return (
     <Box>
@@ -31,9 +42,7 @@ export const SortingSelect: VFC<Props> = ({ sortingType, setSortingType }) => {
           label="Sorting"
           onChange={handleChange}
         >
-          <MenuItem value={TITLE_PROPERTY}>By Title</MenuItem>
-          <MenuItem value={EPISODE_ID_PROPERTY}>By Episode №</MenuItem>
-          <MenuItem value={RELEASE_DATE_PROPERTY}>By Release Date</MenuItem>
+          {menuItemList}
         </Select>
       </FormControl>
     </Box>
