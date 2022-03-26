@@ -1,4 +1,4 @@
-import { first, Subject } from 'rxjs';
+import { first, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -72,12 +72,14 @@ export class DialogWithFilmFormComponent implements OnDestroy {
     if (!this.data) {
       this.filmsService.addFilm(this.form.value).pipe(
         first(),
+        takeUntil(this.onDestroy$),
       )
         .subscribe(() => this.router.navigate(['']));
     }
     if (this.data) {
       this.filmsService.updateFilm({ ...this.form.value, id: this.data.film.id }).pipe(
         first(),
+        takeUntil(this.onDestroy$),
       )
         .subscribe(() => this.router.navigate(['']));
     }

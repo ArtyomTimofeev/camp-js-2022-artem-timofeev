@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { first, shareReplay, Subject, switchMap } from 'rxjs';
+import { first, shareReplay, Subject, switchMap, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -73,6 +73,7 @@ export class DetailsFilmPageComponent implements OnDestroy {
   public deleteFilm(id: string): void {
     this.filmsService.deleteFilm(id).pipe(
       first(),
+      takeUntil(this.onDestroy$),
     )
       .subscribe(() => this.router.navigate(['']));
   }
