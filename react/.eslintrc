@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "@chernodub/eslint-config",
+    "react-app",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:react/jsx-runtime"
+  ],
+  "rules": {
+    "@typescript-eslint/member-ordering": 0,
+    "import/prefer-default-export": 0,
+    "class-methods-use-this": 0,
+    "max-classes-per-file": 0,
+    "react/prop-types": 0,
+    "max-len": ["warn", 120],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["state"]
+      }
+    ],
+    "arrow-parens": ["error", "as-needed"],
+    "react/function-component-definition": ["warn", {
+      "namedComponents": "arrow-function"
+    }],
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+  }
+}
