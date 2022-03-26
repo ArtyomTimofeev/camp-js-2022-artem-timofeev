@@ -8,6 +8,7 @@ import { IMapper } from './mappers';
 import { FilmCreateDto, FilmDto } from './dto/film.dto';
 
 type SortFieldsNames = keyof Pick<Film, 'releaseDate' | 'episodeId' | 'title' | 'producer'>;
+
 type SortFieldsNamesDto = keyof Pick<FilmDto['fields'], 'release_date' | 'episode_id' | 'title' | 'producer'>;
 
 /** Firebase sorting config interface. */

@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { first, shareReplay, switchMap } from 'rxjs';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { first, shareReplay, Subject, switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+
 import { Film } from 'src/app/core/models/film';
 import { PlanetMapper } from 'src/app/core/services/mappers/planet.mapper';
 import { CharacterMapper } from 'src/app/core/services/mappers/character.mapper';
@@ -24,7 +25,7 @@ import { FilmsService } from './../../../core/services/films.service';
   styleUrls: ['./details-film-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailsFilmPageComponent {
+export class DetailsFilmPageComponent implements OnDestroy {
   /** Selected film. */
   public readonly selectedFilm$ = this.filmsService.getFilmById(this.route.snapshot.paramMap.get('id') ?? '').pipe(
     shareReplay({ bufferSize: 1, refCount: true }),
@@ -32,8 +33,8 @@ export class DetailsFilmPageComponent {
 
   /** List of related planets. */
   public readonly relatedPlanetsList$ = this.selectedFilm$.pipe(
-    switchMap(film => {
-      const { planetsIds } = film;
+    switchMap(selectedFilm => {
+      const { planetsIds } = selectedFilm;
       return this.additionalCollectionsService
         .getCollectionItems<PlanetDto, Planet>(planetsIds, this.planetMapper, PLANETS_COLLECTION);
     }),
@@ -41,12 +42,14 @@ export class DetailsFilmPageComponent {
 
   /** List of related characters. */
   public readonly relatedCharactersList$ = this.selectedFilm$.pipe(
-    switchMap(film => {
-      const { charactersIds } = film;
+    switchMap(selectedFilm => {
+      const { charactersIds } = selectedFilm;
       return this.additionalCollectionsService
         .getCollectionItems<CharacterDto, Character>(charactersIds, this.characterMapper, CHARACTERS_COLLECTION);
     }),
   );
+
+  private readonly onDestroy$ = new Subject<void>();
 
   public constructor(
     private readonly filmsService: FilmsService,
@@ -57,6 +60,12 @@ export class DetailsFilmPageComponent {
     private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
   ) { }
+
+  /**  @inheritdoc */
+  public ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
 
   /** Delete film function.
    * @param id - Film id.

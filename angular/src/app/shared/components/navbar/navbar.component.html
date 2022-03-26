@@ -2,7 +2,7 @@
   <span class="navbar__title" routerLink="">SW Films</span>
   <button
     type="button"
-    *ngIf="auth.authState | async; else loginCase"
+    *ngIf="authenticationService.isUserAuthorized$ | async; else loginCase"
     mat-flat-button
     (click)="onLogoutClick()"
     color="accent"

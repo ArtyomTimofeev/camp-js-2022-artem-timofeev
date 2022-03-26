@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { AuthorizedGuard } from 'src/app/core/guards/authorized.guard';
+
 import { MaterialModule } from '../../material.module';
 
 import { FilmsPageComponent } from './films-page/films-page.component';
@@ -17,6 +19,7 @@ const routes: Routes = [
   {
     path: 'film-details/:id',
     component: DetailsFilmPageComponent,
+    canActivate: [AuthorizedGuard],
   },
 ];
 

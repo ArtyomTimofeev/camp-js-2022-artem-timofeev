@@ -1,6 +1,6 @@
-import { first } from 'rxjs';
+import { first, Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FilmsService } from 'src/app/core/services/films.service';
@@ -16,7 +16,7 @@ import { Film } from './../../../../core/models/film';
 export interface DialogWithFilmFormData {
 
   /** Film. */
-  readonly film: Film | null;
+  readonly film: Film;
 }
 
 /**
@@ -28,15 +28,17 @@ export interface DialogWithFilmFormData {
   styleUrls: ['./dialog-with-film-form.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogWithFilmFormComponent {
+export class DialogWithFilmFormComponent implements OnDestroy {
   /** All planets in the database. */
   public allPlanets$ = this.additionalCollectionsService.getAllCollectionItems(PLANETS_COLLECTION, this.planetMapper);
 
   /** All characters in the database. */
   public allCharacters$ = this.additionalCollectionsService.getAllCollectionItems(CHARACTERS_COLLECTION, this.characterMapper);
 
+  private readonly onDestroy$ = new Subject<void>();
+
   public constructor(
-    private readonly fb: FormBuilder,
+    private readonly formBuilder: FormBuilder,
     private readonly filmsService: FilmsService,
     private readonly additionalCollectionsService: AdditionalCollectionsService,
     private readonly planetMapper: PlanetMapper,
@@ -46,8 +48,14 @@ export class DialogWithFilmFormComponent {
     @Inject(MAT_DIALOG_DATA) private readonly data: DialogWithFilmFormData,
   ) {}
 
+  /**  @inheritdoc */
+  public ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
   /** Form config. */
-  public form = this.fb.group({
+  public form = this.formBuilder.group({
     title: [this.data?.film?.title ?? '', Validators.required],
     director: [this.data?.film?.director ?? '', [Validators.required]],
     producer: [this.data?.film?.producer ?? '', [Validators.required]],
@@ -68,7 +76,7 @@ export class DialogWithFilmFormComponent {
         .subscribe(() => this.router.navigate(['']));
     }
     if (this.data) {
-      this.filmsService.updateFilm({ ...this.form.value, id: this.data.film?.id }).pipe(
+      this.filmsService.updateFilm({ ...this.form.value, id: this.data.film.id }).pipe(
         first(),
       )
         .subscribe(() => this.router.navigate(['']));

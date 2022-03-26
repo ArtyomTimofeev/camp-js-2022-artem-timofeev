@@ -2,10 +2,12 @@ import { combineLatest, map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
+import { CHUNK_SIZE_OF_IDS } from '../utils/constants';
+
 import { IMapper } from './mappers/mappers';
 
 /**
- *
+ * Additional Collections Service.
  */
 @Injectable({
   providedIn: 'root',
@@ -13,10 +15,24 @@ import { IMapper } from './mappers/mappers';
 export class AdditionalCollectionsService {
 
   public constructor(
-    private readonly afs: AngularFirestore,
+    private readonly angularFirestore: AngularFirestore,
   ) {}
 
-  /** Function to get items from any collection related by ids.
+  /**
+   * Gets sliced ids array.
+   * @param ids - Items ids.
+   * @param size - Chunk size of ids.
+   */
+  private getSlicedArrayOfIds(ids: readonly number[], size: number): number[][] {
+    const slicedIdsArray: number[][] = [];
+    for (let i = 0; i < Math.ceil(ids.length / size); i++) {
+      slicedIdsArray[i] = ids.slice((i * size), (i * size) + size);
+    }
+    return slicedIdsArray;
+  }
+
+  /**
+   * Gets items from any collection related by ids.
    * @param ids - Items ids.
    * @param mapper - Mapper for items.
    * @param collectionName - Name of collection.
@@ -24,9 +40,9 @@ export class AdditionalCollectionsService {
   public getCollectionItems<TDto, TModel>(
     ids: readonly number[], mapper: IMapper<TDto, TModel>, collectionName: string,
   ): Observable<TModel[]> {
-    const slicedIds = this.getSlicedArrayOfIds(ids, 10);
+    const slicedIds = this.getSlicedArrayOfIds(ids, CHUNK_SIZE_OF_IDS);
     const allItems: Observable<TModel[]>[] = slicedIds.map(chunk =>
-      this.afs.collection<TDto>(collectionName, ref => ref.where('pk', 'in', chunk))
+      this.angularFirestore.collection<TDto>(collectionName, ref => ref.where('pk', 'in', chunk))
         .snapshotChanges()
         .pipe(
           map(snapshot => snapshot.map(s => ({ ...s.payload.doc.data(), id: s.payload.doc.id }))),
@@ -37,16 +53,8 @@ export class AdditionalCollectionsService {
     );
   }
 
-  private getSlicedArrayOfIds(ids: readonly number[], size: number): number[][] {
-    const slicedIdsArray: number[][] = [];
-    for (let i = 0; i < Math.ceil(ids.length / size); i++) {
-      slicedIdsArray[i] = ids.slice((i * size), (i * size) + size);
-    }
-    return slicedIdsArray;
-  }
-
   /**
-   * Function to get all collection items.
+   * Gets all collection items.
    * @param collectionName - Name of collection.
    * @param mapper -  Mapper for items.
    */
@@ -54,7 +62,7 @@ export class AdditionalCollectionsService {
     collectionName: string,
     mapper: IMapper<TDto, TModel>,
   ): Observable<TModel[]> {
-    const itemsCollection = this.afs.collection<TDto>(collectionName);
+    const itemsCollection = this.angularFirestore.collection<TDto>(collectionName);
     return itemsCollection.snapshotChanges()
       .pipe(
         map(snapshot => snapshot.map(s => s.payload.doc.data())),

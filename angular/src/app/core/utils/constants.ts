@@ -24,3 +24,6 @@ export const TITLE_PROPERTY = 'fields.title';
 
 /** Default debounce time. */
 export const DEFAULT_DEBOUNCE_TIME = 1000;
+
+/** Chunk size of ids. */
+export const CHUNK_SIZE_OF_IDS = 10;

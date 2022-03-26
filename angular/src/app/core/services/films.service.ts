@@ -54,7 +54,7 @@ export class FilmsService {
   }
 
   /**
-   * Gets query.
+   * Gets query for fetching films.
    * @param pageConfig - Page config.
    * @param sortConfig - Sorting config.
    * @param searchValue - Search value.
@@ -94,7 +94,7 @@ export class FilmsService {
   }
 
   /**
-   * Function to get all films.
+   * Gets all films in collection.
    */
   public getAllFilms(): Observable<Film[]> {
     const itemsCollection = this.angularFirestore.collection<FilmDto>(FILMS_COLLECTION);
@@ -106,7 +106,6 @@ export class FilmsService {
   }
 
   /**
-   * Function to get film doc by id.
    * Gets film doc by id.
    * @param id - Doc id.
    */

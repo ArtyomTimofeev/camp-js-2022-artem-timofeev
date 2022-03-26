@@ -1,5 +1,6 @@
 <div class="details-film-page">
   <button
+    type="button"
     class="details-film-page__add-button"
     mat-fab
     color="primary"
@@ -33,15 +34,23 @@
         </span>
       </p>
     </div>
-    <div class="buttons">
+    <div class="film-details-card__controls">
       <button
+        type="button"
+        class="card__controls__edit-button"
         mat-flat-button
         color="accent"
         (click)="openDialogForEditFilm(film)"
       >
         Edit Card
       </button>
-      <button mat-flat-button color="warn" (click)="deleteFilm(film.id)">
+      <button
+        type="button"
+        class="card__controls__delete-button"
+        mat-flat-button
+        color="warn"
+        (click)="deleteFilm(film.id)"
+      >
         Delete Card
       </button>
     </div>
