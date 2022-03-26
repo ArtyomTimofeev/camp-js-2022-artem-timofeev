@@ -12,7 +12,7 @@ import { IMapper } from './mappers';
 export class CharacterMapper implements IMapper<CharacterDto, Character> {
 
   /**
-   * Maps Character DTO to Character model.
+   * From Dto to Model.
    * @param dto Character DTO.
    */
   public fromDto(dto: CharacterDto): Character {
@@ -35,7 +35,7 @@ export class CharacterMapper implements IMapper<CharacterDto, Character> {
   }
 
   /**
-   * Maps Character model to Character DTO.
+   * From Model to Dto.
    * @param model Character model.
    */
   public toDto(model: Character): CharacterDto {

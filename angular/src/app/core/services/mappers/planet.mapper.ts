@@ -12,7 +12,7 @@ import { IMapper } from './mappers';
 export class PlanetMapper implements IMapper<PlanetDto, Planet> {
 
   /**
-   * Maps Planet DTO to Planet model.
+   * From Dto to Model.
    * @param dto Planet DTO.
    */
   public fromDto(dto: PlanetDto): Planet {
@@ -35,7 +35,7 @@ export class PlanetMapper implements IMapper<PlanetDto, Planet> {
   }
 
   /**
-   * Maps Planet model to Planet DTO.
+   * From Model to Dto.
    * @param model Model model.
    */
   public toDto(model: Planet): PlanetDto {
