@@ -1,27 +1,28 @@
-<div class="sw-table">
-  <div class="search-container">
-    <mat-form-field>
-      <mat-label>Search By Title</mat-label>
-      <input
-        matInput
-        type="search"
-        [formControl]="searchControl"
-        autocomplete="off"
-      />
-    </mat-form-field>
-  </div>
+<div class="films-page">
+  <mat-form-field>
+    <mat-label>Search By Title</mat-label>
+    <input matInput type="search" [formControl]="searchControl" />
+  </mat-form-field>
   <div class="mat-elevation-z8">
     <table
+      class="films-page__sw-table"
       aria-label="SW Films data table"
       *ngIf="requestedFilms$ | async as films"
       mat-table
       [dataSource]="films"
       matSort
-      [matSortDisabled]="!!searchControl.value"
-      [matSortActive]="(sortConfig$ | async)?.active ?? 'title'"
-      [matSortDirection]="(sortConfig$ | async)?.direction ?? 'asc'"
+      [matSortDisabled]="searchControl.value !== ''"
+      [matSortActive]="
+        (tableConfig$ | async)?.sortConfig?.active ?? defaultSortActiveField
+      "
+      [matSortDirection]="
+        (tableConfig$ | async)?.sortConfig?.direction ?? defaultSortDirection
+      "
       (matSortChange)="onSortChange($event)"
     >
+      <caption class="sw-table__caption">
+        SW Films
+      </caption>
       <ng-container matColumnDef="title">
         <th
           mat-header-cell
@@ -78,13 +79,13 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
     <mat-paginator
-      *ngIf="pageConfig$ | async as pageConfig"
-      [pageIndex]="pageConfig.pageIndex"
-      [pageSize]="pageConfig.pageSize"
-      [pageSizeOptions]="[2, 3, 10]"
-      [length]="(allFilms$ | async)?.length"
+      *ngIf="tableConfig$ | async as tableConfig"
+      [pageIndex]="tableConfig.pageConfig.pageIndex"
+      [pageSize]="tableConfig.pageConfig.pageSize"
+      [pageSizeOptions]="tableConfig.pageConfig.pageSizeOptions"
+      [length]="tableConfig.pageConfig.length"
       aria-label="Select page"
-      (page)="($event); onPaginateChange($event)"
+      (page)="onPaginateChange($event)"
     >
     </mat-paginator>
   </div>

@@ -2,21 +2,20 @@
   display: block;
 }
 
-table {
-  min-width: 800px;
-}
-
-.mat-elevation-z8 {
-  width: 800px;
-}
-
-.sw-table {
+.films-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 100px;
 }
 
-a {
-  color: var(--accent-color);
+.films-page__sw-table {
+  min-width: 800px;
+}
+
+.sw-table__caption {
+  padding: 15px;
+  font-size: var(--caption-font-size);
+  background-color: var(--primary-dark-contrast-color);
+  color: var(--primary-light-contrast-color);
 }

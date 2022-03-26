@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { takeUntil, first, Subject } from 'rxjs';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 /**
- * Class Navbar.
+ * Navbar Component.
  */
 @Component({
   selector: 'sw-navbar',
@@ -11,6 +12,36 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
   styleUrls: ['./navbar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavbarComponent {
-  public constructor(public readonly authenticationService: AuthenticationService) {}
+export class NavbarComponent implements OnDestroy {
+
+  private readonly onDestroy$ = new Subject<void>();
+
+  public constructor(
+    public readonly auth: AngularFireAuth,
+    private readonly authenticationService: AuthenticationService,
+  ) {}
+
+  /**  @inheritdoc */
+  public ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
+  /** Log in function. */
+  public onLoginClick(): void {
+    this.authenticationService.login().pipe(
+      first(),
+      takeUntil(this.onDestroy$),
+    )
+      .subscribe();
+  }
+
+  /** Log out function. */
+  public onLogoutClick(): void {
+    this.authenticationService.logout().pipe(
+      first(),
+      takeUntil(this.onDestroy$),
+    )
+      .subscribe();
+  }
 }

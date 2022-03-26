@@ -1,7 +1,7 @@
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { BehaviorSubject } from 'rxjs';
+import { defer, Observable, mapTo } from 'rxjs';
 
 /**
  * Authentication Service.
@@ -13,25 +13,18 @@ export class AuthenticationService {
 
   public constructor(private readonly auth: Auth) {}
 
-  /** IsUserAuthorized flag. */
-  public readonly isUserAuthorized$ = new BehaviorSubject<Boolean>(false);
-
   /**
    * Login through google account.
    */
-  public login(): void {
+  public login(): Observable<void> {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(this.auth, provider).then(() => {
-      this.isUserAuthorized$.next(true);
-    });
+    return defer(() => signInWithPopup(this.auth, provider)).pipe(mapTo(void 0));
   }
 
   /**
    * Logout through google account.
    */
-  public logout(): void {
-    this.auth.signOut().then(() => {
-      this.isUserAuthorized$.next(false);
-    });
+  public logout(): Observable<void> {
+    return defer(() => this.auth.signOut());
   }
 }

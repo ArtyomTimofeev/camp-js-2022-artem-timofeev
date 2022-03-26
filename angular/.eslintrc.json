@@ -37,13 +37,6 @@
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {}
-    },
-    {
-      "files": ["angular/src/services/mappers"],
-      "rules": {
-        "linebreak-style": 0,
-        "@typescript-eslint/naming-convention": 0
-      }
     }
   ]
 }

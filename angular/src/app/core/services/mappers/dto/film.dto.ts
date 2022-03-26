@@ -19,7 +19,7 @@ export interface FilmDto {
     /** Opening crawl. */
     readonly opening_crawl: string;
 
-    /** Producer name. */
+    /** Producers names. */
     readonly producer: string;
 
     /** Release date (zzzz-yy-xx). */

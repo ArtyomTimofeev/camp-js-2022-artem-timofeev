@@ -1,10 +1,11 @@
 /* Custom application color and font settings */
 :root {
   /* Font */
-  --font-size: 18px;
-  --font-family: Roboto, sans-serif;
-  --h1-font-size: 26px;
-  --h2-font-size: 14px;
+  --font-size: 14px;
+  --font-family: sans-serif;
+  --h1-font-size: 21px;
+  --h2-font-size: 17px;
+  --caption-font-size: 24px;
 
   /* Styles that don't represent the brand (stole this phrase from material.io) */
 
@@ -20,7 +21,7 @@
   --primary-light-color: #c5cae9;
   --primary-contrast-color: #ffffff;
   --primary-dark-contrast-color: #ffffff;
-  --primary-light-contrast-color: #000000;
+  --primary-light-contrast-color: #000000b4;
 
   --accent-color: #da9233;
   --accent-dark-color: #cc7e18;

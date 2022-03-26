@@ -1,21 +1,24 @@
-
 import { Injectable } from '@angular/core';
 import { OrderByDirection } from '@angular/fire/firestore';
-import { Sort } from '@angular/material/sort';
 
 import { Film } from '../../models/film';
+import { SortConfig } from '../../models/table-config';
 
 import { IMapper } from './mappers';
 import { FilmCreateDto, FilmDto } from './dto/film.dto';
+
+type SortFieldsNames = keyof Pick<Film, 'releaseDate' | 'episodeId' | 'title' | 'producer'>;
+type SortFieldsNamesDto = keyof Pick<FilmDto['fields'], 'release_date' | 'episode_id' | 'title' | 'producer'>;
 
 /** Firebase sorting config interface. */
 interface FirebaseSortQuery {
 
   /** The field by which sorting occurs. */
-  activeField: string;
+  readonly activeField: string;
 
-  /** Sorting direction. */
-  direction: OrderByDirection | '';
+  /** Sorting direction.
+   */
+  readonly direction: OrderByDirection | '';
 }
 
 /** Film mapper. */
@@ -24,15 +27,8 @@ interface FirebaseSortQuery {
 })
 export class FilmMapper implements IMapper<FilmCreateDto, Film> {
 
-  /** From sort config to sort query. */
-  public querySortMap: Map<keyof Film, keyof FilmDto['fields']> = new Map([
-    ['releaseDate', 'release_date'],
-    ['episodeId', 'episode_id'],
-    ['title', 'title'],
-    ['producer', 'producer'],
-  ]);
-
-  /** From Dto to Model.
+  /**
+   * From Dto to Model.
    * @param dto - Dto.
    */
   public fromDto(dto: FilmDto): Film {
@@ -49,7 +45,8 @@ export class FilmMapper implements IMapper<FilmCreateDto, Film> {
     };
   }
 
-  /** From Model to Dto.
+  /**
+   * From Model to Dto.
    * @param model - Model.
    */
   public toDto(model: Film): FilmCreateDto {
@@ -59,7 +56,7 @@ export class FilmMapper implements IMapper<FilmCreateDto, Film> {
         director: model.director,
         opening_crawl: model.openingCrawl,
         producer: model.producer,
-        release_date: String(model.releaseDate),
+        release_date: model.releaseDate.toISOString(),
         characters: model.charactersIds,
         planets: model.planetsIds,
         episode_id: model.episodeId,
@@ -67,14 +64,22 @@ export class FilmMapper implements IMapper<FilmCreateDto, Film> {
     };
   }
 
-  /** From Model SortConfig to Dto Sort query.
+  /**
+   * From Model SortConfig to Dto Sort query.
    * @param sortConfig - Sorting config.
    */
-  public toDtoSortConfig(sortConfig: Sort): FirebaseSortQuery | null {
-    const sortFiled = sortConfig.active as keyof Film;
+  public toDtoSortConfig(sortConfig: SortConfig): FirebaseSortQuery {
+    const sortField = sortConfig.active as SortFieldsNames;
     return {
-      activeField: `fields.${this.querySortMap.get(sortFiled)}`,
+      activeField: `fields.${this.sortFieldsNamesDto[sortField]}`,
       direction: sortConfig.direction ?? 'asc',
     };
   }
+
+  private readonly sortFieldsNamesDto: Record<SortFieldsNames, SortFieldsNamesDto> = {
+    releaseDate: 'release_date',
+    episodeId: 'episode_id',
+    title: 'title',
+    producer: 'producer',
+  };
 }
