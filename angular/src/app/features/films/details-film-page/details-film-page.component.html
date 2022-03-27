@@ -15,20 +15,23 @@
     class="details-film-page__film-details-card"
   >
     <div>
-      <h1><b>Title:</b> {{ film.title }}</h1>
-      <p><b>Release date:</b> {{ film.releaseDate.toLocaleDateString() }}</p>
-      <p><b>Description:</b> {{ film.openingCrawl }}</p>
-      <p><b>Producer:</b> {{ film.producer }}</p>
-      <p><b>Director:</b> {{ film.director }}</p>
-      <p><b>Episode №:</b> {{ film.episodeId }}</p>
+      <h1><strong>Title:</strong> {{ film.title }}</h1>
+      <p>
+        <strong>Release date:</strong>
+        {{ film.releaseDate.toLocaleDateString() }}
+      </p>
+      <p><strong>Description:</strong> {{ film.openingCrawl }}</p>
+      <p><strong>Producer:</strong> {{ film.producer }}</p>
+      <p><strong>Director:</strong> {{ film.director }}</p>
+      <p><strong>Episode №:</strong> {{ film.episodeId }}</p>
       <p *ngIf="relatedPlanetsList$ | async as planets">
-        <b>The planets on which the action took place:</b>
+        <strong>The planets on which the action took place:</strong>
         <span *ngFor="let planet of planets; let isLast = last">
           {{ planet.name }}{{ isLast ? "" : "," }}
         </span>
       </p>
       <p *ngIf="relatedCharactersList$ | async as characters">
-        <b>Characters featured in the film:</b>
+        <strong>Characters featured in the film:</strong>
         <span *ngFor="let character of characters; let isLast = last">
           {{ character.name }}{{ isLast ? "" : "," }}
         </span>
