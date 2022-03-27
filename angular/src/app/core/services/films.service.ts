@@ -96,7 +96,7 @@ export class FilmsService {
   /**
    * Gets all films in collection.
    */
-  public getAllFilms(): Observable<Film[]> {
+  public getAllFilms(): Observable<readonly Film[]> {
     const itemsCollection = this.angularFirestore.collection<FilmDto>(FILMS_COLLECTION);
     return itemsCollection.snapshotChanges()
       .pipe(
@@ -109,7 +109,7 @@ export class FilmsService {
    * Gets film doc by id.
    * @param id - Doc id.
    */
-  public getFilmById(id: Film['id']): Observable<Film> {
+  public getFilmById(id: Film['id']): Observable< Film> {
     const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
     return docData(filmDocRef, { idField: 'id' }).pipe(
       map(filmDto => this.filmMapper.fromDto(filmDto)),

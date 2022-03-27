@@ -39,7 +39,7 @@ export class AdditionalCollectionsService {
    */
   public getCollectionItems<TDto, TModel>(
     ids: readonly number[], mapper: IMapper<TDto, TModel>, collectionName: string,
-  ): Observable<TModel[]> {
+  ): Observable<readonly TModel[]> {
     const slicedIds = this.getSlicedArrayOfIds(ids, CHUNK_SIZE_OF_IDS);
     const allItems: Observable<TModel[]>[] = slicedIds.map(chunk =>
       this.angularFirestore.collection<TDto>(collectionName, ref => ref.where('pk', 'in', chunk))
@@ -61,7 +61,7 @@ export class AdditionalCollectionsService {
   public getAllCollectionItems<TDto, TModel>(
     collectionName: string,
     mapper: IMapper<TDto, TModel>,
-  ): Observable<TModel[]> {
+  ): Observable<readonly TModel[]> {
     const itemsCollection = this.angularFirestore.collection<TDto>(collectionName);
     return itemsCollection.snapshotChanges()
       .pipe(
