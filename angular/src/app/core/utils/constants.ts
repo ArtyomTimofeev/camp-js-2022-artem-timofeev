@@ -7,9 +7,6 @@ export const CHARACTERS_COLLECTION = 'people';
 /** Planets collection name for firebase connection.*/
 export const PLANETS_COLLECTION = 'planets';
 
-/** Symbol encoding. */
-export const VERY_BIG_SYMBOL = '\uf8ff';
-
 /** Default sorting active field. */
 export const DEFAULT_SORT_ACTIVE_FIELD = 'title';
 
