@@ -18,8 +18,8 @@ export const FilmsPage: VFC = () => {
   const films = useAppSelector(selectFilms);
   const lastDocCursor = useAppSelector(selectLastDocCursor);
 
-  const [sortingType, setSortingType] = useState(DEFAULT_SORTING_TYPE);
-  const [searchValue, setSearchValue] = useState('');
+  const [sortingType, setSortingType] = useState<string>(DEFAULT_SORTING_TYPE);
+  const [searchValue, setSearchValue] = useState<string>('');
 
   useEffect(() => {
     dispatch(fetchFilms({ sortingType, searchValue }));

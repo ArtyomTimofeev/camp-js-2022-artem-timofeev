@@ -14,8 +14,20 @@ interface Props {
   readonly handleSortingTypeChange: (value: string) => void;
 }
 
+interface MenuItemValue{
+
+  /** Menu Item id. */
+  id: number;
+
+  /** Menu Item value. */
+  value: string;
+
+  /** Menu Item label. */
+  label: string;
+}
+
 export const SortingSelect: VFC<Props> = ({ sortingType, handleSortingTypeChange }) => {
-  const MenuItemValues = useMemo(() => [
+  const MenuItemValues = useMemo<MenuItemValue[]>(() => [
     { id: 1, value: TITLE_PROPERTY, label: 'By Title' },
     { id: 2, value: EPISODE_ID_PROPERTY, label: 'By Episode №' },
     { id: 3, value: RELEASE_DATE_PROPERTY, label: 'By Release Date' }], []);

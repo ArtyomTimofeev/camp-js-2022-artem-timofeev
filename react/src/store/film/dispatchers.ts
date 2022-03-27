@@ -22,18 +22,10 @@ interface FetchMoreFilmsOptions {
 
 export const fetchFilms = createAsyncThunk(
   'films/fetchFilms',
-  (fetchFilmsOptions: FetchFilmsOptions) => {
-    const {
-      sortingType, searchValue,
-    } = fetchFilmsOptions;
-    return FilmsService.fetchFilms(sortingType, searchValue);
-  },
+  ({ sortingType, searchValue }: FetchFilmsOptions) => FilmsService.fetchFilms(sortingType, searchValue),
 );
 
 export const fetchMoreFilms = createAsyncThunk(
   'films/fetchMoreFilms',
-  (fetchMoreFilmsOptions: FetchMoreFilmsOptions) => {
-    const { sortingType, lastDocCursor } = fetchMoreFilmsOptions;
-    return FilmsService.fetchMoreFilms(sortingType, lastDocCursor);
-  },
+  ({ sortingType, lastDocCursor }: FetchMoreFilmsOptions) => FilmsService.fetchMoreFilms(sortingType, lastDocCursor),
 );

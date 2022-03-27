@@ -3,7 +3,6 @@ import { login, logout } from './dispatchers';
 import { initialState } from './state';
 
 export const authSlice = createSlice({
-
   name: 'films',
   initialState,
   reducers: {},
