@@ -21,9 +21,15 @@
       }
     ],
     "arrow-parens": ["error", "as-needed"],
-    "react/function-component-definition": ["warn", {
-      "namedComponents": "arrow-function"
-    }],
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+    "react/function-component-definition": [
+      "warn",
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ]
   }
 }
