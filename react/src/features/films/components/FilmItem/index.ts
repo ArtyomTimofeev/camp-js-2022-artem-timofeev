@@ -1,0 +1,1 @@
+export { FilmItem } from './FilmItem';
