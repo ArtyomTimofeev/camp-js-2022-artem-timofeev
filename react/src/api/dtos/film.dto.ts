@@ -5,10 +5,10 @@ export interface FilmDto {
   readonly fields: {
 
     /** Character ids. */
-    readonly characters: readonly number[];
+    readonly characters: number[];
 
     /** Planets ids. */
-    readonly planets: readonly number[];
+    readonly planets: number[];
 
     /** Director name. */
     readonly director: string;

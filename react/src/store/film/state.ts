@@ -1,12 +1,15 @@
+import { Film } from 'src/models/film';
+import { createEntityAdapter } from '@reduxjs/toolkit';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore/lite';
-import { Film } from '../../models/film';
+
+export const filmsAdapter = createEntityAdapter<Film>({
+  selectId: film => film.id,
+});
 
 /**
  * Films state.
  */
-export interface FilmsState {
-  /** Films list. */
-  readonly films: Film[];
+interface FilmsStateData {
 
   /** Error. */
   readonly error?: string;
@@ -15,7 +18,8 @@ export interface FilmsState {
   readonly lastDocCursor: QueryDocumentSnapshot<DocumentData> | null;
 }
 
-export const initialState: FilmsState = {
-  films: [],
+export const initialState = filmsAdapter.getInitialState<FilmsStateData>({
   lastDocCursor: null,
-};
+});
+
+export type FilmsState = typeof initialState;

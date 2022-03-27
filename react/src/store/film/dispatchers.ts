@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FilmsService } from 'src/api/services/films.service';
 import { FilmsState } from './state';
 
-interface FetchFilmsProps {
+interface FetchFilmsOptions {
 
   /** Sorting type. */
   readonly sortingType: string;
@@ -11,7 +11,7 @@ interface FetchFilmsProps {
   readonly searchValue: string;
 }
 
-interface FetchMoreFilmsProps {
+interface FetchMoreFilmsOptions {
 
   /** Sorting type. */
   readonly sortingType: string;
@@ -22,18 +22,18 @@ interface FetchMoreFilmsProps {
 
 export const fetchFilms = createAsyncThunk(
   'films/fetchFilms',
-  (fetchFilmsProps: FetchFilmsProps) => {
+  (fetchFilmsOptions: FetchFilmsOptions) => {
     const {
       sortingType, searchValue,
-    } = fetchFilmsProps;
+    } = fetchFilmsOptions;
     return FilmsService.fetchFilms(sortingType, searchValue);
   },
 );
 
 export const fetchMoreFilms = createAsyncThunk(
   'films/fetchMoreFilms',
-  (fetchMoreFilmsProps: FetchMoreFilmsProps) => {
-    const { sortingType, lastDocCursor } = fetchMoreFilmsProps;
+  (fetchMoreFilmsOptions: FetchMoreFilmsOptions) => {
+    const { sortingType, lastDocCursor } = fetchMoreFilmsOptions;
     return FilmsService.fetchMoreFilms(sortingType, lastDocCursor);
   },
 );
