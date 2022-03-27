@@ -10,8 +10,6 @@ import { TableConfig } from 'src/app/core/models/table-config';
 import { Film } from '../../../core/models/film';
 import { DEFAULT_SORT_ACTIVE_FIELD, DEFAULT_SORT_DIRECTION, DEFAULT_DEBOUNCE_TIME } from '../../../core/utils/constants';
 
-import { AdditionalCollectionsService } from './../../../core/services/additional-collections.service';
-
 /**
  * FilmsPage component.
  */
@@ -67,7 +65,6 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
   public constructor(
     private readonly filmsService: FilmsService,
     private readonly formBuilder: FormBuilder,
-    private readonly additionalCollectionsService: AdditionalCollectionsService,
   ) {
     this.tableConfig$ = new BehaviorSubject<TableConfig>(this.defaultTableConfig);
 

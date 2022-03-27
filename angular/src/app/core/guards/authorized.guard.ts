@@ -1,7 +1,6 @@
 import { Observable, map } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 
 import { AuthenticationService } from '../services/authentication.service';
 
@@ -13,16 +12,13 @@ export class AuthorizedGuard implements CanActivate {
 
   public constructor(
     private readonly authenticationService: AuthenticationService,
-    public readonly auth: AngularFireAuth,
+    private readonly router: Router,
   ) {}
 
-  /**
-   * @inheritdoc
-   */
   /** @inheritdoc */
-  public canActivate(): Observable<boolean> {
+  public canActivate(): Observable<boolean | UrlTree> {
     return this.authenticationService.isUserAuthorized$.pipe(
-      map(isUserAuthorized => (Boolean(isUserAuthorized) === true)),
+      map(isUserAuthorized => (isUserAuthorized ? true : this.router.parseUrl(''))),
     );
   }
 }
