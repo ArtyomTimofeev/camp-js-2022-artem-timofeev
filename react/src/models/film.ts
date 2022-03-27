@@ -8,10 +8,10 @@ export class Film extends Immerable {
   public readonly id: string;
 
   /** Character ids. */
-  public readonly charactersIds: number[];
+  public readonly charactersIds: readonly number[];
 
   /** Planets ids. */
-  public readonly planetsIds: number[];
+  public readonly planetsIds: readonly number[];
 
   /** Director name. */
   public readonly director: string;
