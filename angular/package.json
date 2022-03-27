@@ -50,9 +50,10 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "typescript": "~4.5.2"
-  } ,
+  },
   "lint-staged": {
     "src/**/*.{ts,html}": "eslint --cache --fix",
     "src/**/*.*css": "stylelint --fix",
-    "src/**/*.html": "prettier --write"}
+    "src/**/*.html": "prettier --write"
+  }
 }
