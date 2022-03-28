@@ -4,7 +4,8 @@ import {
 import { memo, VFC } from 'react';
 import { Film } from 'src/models/film';
 import MovieIcon from '@mui/icons-material/Movie';
-import ListItemButton from '@mui/material/ListItemButton';
+import ListItem from '@mui/material/ListItem';
+import { NavLink } from 'react-router-dom';
 
 interface Props {
 
@@ -13,14 +14,19 @@ interface Props {
 }
 
 export const FilmItemComponent: VFC<Props> = ({ film }) => (
-  <ListItemButton>
+  <ListItem>
     <ListItemAvatar>
       <Avatar>
         <MovieIcon />
       </Avatar>
     </ListItemAvatar>
+
     <ListItemText
-      primary={film.title}
+      primary={(
+        <NavLink to={`film-details/${film.id}`}>
+          {film.title}
+        </NavLink>
+)}
       secondary={(
         <>
           <b>Release Date: </b>
@@ -31,7 +37,8 @@ export const FilmItemComponent: VFC<Props> = ({ film }) => (
         </>
       )}
     />
-  </ListItemButton>
+
+  </ListItem>
 );
 
 export const FilmItem = memo(FilmItemComponent);

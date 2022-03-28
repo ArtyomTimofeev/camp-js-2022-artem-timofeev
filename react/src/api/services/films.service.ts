@@ -1,7 +1,9 @@
 import { Film } from 'src/models/film';
 import {
-  collection, DocumentData, getDocs, limit, orderBy, Query, query, QueryDocumentSnapshot, startAfter, where,
+  collection, doc, DocumentData, getDoc, getDocs, limit, orderBy,
+  Query, query, QueryDocumentSnapshot, startAfter, where,
 } from 'firebase/firestore/lite';
+
 import {
   FILMS_COLLECTION_NAME, FIREBASE_SYMBOL_ENCODING, TITLE_PROPERTY,
 } from '../../utils/constants';
@@ -10,7 +12,7 @@ import { FirebaseService } from './firebase.service';
 import { filmMapper } from '../mappers/film.mapper';
 
 /**
- * Films Service returned data.
+ * FetchFilms function returned data.
  */
 interface FetchFilmsReturnedData {
 
@@ -20,7 +22,6 @@ interface FetchFilmsReturnedData {
   /** Last document cursor. */
   readonly lastDocCursor: QueryDocumentSnapshot<DocumentData> | null;
 }
-
 export namespace FilmsService {
 
   /** Limit for getting films query. */
@@ -37,7 +38,7 @@ export namespace FilmsService {
       lastDocCursor = filmsSnapshot.docs[filmsSnapshot.docs.length - 1];
     }
     const films = filmsSnapshot.docs
-      .map(doc => ({ ...doc.data(), id: doc.id }))
+      .map(filmDoc => ({ ...filmDoc.data(), id: filmDoc.id }))
       .map(dto => filmMapper.fromDto(dto as FilmDto));
     return { lastDocCursor, films };
   };
@@ -88,4 +89,15 @@ export namespace FilmsService {
     return getFilmsList(queryForFilms);
   };
 
+  /**
+   * Fetches film doc by id.
+   * @param id - Film id.
+   */
+  export const fetchFilmById = async (id: Film['id']):
+  Promise<Film> => {
+    const docRef = doc(FirebaseService.db, FILMS_COLLECTION_NAME, id);
+    const filmsSnapshot = await getDoc(docRef);
+    const dto = { ...filmsSnapshot.data(), id: filmsSnapshot.id } as FilmDto;
+    return filmMapper.fromDto(dto);
+  };
 }

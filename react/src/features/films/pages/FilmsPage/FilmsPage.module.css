@@ -11,3 +11,7 @@
   overflow: auto;
   background-color: var(--scrollableList-background-color);
 }
+
+.filmsPageContent {
+  display: flex;
+}

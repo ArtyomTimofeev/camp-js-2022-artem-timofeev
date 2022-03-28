@@ -3,10 +3,13 @@ import {
   useEffect, useMemo, useState, VFC,
 } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Route, Routes } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { fetchFilms, fetchMoreFilms } from 'src/store/film/dispatchers';
-import { selectFilms, selectLastDocCursor } from 'src/store/film/selectors';
+import { fetchFilms, fetchMoreFilms } from 'src/store/films/dispatchers';
+import { selectFilms, selectLastDocCursor } from 'src/store/films/selectors';
 import { DEFAULT_SORTING_TYPE } from 'src/utils/constants';
+import FilmDetailsBlockStub from '../../components/DetailsFilmBlockStub/FilmDetailsBlockStub';
+import FilmDetailsBlock from '../../components/FilmDetailsBlock/FilmDetailsBlock';
 import { FilmItem } from '../../components/FilmItem';
 import { Search } from '../../components/Search';
 import { SortingSelect } from '../../components/SortingSelect';
@@ -43,27 +46,33 @@ export const FilmsPage: VFC = () => {
   };
 
   return (
-    <>
-      <Typography variant="h4" component="h1" align="center">SW Films</Typography>
+    <div className={styles.filmsPage}>
+      <Typography variant="h4" component="h1" align="center" color="primary">SW Films</Typography>
       <div className={styles.filterControls}>
         <Search searchValue={searchValue} handleSearchValueChange={handleSearchValueChange} />
         <SortingSelect sortingType={sortingType} handleSortingTypeChange={handleSortingTypeChange} />
       </div>
-      <List
-        id="scrollableList"
-        className={styles.scrollableList}
-        component="div"
-      >
-        <InfiniteScroll
-          dataLength={films.length}
-          next={fetchNextFilmsChunk}
-          scrollableTarget="scrollableList"
-          hasMore
-          loader
+      <div className={styles.filmsPageContent}>
+        <List
+          id="scrollableList"
+          className={styles.scrollableList}
+          component="div"
         >
-          {filmsList}
-        </InfiniteScroll>
-      </List>
-    </>
+          <InfiniteScroll
+            dataLength={films.length}
+            next={fetchNextFilmsChunk}
+            scrollableTarget="scrollableList"
+            hasMore
+            loader
+          >
+            {filmsList}
+          </InfiniteScroll>
+        </List>
+        <Routes>
+          <Route path="film-details/:id" element={<FilmDetailsBlock />} />
+          <Route path="*" element={<FilmDetailsBlockStub />} />
+        </Routes>
+      </div>
+    </div>
   );
 };

@@ -9,6 +9,18 @@ export const selectLastDocCursor = createSelector(
   lastDocCursor => lastDocCursor,
 );
 
+/** Selects selected film. */
+export const selectSelectedFilm = createSelector(
+  (state: RootState) => state.films.selectedFilm,
+  selectedFilm => selectedFilm,
+);
+
+/** Selects selected film. */
+export const selectFetchFilmsError = createSelector(
+  (state: RootState) => state.films.error,
+  error => error,
+);
+
 export const {
   /** Selects all films. */
   selectAll: selectFilms,

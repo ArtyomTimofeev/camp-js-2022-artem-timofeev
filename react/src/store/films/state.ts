@@ -16,10 +16,14 @@ interface FilmsStateData {
 
   /** Last document cursor. */
   readonly lastDocCursor: QueryDocumentSnapshot<DocumentData> | null;
+
+  /** Selected film. */
+  readonly selectedFilm: Film | null;
 }
 
 export const initialState = filmsAdapter.getInitialState<FilmsStateData>({
   lastDocCursor: null,
+  selectedFilm: null,
 });
 
 export type FilmsState = typeof initialState;

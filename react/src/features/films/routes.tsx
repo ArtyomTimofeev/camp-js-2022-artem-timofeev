@@ -5,7 +5,7 @@ const FilmsPage = lazy(() => import('./pages/FilmsPage').then(module => ({ defau
 
 export const filmsRoutes: RouteObject[] = [
   {
-    path: 'films',
+    path: 'films/*',
     element: <FilmsPage />,
   },
   {

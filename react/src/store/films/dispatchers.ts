@@ -1,3 +1,4 @@
+import { Film } from 'src/models/film';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FilmsService } from 'src/api/services/films.service';
 import { FilmsState } from './state';
@@ -28,4 +29,9 @@ export const fetchFilms = createAsyncThunk(
 export const fetchMoreFilms = createAsyncThunk(
   'films/fetchMoreFilms',
   ({ sortingType, lastDocCursor }: FetchMoreFilmsOptions) => FilmsService.fetchMoreFilms(sortingType, lastDocCursor),
+);
+
+export const fetchFilmById = createAsyncThunk(
+  'films/fetchFilmById',
+  (id: Film['id']) => FilmsService.fetchFilmById(id),
 );
