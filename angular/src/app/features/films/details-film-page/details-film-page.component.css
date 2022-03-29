@@ -30,6 +30,6 @@
   flex-direction: column;
 }
 
-.card__controls__delete-button {
+.controls__delete-button {
   margin-top: 5px;
 }

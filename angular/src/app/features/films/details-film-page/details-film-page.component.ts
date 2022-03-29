@@ -1,18 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { first, shareReplay, Subject, switchMap, takeUntil } from 'rxjs';
+import { EMPTY, first, shareReplay, Subject, switchMap, takeUntil, map } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-
 import { Film } from 'src/app/core/models/film';
-import { PlanetMapper } from 'src/app/core/services/mappers/planet.mapper';
-import { CharacterMapper } from 'src/app/core/services/mappers/character.mapper';
-import { CHARACTERS_COLLECTION, PLANETS_COLLECTION } from 'src/app/core/utils/constants';
 import { DialogWithFilmFormComponent, DialogWithFilmFormData } from 'src/app/features/films/details-film-page/dialog-with-film-form/dialog-with-film-form.component';
 
-import { Character } from './../../../core/models/character';
-import { Planet } from './../../../core/models/planet';
-import { CharacterDto } from './../../../core/services/mappers/dto/character.dto';
-import { PlanetDto } from './../../../core/services/mappers/dto/planet.dto';
 import { AdditionalCollectionsService } from './../../../core/services/additional-collections.service';
 import { FilmsService } from './../../../core/services/films.service';
 
@@ -27,26 +19,44 @@ import { FilmsService } from './../../../core/services/films.service';
 })
 export class DetailsFilmPageComponent implements OnDestroy {
   /** Selected film. */
-  public readonly selectedFilm$ = this.filmsService.getFilmById(this.route.snapshot.paramMap.get('id') ?? '').pipe(
+  public readonly selectedFilm$ = this.route.paramMap.pipe(
+    switchMap(params => {
+      const id = params.get('id');
+      if (id !== null) {
+        return this.filmsService.getFilmById(id);
+      }
+      this.router.navigate(['']);
+      return EMPTY;
+    }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   /** List of related planets. */
-  public readonly relatedPlanetsList$ = this.selectedFilm$.pipe(
+  private readonly relatedPlanetsList$ = this.selectedFilm$.pipe(
     switchMap(selectedFilm => {
       const { planetsIds } = selectedFilm;
       return this.additionalCollectionsService
-        .getCollectionItems<PlanetDto, Planet>(planetsIds, this.planetMapper, PLANETS_COLLECTION);
+        .getRelatedPlanets(planetsIds);
     }),
   );
 
+  /** List of related planets names. */
+  public readonly relatedPlanetsNames$ = this.relatedPlanetsList$.pipe(
+    map(planets => planets.map(planet => planet.name)),
+  );
+
   /** List of related characters. */
-  public readonly relatedCharactersList$ = this.selectedFilm$.pipe(
+  private readonly relatedCharactersList$ = this.selectedFilm$.pipe(
     switchMap(selectedFilm => {
       const { charactersIds } = selectedFilm;
       return this.additionalCollectionsService
-        .getCollectionItems<CharacterDto, Character>(charactersIds, this.characterMapper, CHARACTERS_COLLECTION);
+        .getRelatedCharacters(charactersIds);
     }),
+  );
+
+  /** List of related characters names. */
+  public readonly relatedCharactersNames$ = this.relatedCharactersList$.pipe(
+    map(characters => characters.map(character => character.name)),
   );
 
   private readonly onDestroy$ = new Subject<void>();
@@ -54,8 +64,6 @@ export class DetailsFilmPageComponent implements OnDestroy {
   public constructor(
     private readonly filmsService: FilmsService,
     private readonly additionalCollectionsService: AdditionalCollectionsService,
-    private readonly planetMapper: PlanetMapper,
-    private readonly characterMapper: CharacterMapper,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
@@ -70,7 +78,7 @@ export class DetailsFilmPageComponent implements OnDestroy {
   /** Delete film function.
    * @param id - Film id.
    */
-  public deleteFilm(id: string): void {
+  public onDeleteFilm(id: Film['id']): void {
     this.filmsService.deleteFilm(id).pipe(
       first(),
       takeUntil(this.onDestroy$),
@@ -82,7 +90,7 @@ export class DetailsFilmPageComponent implements OnDestroy {
    * Open dialog for edit film function.
    * @param film - Film data after editing.
    */
-  public openDialogForEditFilm(film: Film): void {
+  public onOpenDialogForEditFilm(film: Film): void {
     this.dialog.open<DialogWithFilmFormComponent, DialogWithFilmFormData, Film>(DialogWithFilmFormComponent, {
       data: {
         film,

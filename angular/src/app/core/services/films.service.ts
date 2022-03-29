@@ -38,7 +38,7 @@ export class FilmsService {
    * @param tableConfig - Table config.
    * @param searchValue - Search value.
    */
-  public getFilms(tableConfig: TableConfig, searchValue: string): Observable<readonly Film[]> {
+  public getFilms(tableConfig: TableConfig, searchValue: string): Observable<Film[]> {
     const { pageConfig, sortConfig } = tableConfig;
     const filmsCollection = this.angularFirestore.collection<FilmDto>(FILMS_COLLECTION, this.getQuery(pageConfig, sortConfig, searchValue));
     return filmsCollection.snapshotChanges().pipe(
@@ -96,7 +96,7 @@ export class FilmsService {
   /**
    * Gets all films in collection.
    */
-  public getAllFilms(): Observable<readonly Film[]> {
+  public getAllFilms(): Observable<Film[]> {
     const itemsCollection = this.angularFirestore.collection<FilmDto>(FILMS_COLLECTION);
     return itemsCollection.snapshotChanges()
       .pipe(

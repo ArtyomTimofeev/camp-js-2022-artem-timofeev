@@ -4,10 +4,7 @@ import { Component, ChangeDetectionStrategy, Inject, OnDestroy } from '@angular/
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FilmsService } from 'src/app/core/services/films.service';
-import { CHARACTERS_COLLECTION, PLANETS_COLLECTION } from 'src/app/core/utils/constants';
 
-import { CharacterMapper } from '../../../../core/services/mappers/character.mapper';
-import { PlanetMapper } from '../../../../core/services/mappers/planet.mapper';
 import { AdditionalCollectionsService } from '../../../../core/services/additional-collections.service';
 
 import { Film } from './../../../../core/models/film';
@@ -16,7 +13,7 @@ import { Film } from './../../../../core/models/film';
 export interface DialogWithFilmFormData {
 
   /** Film. */
-  readonly film: Film;
+  readonly film: Film | null;
 }
 
 /**
@@ -30,10 +27,10 @@ export interface DialogWithFilmFormData {
 })
 export class DialogWithFilmFormComponent implements OnDestroy {
   /** All planets in the database. */
-  public allPlanets$ = this.additionalCollectionsService.getAllCollectionItems(PLANETS_COLLECTION, this.planetMapper);
+  public allPlanets$ = this.additionalCollectionsService.getAllPlanets();
 
   /** All characters in the database. */
-  public allCharacters$ = this.additionalCollectionsService.getAllCollectionItems(CHARACTERS_COLLECTION, this.characterMapper);
+  public allCharacters$ = this.additionalCollectionsService.getAllCharacters();
 
   private readonly onDestroy$ = new Subject<void>();
 
@@ -41,8 +38,6 @@ export class DialogWithFilmFormComponent implements OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly filmsService: FilmsService,
     private readonly additionalCollectionsService: AdditionalCollectionsService,
-    private readonly planetMapper: PlanetMapper,
-    private readonly characterMapper: CharacterMapper,
     private readonly dialogRef: MatDialogRef<DialogWithFilmFormComponent, Film>,
     private readonly router: Router,
     @Inject(MAT_DIALOG_DATA) private readonly data: DialogWithFilmFormData,
@@ -69,7 +64,7 @@ export class DialogWithFilmFormComponent implements OnDestroy {
   /** Submit form function. */
   public submitForm(): void {
     this.dialogRef.close(this.form.value);
-    if (!this.data) {
+    if (this.data === null) {
       this.filmsService.addFilm(this.form.value).pipe(
         first(),
         takeUntil(this.onDestroy$),
@@ -77,7 +72,7 @@ export class DialogWithFilmFormComponent implements OnDestroy {
         .subscribe(() => this.router.navigate(['']));
     }
     if (this.data) {
-      this.filmsService.updateFilm({ ...this.form.value, id: this.data.film.id }).pipe(
+      this.filmsService.updateFilm({ ...this.form.value, id: this.data.film?.id }).pipe(
         first(),
         takeUntil(this.onDestroy$),
       )
