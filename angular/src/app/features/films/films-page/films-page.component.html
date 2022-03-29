@@ -83,7 +83,7 @@
       [pageIndex]="tableConfig.pageConfig.pageIndex"
       [pageSize]="tableConfig.pageConfig.pageSize"
       [pageSizeOptions]="tableConfig.pageConfig.pageSizeOptions"
-      [length]="tableConfig.pageConfig.length"
+      [length]="(allFilms$ | async)?.length"
       aria-label="Select page"
       (page)="onPaginateChange($event)"
     >

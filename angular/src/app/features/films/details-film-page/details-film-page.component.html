@@ -24,11 +24,11 @@
       <p><strong>Director:</strong> {{ film.director }}</p>
       <p><strong>Episode №:</strong> {{ film.episodeId }}</p>
       <p *ngIf="relatedPlanetsNames$ | async as names">
-        <strong>The planets on which the action took place:</strong>
+        <strong>The planets on which the action took place: </strong>
         <span>{{ names.join(", ") }}</span>
       </p>
       <p *ngIf="relatedCharactersNames$ | async as names">
-        <strong>Characters featured in the film:</strong>
+        <strong>Characters featured in the film: </strong>
         <span> {{ names.join(", ") }}</span>
       </p>
     </div>

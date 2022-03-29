@@ -47,11 +47,11 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
   /** Default table config. */
   private readonly defaultTableConfig: TableConfig = {
     pageConfig: {
-      pageSize: 6,
+      pageSize: 3,
       pageIndex: 0,
-      length: 6,
+      length: 0,
       previousPageIndex: 0,
-      pageSizeOptions: [2, 3, 6],
+      pageSizeOptions: [2, 3],
     },
     sortConfig: {
       active: this.defaultSortActiveField,
