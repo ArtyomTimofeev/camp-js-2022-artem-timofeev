@@ -62,7 +62,7 @@ export class DialogWithFilmFormComponent implements OnDestroy {
   });
 
   /** Submit form function. */
-  public submitForm(): void {
+  public onSubmitForm(): void {
     this.dialogRef.close(this.form.value);
     if (this.data === null) {
       this.filmsService.addFilm(this.form.value).pipe(
