@@ -12,6 +12,9 @@ interface CharactersState {
 
   /** Error. */
   readonly error?: string;
+
+  /** Error. */
+  readonly allCharacters: Character[] | [];
 }
 
-export const initialState = charactersAdapter.getInitialState<CharactersState>({});
+export const initialState = charactersAdapter.getInitialState<CharactersState>({ allCharacters: [] });

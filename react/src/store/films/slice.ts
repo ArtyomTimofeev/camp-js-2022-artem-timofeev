@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { castDraft } from 'immer';
 import { fetchFilmById, fetchFilms, fetchMoreFilms } from './dispatchers';
 import { filmsAdapter, FilmsState, initialState } from './state';
 
@@ -26,7 +27,7 @@ export const filmsSlice = createSlice({
       }
     })
     .addCase(fetchFilmById.fulfilled, (state, { payload }) => {
-      state.selectedFilm = payload;
+      state.selectedFilm = castDraft(payload);
     })
     .addCase(fetchFilmById.rejected, (state, action) => {
       if (action.error.message) {

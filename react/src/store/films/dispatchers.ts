@@ -35,3 +35,8 @@ export const fetchFilmById = createAsyncThunk(
   'films/fetchFilmById',
   (id: Film['id']) => FilmsService.fetchFilmById(id),
 );
+
+export const createFilm = createAsyncThunk(
+  'films/createFilm',
+  (film: Film) => FilmsService.createFilm(film),
+);

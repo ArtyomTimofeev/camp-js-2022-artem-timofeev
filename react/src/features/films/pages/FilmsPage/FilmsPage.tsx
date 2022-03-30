@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchFilms, fetchMoreFilms } from 'src/store/films/dispatchers';
 import { selectFilms, selectLastDocCursor } from 'src/store/films/selectors';
 import { DEFAULT_SORTING_TYPE } from 'src/utils/constants';
-import FilmDetailsBlockStub from '../../components/DetailsFilmBlockStub/FilmDetailsBlockStub';
+import FilmDetailsBlockStub from '../../components/FilmDetailsBlockStub/FilmDetailsBlockStub';
 import FilmDetailsBlock from '../../components/FilmDetailsBlock/FilmDetailsBlock';
 import { FilmItem } from '../../components/FilmItem';
 import { Search } from '../../components/Search';

@@ -1,5 +1,7 @@
-import { Box, Paper, Typography } from '@mui/material';
-import { useEffect, VFC } from 'react';
+import {
+  Box, Button, Paper, Typography,
+} from '@mui/material';
+import { useEffect, useState, VFC } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { fetchRelatedCharacters } from 'src/store/character/dispatchers';
@@ -11,6 +13,7 @@ import {
 } from 'src/store/films/selectors';
 import { fetchRelatedPlanets } from 'src/store/planet/dispatchers';
 import { selectPlanets } from 'src/store/planet/selectors';
+import FilmForm from '../FilmForm/FilmForm';
 import styles from './FilmDetailsBlock.module.css';
 
 const FilmDetailsBlock: VFC = () => {
@@ -21,6 +24,8 @@ const FilmDetailsBlock: VFC = () => {
   const requestError = useAppSelector(selectFetchFilmsError);
   const relatedPlanets = useAppSelector(selectPlanets);
   const relatedCharacters = useAppSelector(selectCharacters);
+
+  const [isFormOpen, setIsOpenForm] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -37,6 +42,11 @@ const FilmDetailsBlock: VFC = () => {
       dispatch(fetchRelatedPlanets(planetsIds));
     }
   }, [dispatch, selectedFilm]);
+
+  const handleIsOpenFormChange = (value: boolean): void => {
+    setIsOpenForm(value);
+  };
+
   return (
     <Box
       sx={{
@@ -53,31 +63,32 @@ const FilmDetailsBlock: VFC = () => {
     >
       <Paper className={styles.paper}>
         <Typography variant="h5" component="h1" align="center" color="primary">
-          <strong>Title: </strong>
+          <b>Title: </b>
           {selectedFilm?.title}
-        </Typography>
-        <Typography variant="body1" component="p" color="primary">
-          <strong>Director: </strong>
-          {selectedFilm?.director}
-        </Typography>
-        <Typography variant="body1" component="p" color="primary">
-          <strong>Producer: </strong>
-          {selectedFilm?.producer}
-        </Typography>
-        <Typography variant="body1" component="p" color="primary">
-          <strong>Description: </strong>
-          {selectedFilm?.openingCrawl}
-        </Typography>
-        <Typography variant="body1" component="p" color="primary">
-          <strong>Release Date: </strong>
-          {selectedFilm?.releaseDate.toLocaleDateString()}
-        </Typography>
-        <Typography variant="body1" component="p" color="primary">
-          <strong>Episode №: </strong>
-          {selectedFilm?.episodeId}
         </Typography>
 
         <Typography variant="body1" component="p" color="primary">
+          <b>Director: </b>
+          {selectedFilm?.director}
+        </Typography>
+        <Typography variant="body1" component="p" color="primary">
+          <b>Producer: </b>
+          {selectedFilm?.producer}
+        </Typography>
+        <Typography variant="body1" component="p" color="primary">
+          <b>Description: </b>
+          {selectedFilm?.openingCrawl}
+        </Typography>
+        <Typography variant="body1" component="p" color="primary">
+          <b>Release Date: </b>
+          {selectedFilm?.releaseDate.toLocaleDateString()}
+        </Typography>
+        <Typography variant="body1" component="p" color="primary">
+          <b>Episode №: </b>
+          {selectedFilm?.episodeId}
+        </Typography>
+
+        <Typography variant="body1" component="span" color="primary">
           <strong>The planets on which the action took place: </strong>
           {relatedPlanets.map(planet => (
             <span key={planet.id}>
@@ -96,7 +107,8 @@ const FilmDetailsBlock: VFC = () => {
             </span>
           ))}
         </Typography>
-
+        <Button variant="contained" color="primary" onClick={() => handleIsOpenFormChange(true)}>add</Button>
+        <FilmForm handleIsOpenFormChange={handleIsOpenFormChange} isFormOpen={isFormOpen} />
       </Paper>
     </Box>
   );

@@ -1,14 +1,14 @@
-/** Film data that stored in firestore. */
+/** Film dto. */
 export interface FilmDto {
 
   /** Film fields. */
   readonly fields: {
 
     /** Character ids. */
-    readonly characters: number[];
+    readonly characters: readonly number[];
 
     /** Planets ids. */
-    readonly planets: number[];
+    readonly planets: readonly number[];
 
     /** Director name. */
     readonly director: string;
@@ -32,3 +32,5 @@ export interface FilmDto {
   /** Id. */
   readonly id: string;
 }
+
+export type FilmCreateDto = Pick<FilmDto, 'fields'>;

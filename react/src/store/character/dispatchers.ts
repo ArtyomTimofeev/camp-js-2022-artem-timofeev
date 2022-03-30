@@ -6,3 +6,8 @@ export const fetchRelatedCharacters = createAsyncThunk(
   'characters/fetchRelatedCharacters',
   (charactersIds: Film['charactersIds']) => CharacterService.fetchRelatedCharacters(charactersIds),
 );
+
+export const fetchAllCharacters = createAsyncThunk(
+  'characters/fetchAllCharactersNames',
+  () => CharacterService.fetchAllCharacters(),
+);

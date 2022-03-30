@@ -1,7 +1,8 @@
 import { Film } from 'src/models/film';
 import {
-  collection, doc, DocumentData, getDoc, getDocs, limit, orderBy,
-  Query, query, QueryDocumentSnapshot, startAfter, where,
+  addDoc,
+  collection, deleteDoc, doc, DocumentData, getDoc, getDocs, limit, orderBy,
+  Query, query, QueryDocumentSnapshot, startAfter, updateDoc, where,
 } from 'firebase/firestore/lite';
 
 import {
@@ -99,5 +100,33 @@ export namespace FilmsService {
     const filmsSnapshot = await getDoc(docRef);
     const dto = { ...filmsSnapshot.data(), id: filmsSnapshot.id } as FilmDto;
     return filmMapper.fromDto(dto);
+  };
+
+  /**
+   * Adds film doc to films collection.
+   * @param film - Added film doc.
+   */
+  export const createFilm = async (film: Film): Promise<void> => {
+    const filmDto = filmMapper.toDto(film);
+    await addDoc(collection(FirebaseService.db, FILMS_COLLECTION_NAME), filmDto);
+  };
+
+  /**
+   * Updates film doc in films collection.
+   * @param film - Updated film doc.
+   */
+  export const updateFilm = async (film: Film): Promise<void> => {
+    const filmDto = filmMapper.toDto(film);
+    const bookDoc = doc(FirebaseService.db, FILMS_COLLECTION_NAME, film.id);
+    await updateDoc(bookDoc, filmDto);
+  };
+
+  /**
+   *  Deletes film doc from films collection.
+   * @param id - Removable film id.
+   */
+  export const deleteFilm = async (id: Film['id']): Promise<void> => {
+    const bookDoc = doc(FirebaseService.db, FILMS_COLLECTION_NAME, id);
+    await deleteDoc(bookDoc);
   };
 }
