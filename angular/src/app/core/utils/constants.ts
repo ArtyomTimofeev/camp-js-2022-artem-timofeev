@@ -1,6 +1,12 @@
 /** Films collection name for firebase connection.*/
 export const FILMS_COLLECTION = 'films';
 
+/** Characters collection name for firebase connection.*/
+export const CHARACTERS_COLLECTION = 'people';
+
+/** Planets collection name for firebase connection.*/
+export const PLANETS_COLLECTION = 'planets';
+
 /** Default sorting active field. */
 export const DEFAULT_SORT_ACTIVE_FIELD = 'title';
 
@@ -15,3 +21,6 @@ export const TITLE_PROPERTY = 'fields.title';
 
 /** Default debounce time. */
 export const DEFAULT_DEBOUNCE_TIME = 1000;
+
+/** Chunk size of ids. */
+export const CHUNK_SIZE_OF_IDS = 10;

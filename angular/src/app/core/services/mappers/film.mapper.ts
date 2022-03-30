@@ -4,7 +4,8 @@ import { OrderByDirection } from '@angular/fire/firestore';
 import { Film } from '../../models/film';
 import { SortConfig } from '../../models/table-config';
 
-import { FilmDto } from './dto/film.dto';
+import { IMapper } from './mappers';
+import { FilmCreateDto, FilmDto } from './dto/film.dto';
 
 type SortFieldsNames = keyof Pick<Film, 'releaseDate' | 'episodeId' | 'title' | 'producer'>;
 
@@ -25,7 +26,7 @@ interface FirebaseSortQuery {
 @Injectable({
   providedIn: 'root',
 })
-export class FilmMapper {
+export class FilmMapper implements IMapper<FilmCreateDto, Film> {
 
   /**
    * From Dto to Model.
@@ -49,9 +50,8 @@ export class FilmMapper {
    * From Model to Dto.
    * @param model - Model.
    */
-  public toDto(model: Film): FilmDto {
+  public toDto(model: Film): FilmCreateDto {
     return {
-      id: model.id,
       fields: {
         title: model.title,
         director: model.director,

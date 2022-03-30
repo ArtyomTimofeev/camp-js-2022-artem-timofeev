@@ -24,14 +24,17 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
   /** Names of displayed columns array.*/
   public readonly displayedColumns: readonly string[] = ['title', 'episodeId', 'producer', 'releaseDate'];
 
+  /** All films in the database (necessary for the correct operation of the paginator). */
+  public readonly allFilms$: Observable<Film[]> = this.filmsService.getAllFilms();
+
+  /** Observable with requested films data. */
+  public readonly requestedFilms$: Observable<Film[]>;
+
   /** Search control with search value. */
-  public readonly searchControl = this.fb.control('');
+  public readonly searchControl = this.formBuilder.control('');
 
   /** Table Config. */
   public readonly tableConfig$: BehaviorSubject<TableConfig>;
-
-  /** Observable with films data. */
-  public readonly films$: Observable<readonly Film[]>;
 
   /** Default sorting active field. */
   public readonly defaultSortActiveField: Sort['active'] = DEFAULT_SORT_ACTIVE_FIELD;
@@ -44,11 +47,11 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
   /** Default table config. */
   private readonly defaultTableConfig: TableConfig = {
     pageConfig: {
-      pageSize: 6,
+      pageSize: 3,
       pageIndex: 0,
-      length: 6,
+      length: 0,
       previousPageIndex: 0,
-      pageSizeOptions: [2, 3, 6],
+      pageSizeOptions: [2, 3],
     },
     sortConfig: {
       active: this.defaultSortActiveField,
@@ -61,7 +64,7 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
 
   public constructor(
     private readonly filmsService: FilmsService,
-    private readonly fb: FormBuilder,
+    private readonly formBuilder: FormBuilder,
   ) {
     this.tableConfig$ = new BehaviorSubject<TableConfig>(this.defaultTableConfig);
 
@@ -71,7 +74,7 @@ export class FilmsPageComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
     );
 
-    this.films$ = combineLatest([
+    this.requestedFilms$ = combineLatest([
       this.tableConfig$,
       this.searchValue$,
     ]).pipe(

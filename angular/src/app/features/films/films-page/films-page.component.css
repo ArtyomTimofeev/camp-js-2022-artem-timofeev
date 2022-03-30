@@ -12,7 +12,9 @@
 .films-page__sw-table {
   min-width: 800px;
 }
-
+.films-page__sw-table a {
+  color: var(--accent-color);
+}
 .sw-table__caption {
   padding: 15px;
   font-size: var(--caption-font-size);

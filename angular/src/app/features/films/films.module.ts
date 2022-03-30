@@ -3,14 +3,23 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { AuthorizedGuard } from 'src/app/core/guards/authorized.guard';
+
 import { MaterialModule } from '../../material.module';
 
 import { FilmsPageComponent } from './films-page/films-page.component';
+import { DetailsFilmPageComponent } from './details-film-page/details-film-page.component';
+import { DialogWithFilmFormComponent } from './details-film-page/dialog-with-film-form/dialog-with-film-form.component';
 
 const routes: Routes = [
   {
     path: '',
     component: FilmsPageComponent,
+  },
+  {
+    path: 'film-details/:id',
+    component: DetailsFilmPageComponent,
+    canActivate: [AuthorizedGuard],
   },
 ];
 
@@ -18,8 +27,9 @@ const routes: Routes = [
  * FilmsModule.
  */
 @NgModule({
-  declarations: [FilmsPageComponent],
+  declarations: [FilmsPageComponent, DetailsFilmPageComponent, DialogWithFilmFormComponent],
   imports: [
+    ReactiveFormsModule,
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,

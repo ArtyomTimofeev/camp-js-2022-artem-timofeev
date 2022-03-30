@@ -38,7 +38,7 @@ export class FilmsService {
    * @param tableConfig - Table config.
    * @param searchValue - Search value.
    */
-  public getFilms(tableConfig: TableConfig, searchValue: string): Observable<readonly Film[]> {
+  public getFilms(tableConfig: TableConfig, searchValue: string): Observable<Film[]> {
     const { pageConfig, sortConfig } = tableConfig;
     const filmsCollection = this.angularFirestore.collection<FilmDto>(FILMS_COLLECTION, this.getQuery(pageConfig, sortConfig, searchValue));
     return filmsCollection.snapshotChanges().pipe(
@@ -48,13 +48,13 @@ export class FilmsService {
           this.firstVisibleDoc = snapshot[0].payload.doc;
         }
       }),
-      map(snapshot => snapshot.map(s => s.payload.doc.data())),
+      map(snapshot => snapshot.map(s => ({ ...s.payload.doc.data(), id: s.payload.doc.id }))),
       map(list => list.map(dto => this.filmMapper.fromDto(dto))),
     );
   }
 
   /**
-   * Gets query.
+   * Gets query for fetching films.
    * @param pageConfig - Page config.
    * @param sortConfig - Sorting config.
    * @param searchValue - Search value.
@@ -94,10 +94,22 @@ export class FilmsService {
   }
 
   /**
+   * Gets all films in collection.
+   */
+  public getAllFilms(): Observable<Film[]> {
+    const itemsCollection = this.angularFirestore.collection<FilmDto>(FILMS_COLLECTION);
+    return itemsCollection.snapshotChanges()
+      .pipe(
+        map(snapshot => snapshot.map(s => s.payload.doc.data())),
+        map(list => list.map(dto => this.filmMapper.fromDto(dto))),
+      );
+  }
+
+  /**
    * Gets film doc by id.
    * @param id - Doc id.
    */
-  public getFilmById(id: Film['id']): Observable<Film> {
+  public getFilmById(id: Film['id']): Observable< Film> {
     const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
     return docData(filmDocRef, { idField: 'id' }).pipe(
       map(filmDto => this.filmMapper.fromDto(filmDto)),
@@ -119,7 +131,7 @@ export class FilmsService {
    * @param id - Removable film id.
    */
   public deleteFilm(id: string): Observable<void> {
-    const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`) as DocumentReference<FilmDto>;
+    const filmDocRef = doc(this.firestore, `${FILMS_COLLECTION}/${id}`);
     return defer(() => deleteDoc(filmDocRef));
   }
 

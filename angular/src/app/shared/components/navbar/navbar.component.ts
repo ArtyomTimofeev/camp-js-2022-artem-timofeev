@@ -1,6 +1,5 @@
 import { takeUntil, first, Subject } from 'rxjs';
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 /**
@@ -17,8 +16,7 @@ export class NavbarComponent implements OnDestroy {
   private readonly onDestroy$ = new Subject<void>();
 
   public constructor(
-    public readonly auth: AngularFireAuth,
-    private readonly authenticationService: AuthenticationService,
+    public readonly authenticationService: AuthenticationService,
   ) {}
 
   /**  @inheritdoc */

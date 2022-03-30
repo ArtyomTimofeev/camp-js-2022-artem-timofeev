@@ -2,6 +2,7 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Injectable } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { defer, Observable, mapTo } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 /**
  * Authentication Service.
@@ -11,7 +12,13 @@ import { defer, Observable, mapTo } from 'rxjs';
 })
 export class AuthenticationService {
 
-  public constructor(private readonly auth: Auth) {}
+  /** Is User authorized. */
+  public isUserAuthorized$ = this.angularFireAuth.authState;
+
+  public constructor(
+    private readonly auth: Auth,
+    private readonly angularFireAuth: AngularFireAuth,
+  ) {}
 
   /**
    * Login through google account.

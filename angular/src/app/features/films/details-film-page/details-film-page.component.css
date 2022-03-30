@@ -1,0 +1,35 @@
+:host {
+  display: block;
+}
+
+.details-film-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.details-film-page__add-button {
+  margin-top: 30px;
+}
+
+.details-film-page__film-details-card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  max-width: 40%;
+  min-height: 70vh;
+  margin: auto;
+  margin-top: 30px;
+  padding: 40px;
+  font-size: var(--font-size);
+}
+
+.film-details-card__controls {
+  display: flex;
+  flex-direction: column;
+}
+
+.controls__delete-button {
+  margin-top: 5px;
+}
